@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лаборатория | Сад Адаптации</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="garden-page">
+    <!-- Верхняя панель -->
+    <header class="garden-header">
+        <a href="index.html" class="btn-back">← На базу</a>
+        <div class="header-title">
+            <span class="header-icon">🔬</span>
+            <span>Лаборатория Адаптации</span>
+        </div>
+        <a href="samples.html" class="btn-back" style="font-size: 0.85rem; padding: 8px 16px;">
+            🧫 Хранилище
+        </a>
+        <div class="connection-status">
+            <span class="status-dot"></span>
+            <span id="statusText">Подключение...</span>
+        </div>
+        <div class="header-user">
+            <span class="user-icon">👨‍🔬</span>
+            <span id="currentUserName">Гость</span>
+        </div>
+    </header>
+
+    <div class="garden-container">
+        <!-- Секция с растением -->
+        <div class="plant-section">
+            <div class="plant-display-area">
+                <div class="plant-info-panel">
+                    <h2>Объект: <span class="plant-name">ПРОЕКТ</span></h2>
+                    <div class="plant-stage" id="plantStageInfo">Стадия: Росток</div>
+                    <div class="plant-health">
+                        <span>💚 Адаптация:</span>
+                        <span id="adaptationScore">0%</span>
+                    </div>
+                </div>
+                <div class="plant-visual" id="plantDisplay">🌱</div>
+                <div class="environment-status">
+                    <p>🌡️ Среда: <strong>Агрессивная</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Панель учёных -->
+        <div class="scientists-panel">
+            <h2 class="panel-title">👥 Команда Лаборатории</h2>
+            <p class="panel-subtitle">Учёные, работающие над адаптацией</p>
+            
+            <div class="scientists-grid" id="scientistsGrid">
+                <!-- Сюда будут добавляться учёные -->
+                <div class="scientist-placeholder">
+                    <p>Загрузка списка учёных...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Панель удобрений -->
+        <div class="fertilizers-panel">
+            <h2 class="panel-title">🧪 Протоколы Улучшения</h2>
+            <p class="panel-subtitle">Выберите протокол для применения к объекту</p>
+            
+            <div class="fertilizers-grid">
+                <!-- Вода -->
+                <div class="fertilizer-card" data-fertilizer="water">
+                    <div class="card-icon">💧</div>
+                    <div class="card-name">Гидратация</div>
+                    <div class="card-desc">Базовое увлажнение</div>
+                    <div class="card-counter" id="waterCounter">0</div>
+                    <button class="btn-apply" onclick="increaseCounter('water')">
+                        <span>Применить</span>
+                        <span class="btn-plus">+1</span>
+                    </button>
+                </div>
+
+                <!-- Солнечный свет -->
+                <div class="fertilizer-card" data-fertilizer="sunlight">
+                    <div class="card-icon">☀️</div>
+                    <div class="card-name">Фотосинтез</div>
+                    <div class="card-desc">Энергетическая поддержка</div>
+                    <div class="card-counter" id="sunlightCounter">0</div>
+                    <button class="btn-apply" onclick="increaseCounter('sunlight')">
+                        <span>Применить</span>
+                        <span class="btn-plus">+1</span>
+                    </button>
+                </div>
+
+                <!-- Азот -->
+                <div class="fertilizer-card" data-fertilizer="nitrogen">
+                    <div class="card-icon">🧪</div>
+                    <div class="card-name">Азот N</div>
+                    <div class="card-desc">Стимулятор роста</div>
+                    <div class="card-counter" id="nitrogenCounter">0</div>
+                    <button class="btn-apply" onclick="increaseCounter('nitrogen')">
+                        <span>Применить</span>
+                        <span class="btn-plus">+1</span>
+                    </button>
+                </div>
+
+                <!-- Фосфор -->
+                <div class="fertilizer-card" data-fertilizer="phosphorus">
+                    <div class="card-icon">⚗️</div>
+                    <div class="card-name">Фосфор P</div>
+                    <div class="card-desc">Развитие корней</div>
+                    <div class="card-counter" id="phosphorusCounter">0</div>
+                    <button class="btn-apply" onclick="increaseCounter('phosphorus')">
+                        <span>Применить</span>
+                        <span class="btn-plus">+1</span>
+                    </button>
+                </div>
+
+                <!-- Калий -->
+                <div class="fertilizer-card" data-fertilizer="potassium">
+                    <div class="card-icon">🔮</div>
+                    <div class="card-name">Калий K</div>
+                    <div class="card-desc">Защита иммунитета</div>
+                    <div class="card-counter" id="potassiumCounter">0</div>
+                    <button class="btn-apply" onclick="increaseCounter('potassium')">
+                        <span>Применить</span>
+                        <span class="btn-plus">+1</span>
+                    </button>
+                </div>
+
+                <!-- Компост -->
+                <div class="fertilizer-card" data-fertilizer="compost">
+                    <div class="card-icon">🍂</div>
+                    <div class="card-name">Биогумус</div>
+                    <div class="card-desc">Органическая подкормка</div>
+                    <div class="card-counter" id="compostCounter">0</div>
+                    <button class="btn-apply" onclick="increaseCounter('compost')">
+                        <span>Применить</span>
+                        <span class="btn-plus">+1</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Общий счёт -->
+            <div class="total-section">
+                <div class="total-info">
+                    <h3>📊 Общий прогресс</h3>
+                    <div class="total-score" id="totalScore">0</div>
+                    <p>единиц адаптации</p>
+                </div>
+                <button class="btn-reset" onclick="resetAll()">
+                    <span>🔄</span>
+                    <span>Сбросить протокол</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="garden.js"></script>
+</body>
+</html>

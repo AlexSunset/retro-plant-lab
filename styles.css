@@ -1,0 +1,858 @@
+/* ============================================
+   ОБЩИЕ СТИЛИ
+   ============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto Mono', monospace;
+    background: #0a0a0f;
+    color: #e0e0e0;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* ============================================
+   ТИТУЛЬНАЯ СТРАНИЦА
+   ============================================ */
+.title-page {
+    background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+}
+
+.title-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    position: relative;
+}
+
+/* Анимированный фон */
+.background-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(102, 126, 234, 0.6);
+    border-radius: 50%;
+    animation: float 15s infinite;
+}
+
+.particle-1 { left: 10%; animation-delay: 0s; }
+.particle-2 { left: 30%; animation-delay: 3s; }
+.particle-3 { left: 50%; animation-delay: 6s; }
+.particle-4 { left: 70%; animation-delay: 9s; }
+.particle-5 { left: 90%; animation-delay: 12s; }
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100vh) scale(1);
+        opacity: 0;
+    }
+}
+
+/* Заголовок */
+.title-header {
+    text-align: center;
+    z-index: 1;
+    margin-bottom: 40px;
+}
+
+.logo-container {
+    margin-bottom: 20px;
+}
+
+.logo-icon {
+    font-size: 80px;
+    animation: pulse-logo 2s infinite;
+}
+
+@keyframes pulse-logo {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.title-main {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #667eea;
+    text-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+    margin-bottom: 10px;
+    letter-spacing: 4px;
+}
+
+.title-subtitle {
+    font-size: 1.2rem;
+    color: #98fb98;
+    letter-spacing: 2px;
+}
+
+/* Блок миссии */
+.mission-block {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 600px;
+    text-align: center;
+    z-index: 1;
+    margin-bottom: 30px;
+}
+
+.mission-icon {
+    font-size: 50px;
+    margin-bottom: 15px;
+}
+
+.mission-block h2 {
+    color: #667eea;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.mission-text {
+    line-height: 1.8;
+    color: #b0b0b0;
+}
+
+.mission-text strong {
+    color: #98fb98;
+}
+
+/* Статус подключения */
+.connection-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    font-size: 0.85rem;
+    color: #888;
+    z-index: 1;
+    margin-bottom: 30px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ffc107;
+    animation: pulse-dot 1.5s infinite;
+}
+
+.status-dot.connected {
+    background: #4caf50;
+    box-shadow: 0 0 10px #4caf50;
+}
+
+.status-dot.disconnected {
+    background: #f44336;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Кнопка входа */
+.action-block {
+    z-index: 1;
+    text-align: center;
+}
+
+.btn-enter {
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px 50px;
+    border-radius: 50px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 30px rgba(102, 126, 234, 0.4);
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.btn-enter.ready {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.btn-enter.ready:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.6);
+}
+
+.btn-icon {
+    font-size: 1.5rem;
+}
+
+.hint-text {
+    margin-top: 20px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Форма ввода имени */
+.name-input-block {
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.name-input-block label {
+    display: block;
+    color: #98fb98;
+    font-size: 1rem;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+}
+
+.name-input-block input {
+    width: 100%;
+    max-width: 350px;
+    padding: 15px 25px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(102, 126, 234, 0.3);
+    border-radius: 25px;
+    color: #e0e0e0;
+    font-size: 1.1rem;
+    font-family: 'Roboto Mono', monospace;
+    text-align: center;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.name-input-block input:focus {
+    border-color: #667eea;
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+}
+
+.name-input-block input::placeholder {
+    color: #666;
+}
+
+.name-input-block input.error {
+    border-color: #f44336;
+    animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    50% { transform: translateX(10px); }
+    75% { transform: translateX(-10px); }
+}
+
+/* Футер */
+.title-footer {
+    position: fixed;
+    bottom: 20px;
+    text-align: center;
+    color: #444;
+    font-size: 0.75rem;
+    z-index: 1;
+}
+
+.title-footer p {
+    margin-bottom: 5px;
+}
+
+.version {
+    color: #333 !important;
+}
+
+/* ============================================
+   СТРАНИЦА САДА
+   ============================================ */
+.garden-page {
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+.garden-header {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(102, 126, 234, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.btn-back {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 10px 20px;
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.btn-back:hover {
+    background: rgba(102, 126, 234, 0.2);
+    border-color: #667eea;
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    color: #e0e0e0;
+}
+
+.header-icon {
+    font-size: 1.3rem;
+}
+
+.header-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #98fb98;
+    font-size: 0.95rem;
+    background: rgba(152, 251, 152, 0.1);
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid rgba(152, 251, 152, 0.2);
+}
+
+.user-icon {
+    font-size: 1.2rem;
+}
+
+.garden-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+/* Секция с растением */
+.plant-section {
+    margin-bottom: 40px;
+}
+
+.plant-display-area {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.plant-info-panel {
+    margin-bottom: 30px;
+}
+
+.plant-info-panel h2 {
+    color: #667eea;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.plant-name {
+    color: #98fb98;
+    letter-spacing: 3px;
+}
+
+.plant-stage {
+    color: #b0b0b0;
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.plant-health {
+    color: #4caf50;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.plant-visual {
+    font-size: 180px;
+    line-height: 1;
+    margin: 30px 0;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 0 30px rgba(152, 251, 152, 0.3));
+}
+
+.environment-status {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    color: #888;
+    font-size: 0.95rem;
+}
+
+.environment-status strong {
+    color: #e0e0e0;
+}
+
+/* Панель удобрений */
+.fertilizers-panel {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: 20px;
+    padding: 30px;
+}
+
+.panel-title {
+    text-align: center;
+    color: #667eea;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.panel-subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.fertilizers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.fertilizer-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.fertilizer-card:hover {
+    background: rgba(102, 126, 234, 0.1);
+    border-color: rgba(102, 126, 234, 0.5);
+    transform: translateY(-5px);
+}
+
+.fertilizer-card.card-applied {
+    animation: card-pulse 0.3s ease;
+}
+
+@keyframes card-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.card-icon {
+    font-size: 50px;
+    margin-bottom: 15px;
+}
+
+.card-name {
+    color: #e0e0e0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.card-desc {
+    color: #666;
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+}
+
+.card-counter {
+    background: rgba(102, 126, 234, 0.2);
+    color: #667eea;
+    font-size: 2rem;
+    font-weight: 700;
+    padding: 10px 30px;
+    border-radius: 25px;
+    display: inline-block;
+    margin-bottom: 20px;
+    min-width: 80px;
+}
+
+.btn-apply {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-apply:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-plus {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 3px 10px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+}
+
+/* Общий счёт */
+.total-section {
+    background: linear-gradient(135deg, rgba(240, 147, 251, 0.2) 0%, rgba(245, 87, 108, 0.2) 100%);
+    border: 1px solid rgba(245, 87, 108, 0.3);
+    border-radius: 15px;
+    padding: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.total-info {
+    text-align: left;
+}
+
+.total-info h3 {
+    color: #e0e0e0;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.total-score {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #f5576c;
+    text-shadow: 0 0 20px rgba(245, 87, 108, 0.5);
+}
+
+.total-info p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.btn-reset {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e0e0e0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-reset:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Панель учёных */
+.scientists-panel {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 40px;
+}
+
+.scientists-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.scientist-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: 12px;
+    padding: 12px 18px;
+    transition: all 0.3s ease;
+}
+
+.scientist-card.is-me {
+    background: rgba(152, 251, 152, 0.1);
+    border-color: rgba(152, 251, 152, 0.4);
+}
+
+.scientist-icon {
+    font-size: 2rem;
+}
+
+.scientist-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.scientist-name {
+    color: #e0e0e0;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.badge-me {
+    background: rgba(152, 251, 152, 0.2);
+    color: #98fb98;
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+.scientist-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #666;
+    font-size: 0.8rem;
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #666;
+}
+
+.status-indicator.online {
+    background: #4caf50;
+    box-shadow: 0 0 8px #4caf50;
+    animation: pulse-online 2s infinite;
+}
+
+@keyframes pulse-online {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.scientist-placeholder {
+    width: 100%;
+    text-align: center;
+    padding: 30px;
+    color: #666;
+}
+
+/* Анимации счётчиков */
+@keyframes counterPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.counter-updated {
+    animation: counterPulse 0.3s ease;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .title-main {
+        font-size: 2rem;
+        letter-spacing: 2px;
+    }
+    
+    .logo-icon {
+        font-size: 60px;
+    }
+    
+    .plant-visual {
+        font-size: 120px;
+    }
+    
+    .fertilizers-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .total-section {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .total-info {
+        text-align: center;
+    }
+    
+    .garden-header {
+        padding: 15px;
+    }
+    
+    .header-title span {
+        display: none;
+    }
+}
+
+/* ============================================
+   СТРАНИЦА ХРАНИЛИЩА ОБРАЗЦОВ
+   ============================================ */
+.samples-page {
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+.samples-header {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(102, 126, 234, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.samples-header .header-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    color: #e0e0e0;
+}
+
+.header-spacer {
+    width: 100px;
+}
+
+.samples-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.samples-intro {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    border-radius: 20px;
+}
+
+.samples-intro h1 {
+    color: #667eea;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.samples-intro p {
+    color: #98fb98;
+    font-size: 1.1rem;
+}
+
+.samples-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.sample-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: 15px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sample-card:hover {
+    background: rgba(102, 126, 234, 0.1);
+    border-color: rgba(102, 126, 234, 0.5);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+}
+
+.sample-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sample-key {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.sample-link {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    opacity: 0.7;
+}
+
+.sample-link:hover {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+.sample-title {
+    color: #e0e0e0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .samples-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .samples-intro h1 {
+        font-size: 1.5rem;
+    }
+}
