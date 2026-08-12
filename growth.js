@@ -19,7 +19,15 @@ firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
 // Получаем имя учёного
-const scientistName = localStorage.getItem('scientistName') || 'Аноним';
+const scientistName = localStorage.getItem('scientistName');
+
+// Проверка имени
+if (!scientistName || scientistName === 'undefined' || scientistName === 'null') {
+    console.error('❌ Нет имени учёного, возврат на титульную');
+    window.location.href = 'index.html';
+    return;
+}
+
 document.getElementById('scientistName').textContent = `👨‍🔬 ${scientistName}`;
 
 let currentProtocolId = null;

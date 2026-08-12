@@ -52,8 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('🧫 Отсек почвы загружен');
     
     scientistName = localStorage.getItem('scientistName');
-    if (!scientistName) {
-        console.warn('⚠️ Имя не найдено, возврат на титульную');
+    
+    // Проверка имени
+    if (!scientistName || scientistName === 'undefined' || scientistName === 'null') {
+        console.error('❌ Нет имени учёного, возврат на титульную');
         window.location.href = 'index.html';
         return;
     }

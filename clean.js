@@ -19,10 +19,19 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
 // Получаем имя учёного
-const scientistName = localStorage.getItem('scientistName') || 'Аноним';
-const sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+const scientistName = localStorage.getItem('scientistName');
 
 console.log('🧬 Очистка генома загружена');
+
+// Проверка имени
+if (!scientistName || scientistName === 'undefined' || scientistName === 'null') {
+    console.error('❌ Нет имени учёного, возврат на титульную');
+    window.location.href = 'index.html';
+    return;
+}
+
+const sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
 console.log(`👨‍🔬 Учёный: ${scientistName} Session: ${sessionId}`);
 
 // Обновляем имя в шапке

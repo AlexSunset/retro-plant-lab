@@ -46,7 +46,15 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('🧫 Хранилище Образцов загружено');
     
     // Получаем имя учёного
-    currentUserName = localStorage.getItem('scientistName') || 'Аноним';
+    currentUserName = localStorage.getItem('scientistName');
+    
+    // Проверка имени
+    if (!currentUserName || currentUserName === 'undefined' || currentUserName === 'null') {
+        console.error('❌ Нет имени учёного, возврат на титульную');
+        window.location.href = 'index.html';
+        return;
+    }
+    
     currentSessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     
     console.log(`👨‍🔬 Учёный в хранилище: ${currentUserName} | Session: ${currentSessionId}`);
