@@ -27,16 +27,13 @@ console.log('🧬 Очистка генома загружена');
 if (!scientistName || scientistName === 'undefined' || scientistName === 'null') {
     console.error('❌ Нет имени учёного, возврат на титульную');
     window.location.href = 'index.html';
-    return; // Останавливаем выполнение
 }
 
-// Весь код после проверки
-const sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-
+// Основной код
+document.addEventListener('DOMContentLoaded', () => {
+    const sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
     console.log(`👨‍🔬 Учёный: ${scientistName} Session: ${sessionId}`);
-
-    // Обновляем имя в шапке
-    document.getElementById('currentUserName').textContent = scientistName;
 
     // Индикатор подключения
     function updateConnectionStatus(connected) {
@@ -121,7 +118,7 @@ const sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).sub
         
         db.ref('clean/defects').on('value', (snapshot) => {
             const defects = snapshot.val() || {};
-            const container = document.getElementById('defectsList');
+            const container = document.getElementById('cleanGrid');
             
             console.log(`📝 Получено дефектов: ${Object.keys(defects).length}`);
             
@@ -355,5 +352,4 @@ const sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).sub
             });
         });
     });
-
-} // Конец else
+});

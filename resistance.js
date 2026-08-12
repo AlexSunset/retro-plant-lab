@@ -21,15 +21,18 @@ const database = firebase.database();
 // Получаем имя учёного
 const scientistName = localStorage.getItem('scientistName');
 
-// Проверка имени
-if (!scientistName || scientistName === 'undefined' || scientistName === 'null') {
-    console.error('❌ Нет имени учёного, возврат на титульную');
-    window.location.href = 'index.html';
-    return; // Останавливаем выполнение
-}
-
-// Весь код после проверки
-document.getElementById('userDisplay').textContent = `👨‍🔬 ${scientistName}`;
+// Основной код
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('🛡️ Отделение резистентности загружено');
+    
+    // Проверка имени
+    if (!scientistName || scientistName === 'undefined' || scientistName === 'null') {
+        console.error('❌ Нет имени учёного, возврат на титульную');
+        window.location.href = 'index.html';
+        return;
+    }
+    
+    console.log('👨‍🔬 Учёный в отделении:', scientistName);
 
     // ============================================
     // Утилиты
@@ -169,7 +172,7 @@ document.getElementById('userDisplay').textContent = `👨‍🔬 ${scientistNam
     // Загрузка и отображение отзывов
     // ============================================
 
-    const reviewsGrid = document.getElementById('reviewsGrid');
+    const reviewsGrid = document.getElementById('resistanceGrid');
 
     // Слушаем изменения в Firebase
     database.ref('resistance').on('value', (snapshot) => {
@@ -187,7 +190,4 @@ document.getElementById('userDisplay').textContent = `👨‍🔬 ${scientistNam
         reviewsGrid.innerHTML = sorted.map(([id, review]) => renderReview(id, review)).join('');
     });
 
-    console.log('🛡️ Отделение резистентности загружено');
-    console.log('👨‍🔬 Учёный в отделении:', scientistName);
-
-} // Конец else
+});

@@ -21,15 +21,17 @@ const database = firebase.database();
 // Получаем имя учёного
 const scientistName = localStorage.getItem('scientistName');
 
-// Проверка имени
-if (!scientistName || scientistName === 'undefined' || scientistName === 'null') {
-    console.error('❌ Нет имени учёного, возврат на титульную');
-    window.location.href = 'index.html';
-    return; // Останавливаем выполнение
-}
-
-// Весь код после проверки
-document.getElementById('scientistName').textContent = `👨‍🔬 ${scientistName}`;
+// Основной код
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('📈 Модуляция Роста загружена');
+    console.log('👨‍🔬 Учёный в модуляции:', scientistName);
+    
+    // Проверка имени
+    if (!scientistName || scientistName === 'undefined' || scientistName === 'null') {
+        console.error('❌ Нет имени учёного, возврат на титульную');
+        window.location.href = 'index.html';
+        return;
+    }
 
     let currentProtocolId = null;
 
@@ -293,7 +295,7 @@ document.getElementById('scientistName').textContent = `👨‍🔬 ${scientistN
     // Загрузка и отображение протоколов
     // ============================================
 
-    const protocolsGrid = document.getElementById('protocolsGrid');
+    const protocolsGrid = document.getElementById('growthGrid');
 
     // Слушаем изменения в Firebase
     database.ref('growth').on('value', (snapshot) => {
@@ -311,7 +313,4 @@ document.getElementById('scientistName').textContent = `👨‍🔬 ${scientistN
         protocolsGrid.innerHTML = sorted.map(([id, protocol]) => renderProtocol(id, protocol)).join('');
     });
 
-    console.log('📈 Модуляция Роста загружена');
-    console.log('👨‍🔬 Учёный в модуляции:', scientistName);
-
-} // Конец else
+});
