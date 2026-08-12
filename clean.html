@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Очистка Генома | Ретро</title>
+    <title>Очистка Генома | T-KAT Retro</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,80 +11,79 @@
 </head>
 <body class="clean-page">
     <!-- Верхняя панель -->
-    <header class="clean-header">
-        <div class="header-left">
-            <a href="garden.html" class="btn-back">← В лабораторию</a>
-            <button class="btn-add-task" id="defectModalBtn" style="margin-left: 15px;">+ Дефектный геном</button>
-        </div>
+    <header class="samples-header">
+        <a href="garden.html" class="btn-back">← В лабораторию</a>
         <div class="header-title">
             <span class="header-icon">🧬</span>
             <span>Очистка Генома</span>
         </div>
-        <div class="header-right">
-            <div class="connection-status">
-                <span class="status-dot"></span>
-                <span id="statusText">Подключение...</span>
-            </div>
-            <div class="header-user">
-                <span class="user-icon">👨‍🔬</span>
-                <span id="currentUserName">Гость</span>
-            </div>
-        </div>
+        <button class="btn-add-task" id="addDefectBtn" title="Добавить дефект">+ Дефектный геном</button>
     </header>
 
-    <div class="clean-container">
-        <!-- Вступление -->
-        <div class="clean-intro">
+    <div class="samples-container">
+        <!-- Описание -->
+        <div class="samples-intro">
             <h1>🧬 Очистка Генома</h1>
-            <p>Идентифицируем дефектный геном и находим пути его извлечения</p>
-            <p class="clean-hint">Каждая проблема содержит стратегию решения</p>
+            <p>Выявляем проблемные моменты и находим пути их решения</p>
+            <p class="samples-hint">💡 Добавляйте дефектные гены и предлагайте стратегии извлечения</p>
         </div>
 
         <!-- Список дефектов -->
-        <div class="defects-container" id="defectsList">
-            <div class="loading-genomes">Загрузка дефектных геномов...</div>
+        <div class="clean-list" id="cleanGrid">
+            <!-- Дефекты будут добавлены через JS -->
         </div>
     </div>
 
-    <!-- Модальное окно: Дефектный геном -->
+    <!-- Модальное окно для дефекта -->
     <div class="modal-overlay" id="defectModal">
         <div class="modal-container">
             <div class="modal-header">
-                <h3>🔴 Добавить Дефектный Геном</h3>
-                <button class="modal-close" onclick="closeModal('defectModal')">&times;</button>
+                <h3>🔴 Добавить дефектный геном</h3>
+                <button class="modal-close" id="closeDefectModal">&times;</button>
             </div>
             <div class="modal-body">
-                <p class="modal-hint">Опишите проблему или негативный момент</p>
-                <textarea id="defectText" placeholder="Что пошло не так? Какие были трудности?" maxlength="500"></textarea>
-                <div class="char-count" id="defectCharCount">0/500</div>
+                <div class="form-group">
+                    <label for="defectText">Описание проблемы</label>
+                    <textarea 
+                        id="defectText" 
+                        placeholder="Опишите негативный момент..."
+                        maxlength="1000"
+                        rows="4"
+                    ></textarea>
+                </div>
             </div>
             <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeModal('defectModal')">Отмена</button>
-                <button class="btn-submit">Добавить</button>
+                <button class="btn-cancel" id="cancelDefectBtn">Отмена</button>
+                <button class="btn-submit" id="submitDefectBtn">Добавить дефект</button>
             </div>
         </div>
     </div>
 
-    <!-- Модальное окно: Стратегия извлечения -->
+    <!-- Модальное окно для стратегии -->
     <div class="modal-overlay" id="strategyModal">
         <div class="modal-container">
             <div class="modal-header">
-                <h3>🟢 Добавить Стратегию Извлечения</h3>
-                <button class="modal-close" onclick="closeModal('strategyModal')">&times;</button>
+                <h3>🟢 Добавить стратегию извлечения</h3>
+                <button class="modal-close" id="closeStrategyModal">&times;</button>
             </div>
             <div class="modal-body">
-                <p class="modal-hint">Предложите решение или путь преодоления</p>
-                <textarea id="strategyText" placeholder="Как можно решить эту проблему?" maxlength="500"></textarea>
-                <div class="char-count" id="strategyCharCount">0/500</div>
+                <div class="form-group">
+                    <label for="strategyText">Описание решения</label>
+                    <textarea 
+                        id="strategyText" 
+                        placeholder="Предложите путь решения..."
+                        maxlength="1000"
+                        rows="4"
+                    ></textarea>
+                </div>
             </div>
             <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeModal('strategyModal')">Отмена</button>
-                <button class="btn-submit">Добавить</button>
+                <button class="btn-cancel" id="cancelStrategyBtn">Отмена</button>
+                <button class="btn-submit" id="submitStrategyBtn">Добавить стратегию</button>
             </div>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <script src="clean.js"></script>

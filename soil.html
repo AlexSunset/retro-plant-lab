@@ -11,7 +11,7 @@
 </head>
 <body class="soil-page">
     <!-- Верхняя панель -->
-    <header class="soil-header">
+    <header class="samples-header">
         <a href="garden.html" class="btn-back">← В лабораторию</a>
         <div class="header-title">
             <span class="header-icon">🌱</span>
@@ -20,16 +20,16 @@
         <div class="header-spacer"></div>
     </header>
 
-    <div class="soil-container">
+    <div class="samples-container">
         <!-- Описание -->
         <div class="samples-intro">
             <h1>🌱 Отсек с Образцами Почвы</h1>
-            <p>Договорённости с предыдущих ретро</p>
-            <p class="samples-hint">💡 Оставляйте комментарии по статусу выполнения</p>
+            <p>Договорённости с предыдущих ретро и их статус выполнения</p>
+            <p class="samples-hint">💡 Оставляйте комментарии к каждой договорённости</p>
         </div>
 
         <!-- Список договорённостей -->
-        <div class="soil-grid" id="soilGrid">
+        <div class="samples-grid" id="soilGrid">
             <!-- Договорённости будут добавлены через JS -->
         </div>
     </div>
@@ -45,7 +45,7 @@
                 <div class="task-info" id="modalAgreementInfo"></div>
                 <textarea 
                     id="commentText" 
-                    placeholder="Опишите статус или инсайт... (обновление, проблема, достижение)"
+                    placeholder="Опишите ваш комментарий..."
                     maxlength="500"
                     rows="4"
                 ></textarea>

@@ -1584,13 +1584,9 @@ body {
 }
 
 /* ============================================
-   СТРАНИЦА ОЧИСТКИ ГЕНОМА
+   ЕДИНЫЙ СТИЛЬ ДЛЯ ВЕРХНЕЙ ПАНЕЛИ (как в хранилище)
    ============================================ */
-.clean-page {
-    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-}
-
-.clean-header {
+.samples-header {
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(10px);
     padding: 15px 30px;
@@ -1603,24 +1599,25 @@ body {
     z-index: 100;
 }
 
-.clean-header .header-left {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.clean-header .header-title {
+.samples-header .header-title {
     display: flex;
     align-items: center;
     gap: 10px;
     font-size: 1.1rem;
     color: #e0e0e0;
+    justify-content: center;
+    flex: 1;
 }
 
-.clean-header .header-right {
-    display: flex;
-    align-items: center;
-    gap: 20px;
+.samples-header .header-spacer {
+    width: 150px;
+}
+
+/* ============================================
+   СТРАНИЦА ОЧИСТКИ ГЕНОМА
+   ============================================ */
+.clean-page {
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
 }
 
 .clean-container {
@@ -1866,39 +1863,6 @@ body {
     background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
 }
 
-.growth-header {
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
-    padding: 15px 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(102, 126, 234, 0.3);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.growth-header .header-left {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.growth-header .header-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.1rem;
-    color: #e0e0e0;
-}
-
-.growth-header .header-right {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
 .growth-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -1938,52 +1902,12 @@ body {
     gap: 25px;
 }
 
-/* Стили наследуются от clean-page (defect-card, strategies-section, и т.д.) */
-
 /* ============================================
    СТРАНИЦА ОТДЕЛЕНИЯ РЕЗИСТЕНТНОСТИ
    ============================================ */
 .resistance-page {
     background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
     min-height: 100vh;
-}
-
-.resistance-header {
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
-    padding: 15px 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(102, 126, 234, 0.3);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.resistance-header .header-left {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.resistance-header .header-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.1rem;
-    color: #e0e0e0;
-}
-
-.resistance-header .header-right {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.user-display {
-    color: #98fb98;
-    font-size: 0.95rem;
 }
 
 .resistance-container {

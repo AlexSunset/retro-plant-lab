@@ -3,71 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Отделение Резистентности | Ретро Адаптация</title>
+    <title>Отделение Резистентности | T-KAT Retro</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="resistance-page">
-    <!-- Шапка -->
-    <header class="resistance-header">
-        <div class="header-left">
-            <a href="garden.html" class="btn-back" title="Вернуться в лабораторию">
-                ← На базу
-            </a>
-            <div class="header-title">
-                <span class="icon">🛡️</span>
-                <span>Отделение Резистентности</span>
-            </div>
+    <!-- Верхняя панель -->
+    <header class="samples-header">
+        <a href="garden.html" class="btn-back">← В лабораторию</a>
+        <div class="header-title">
+            <span class="header-icon">🛡️</span>
+            <span>Отделение Резистентности</span>
         </div>
-        <div class="header-right">
-            <span id="userDisplay" class="user-display"></span>
-        </div>
+        <button class="btn-add-task" id="addReviewBtn" title="Добавить отзыв">+ Стимуляция жизненных сил</button>
     </header>
 
-    <!-- Основной контент -->
-    <main class="resistance-container">
-        <div class="resistance-intro">
-            <h1>🌿 Укрепление Иммунитета</h1>
+    <div class="samples-container">
+        <!-- Описание -->
+        <div class="samples-intro">
+            <h1>🛡️ Отделение Резистентности</h1>
             <p>Вдохновляющие отзывы и благодарность коллегам</p>
+            <p class="samples-hint">💡 Делитесь приятными словами о работе команды</p>
         </div>
 
-        <!-- Кнопка добавления -->
-        <button id="reviewModalBtn" class="btn-add-protocol">
-            <span class="btn-icon">💚</span>
-            <span>+ Стимуляция жизненных сил</span>
-        </button>
-
-        <!-- Сетка отзывов -->
-        <div id="reviewsGrid" class="reviews-grid">
-            <div class="loading-data">Загрузка отзывов...</div>
+        <!-- Список отзывов -->
+        <div class="resistance-list" id="resistanceGrid">
+            <!-- Отзывы будут добавлены через JS -->
         </div>
-    </main>
+    </div>
 
     <!-- Модальное окно для отзыва -->
-    <div id="reviewModal" class="modal-overlay">
+    <div class="modal-overlay" id="reviewModal">
         <div class="modal-container">
             <div class="modal-header">
-                <h2>💚 Стимуляция жизненных сил</h2>
-                <button id="modalClose" class="modal-close">×</button>
+                <h3>💪 Стимуляция жизненных сил</h3>
+                <button class="modal-close" id="closeReviewModal">&times;</button>
             </div>
             <div class="modal-body">
-                <p class="modal-hint">Поделитесь благодарностью или вдохновляющим отзывом о коллеге</p>
-                <textarea 
-                    id="reviewText" 
-                    placeholder="Хочу поблагодарить коллегу за..." 
-                    maxlength="1000"
-                ></textarea>
-                <div class="char-count">
-                    <span id="reviewCharCount">0</span> / 1000
+                <div class="form-group">
+                    <label for="reviewText">Текст отзыва</label>
+                    <textarea 
+                        id="reviewText" 
+                        placeholder="Напишите вдохновляющий отзыв о коллеге..."
+                        maxlength="1000"
+                        rows="4"
+                    ></textarea>
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="cancelBtn" class="btn-cancel">Отмена</button>
-                <button id="submitReviewBtn" class="btn-submit">Добавить</button>
+                <button class="btn-cancel" id="cancelReviewBtn">Отмена</button>
+                <button class="btn-submit" id="submitReviewBtn">Добавить отзыв</button>
             </div>
         </div>
     </div>
 
-    <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <script src="resistance.js"></script>
