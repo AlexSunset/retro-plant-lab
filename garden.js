@@ -342,6 +342,30 @@ function resetAll() {
             console.error('❌ Ошибка удаления задач:', error);
         });
         
+        // Сброс дефектов и стратегий (очистка генома)
+        const cleanRef = database.ref('clean');
+        cleanRef.remove().then(() => {
+            console.log('✅ Очистка генома сброшена');
+        }).catch((error) => {
+            console.error('❌ Ошибка удаления очистки:', error);
+        });
+        
+        // Сброс протоколов роста (модуляция роста)
+        const growthRef = database.ref('growth');
+        growthRef.remove().then(() => {
+            console.log('✅ Модуляция роста сброшена');
+        }).catch((error) => {
+            console.error('❌ Ошибка удаления роста:', error);
+        });
+        
+        // Сброс отзывов (резистентность)
+        const resistanceRef = database.ref('resistance');
+        resistanceRef.remove().then(() => {
+            console.log('✅ Резистентность сброшена');
+        }).catch((error) => {
+            console.error('❌ Ошибка удаления отзывов:', error);
+        });
+        
         // Сброс учёных
         const scientistsRef = database.ref(`rooms/${ROOM_ID}/scientists`);
         scientistsRef.remove().then(() => {
