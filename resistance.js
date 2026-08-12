@@ -30,30 +30,49 @@ console.log('🛡️ Отделение резистентности загру�
 console.log('👨‍🔬 Учёный в отделении:', scientistName);
 
 // ============================================
+// ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
+// ============================================
+
+let reviewModal, reviewText, reviewCharCount, reviewsGrid;
+
+// ============================================
+// ИНИЦИАЛИЗАЦИЯ ПОСЛЕ ЗАГРУЗКИ DOM
+// ============================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    reviewModal = document.getElementById('reviewModal');
+    reviewText = document.getElementById('reviewText');
+    reviewCharCount = document.getElementById('reviewCharCount');
+    reviewsGrid = document.getElementById('reviewsGrid');
+    
+    // Закрытие по клику вне окна
+    reviewModal.addEventListener('click', (e) => {
+        if (e.target === reviewModal) {
+            closeReviewModal();
+        }
+    });
+    
+    // Отображение имени пользователя
+    document.getElementById('userDisplay').textContent = `👤 ${scientistName}`;
+    
+    // Подключение к Firebase
+    connectToFirebase();
+});
+
+// ============================================
 // МОДАЛЬНОЕ ОКНО
 // ============================================
 
-const reviewModal = document.getElementById('reviewModal');
-const reviewText = document.getElementById('reviewText');
-const reviewCharCount = document.getElementById('reviewCharCount');
-
-function openReviewModal() {
+window.openReviewModal = function() {
     reviewText.value = '';
     reviewCharCount.textContent = '0';
     reviewModal.classList.add('modal-active');
     reviewText.focus();
-}
+};
 
-function closeReviewModal() {
+window.closeReviewModal = function() {
     reviewModal.classList.remove('modal-active');
-}
-
-// Закрытие по клику вне окна
-reviewModal.addEventListener('click', (e) => {
-    if (e.target === reviewModal) {
-        closeReviewModal();
-    }
-});
+};
 
 // Обновление счётчика символов
 window.updateCharCount = function(textareaId, countId) {
@@ -130,8 +149,6 @@ function timeAgo(timestamp) {
 // ОТОБРАЖЕНИЕ ОТЗЫВОВ
 // ============================================
 
-const reviewsGrid = document.getElementById('reviewsGrid');
-
 function renderReviews(reviews) {
     reviewsGrid.innerHTML = '';
     
@@ -186,18 +203,17 @@ function escapeHtml(text) {
 // ПОДКЛЮЧЕНИЕ К FIREBASE
 // ============================================
 
-const resistanceRef = database.ref('resistance');
-
-resistanceRef.on('value', (snapshot) => {
-    const data = snapshot.val();
+function connectToFirebase() {
+    const resistanceRef = database.ref('resistance');
     
-    if (!data) {
-        reviewsGrid.innerHTML = '<div class="no-data">Пока нет отзывов. Будьте первым! 💚</div>';
-        return;
-    }
-    
-    renderReviews(Object.entries(data));
-});
-
-// Отображение имени пользователя
-document.getElementById('userDisplay').textContent = `👤 ${scientistName}`;
+    resistanceRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        
+        if (!data) {
+            reviewsGrid.innerHTML = '<div class="no-data">Пока нет отзывов. Будьте первым! 💚</div>';
+            return;
+        }
+        
+        renderReviews(Object.entries(data));
+    });
+}
