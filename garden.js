@@ -464,8 +464,13 @@ function updateScientistsList(scientists) {
     
     // Загружаем аватарки для всех учёных
     const equipRef = database.ref('equip');
+    console.log('🔍 Загрузка аватарок, sessionId:', sessionId);
     equipRef.once('value', (snapshot) => {
         const allAvatars = snapshot.val() || {};
+        
+        console.log('🔍 equip данные:', allAvatars);
+        console.log('🔍 Мой sessionId:', sessionId);
+        console.log('🔍 scientists:', scientists);
         
         // Сопоставляем sessionId с аватаркой
         const avatarMap = {};
@@ -473,6 +478,7 @@ function updateScientistsList(scientists) {
             const equipData = allAvatars[sessionIdKey];
             if (equipData && equipData.avatar) {
                 avatarMap[sessionIdKey] = equipData.avatar.emoji;
+                console.log('🎭 Аватарка для', sessionIdKey, ':', equipData.avatar.emoji);
             }
         });
         
@@ -481,6 +487,7 @@ function updateScientistsList(scientists) {
         grid.innerHTML = scientists.map((s, i) => {
             const isMe = s.id === sessionId;
             const avatar = avatarMap[s.id] || icons[i % icons.length];
+            console.log('👤 Учёный', s.name, '| sessionId:', s.id, '| avatar:', avatar, '| isMe:', isMe);
             return `
                 <div class="scientist-card ${isMe ? 'is-me' : ''}">
                     <div class="scientist-icon">${avatar}</div>
