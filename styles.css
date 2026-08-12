@@ -1262,37 +1262,38 @@ body {
 }
 
 .agreement-header {
-    display: flex;
-    gap: 15px;
+    display: grid;
+    grid-template-columns: 40px 1fr auto;
+    gap: 12px;
     align-items: flex-start;
     margin-bottom: 10px;
 }
 
 .agreement-icon {
-    font-size: 40px;
-    flex-shrink: 0;
+    font-size: 36px;
+    text-align: center;
 }
 
-.agreement-title {
-    flex-grow: 1;
+.agreement-content {
     min-width: 0;
 }
 
-.agreement-title h3 {
+.agreement-content h3 {
     color: #667eea;
-    font-size: 1rem;
-    margin-bottom: 8px;
+    font-size: 0.85rem;
+    margin: 0 0 6px 0;
+    font-weight: 600;
 }
 
-.agreement-title p {
+.agreement-content p {
     color: #e0e0e0;
-    font-size: 0.95rem;
-    line-height: 1.5;
+    font-size: 0.85rem;
+    line-height: 1.35;
     word-wrap: break-word;
+    margin: 0;
 }
 
 .agreement-actions {
-    flex-shrink: 0;
     display: flex;
     align-items: flex-start;
 }
