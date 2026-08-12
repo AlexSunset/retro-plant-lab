@@ -139,7 +139,8 @@ let heartbeatTimer = null;
 
 function trackScientists() {
     console.log('👥 Отслеживание учёных, sessionId:', sessionId);
-    console.log('🔍 Проверка имени:', scientistName);
+    console.log('🔍 Проверка имени:', JSON.stringify(scientistName), 'type:', typeof scientistName);
+    console.log('🔍 localStorage scientistName:', JSON.stringify(localStorage.getItem('scientistName')));
     
     // Проверка: если имени нет, не записываем и не создаём сессию
     if (!scientistName || scientistName === 'undefined' || scientistName === 'null' || scientistName === '') {
@@ -157,11 +158,17 @@ function trackScientists() {
         lastSeen: Date.now()
     };
     
-    console.log('📝 Запись учёного:', myData);
+    console.log('📝 Запись учёного ПЕРЕД set():', myData);
+    console.log('📝 sessionId:', sessionId);
     
     // Записываем себя
     myRef.set(myData).then(() => {
         console.log('✅ Я записан в список учёных');
+        // Проверяем, что записалось
+        myRef.once('value').then(snapshot => {
+            const data = snapshot.val();
+            console.log('📖 Проверка записи после set():', data);
+        });
     }).catch((error) => {
         console.error('❌ Ошибка записи:', error);
     });
