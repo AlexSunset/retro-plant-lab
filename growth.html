@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Модуляция Роста | Ретросинтез</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="growth-page">
+        <!-- Шапка -->
+        <header class="growth-header">
+            <div class="header-left">
+                <div class="header-title">
+                    <span class="header-icon">📈</span>
+                    <span>Модуляция Роста</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <span id="scientistName" class="scientist-name"></span>
+                <a href="garden.html" class="btn-back">← В лабораторию</a>
+                <button class="btn-add-task" id="protocolModalBtn">+ Протокол роста</button>
+            </div>
+        </header>
+
+        <!-- Основной контент -->
+        <main class="growth-container">
+            <div class="growth-intro">
+                <h1>Предложения по улучшению</h1>
+                <p>Делитесь идеями по оптимизации процессов, подходов и методик</p>
+                <p class="growth-hint">💡 Каждый протокол можно обсудить в комментариях</p>
+            </div>
+
+            <!-- Контейнер протоколов -->
+            <div class="protocols-container" id="protocolsGrid">
+                <div class="loading">Загрузка протоколов...</div>
+            </div>
+        </main>
+
+        <!-- Модальное окно для добавления протокола -->
+        <div class="modal-overlay" id="protocolModal">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h2>📈 Новый протокол роста</h2>
+                    <button class="modal-close" id="modalClose">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <textarea 
+                        id="protocolText" 
+                        placeholder="Опишите ваше предложение по улучшению процесса, подхода или методики..." 
+                        maxlength="1000"
+                        rows="5"
+                    ></textarea>
+                    <div class="char-count"><span id="protocolCharCount">0</span>/1000</div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-cancel" id="cancelBtn">Отмена</button>
+                    <button class="btn-submit" id="submitProtocolBtn">Добавить протокол</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальное окно для комментария -->
+        <div class="modal-overlay" id="commentModal">
+            <div class="modal-container">
+                <div class="modal-header">
+                    <h2>💬 Добавить комментарий</h2>
+                    <button class="modal-close" id="commentModalClose">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-protocol-info" id="modalProtocolInfo"></p>
+                    <textarea 
+                        id="commentText" 
+                        placeholder="Ваш комментарий, вопрос или поддержка идеи..." 
+                        maxlength="500"
+                        rows="4"
+                    ></textarea>
+                    <div class="char-count"><span id="commentCharCount">0</span>/500</div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-cancel" id="commentCancelBtn">Отмена</button>
+                    <button class="btn-submit" id="submitCommentBtn">Отправить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="growth.js"></script>
+</body>
+</html>

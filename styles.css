@@ -1859,6 +1859,102 @@ body {
     padding: 40px;
 }
 
+/* ============================================
+   СТРАНИЦА МОДУЛЯЦИИ РОСТА
+   ============================================ */
+.growth-page {
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+.growth-header {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(102, 126, 234, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.growth-header .header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.growth-header .header-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    color: #e0e0e0;
+}
+
+.growth-header .header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.growth-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.growth-intro {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    border-radius: 20px;
+}
+
+.growth-intro h1 {
+    color: #667eea;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.growth-intro p {
+    color: #98fb98;
+    font-size: 1.1rem;
+}
+
+.growth-hint {
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+/* Контейнер протоколов */
+.protocols-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* Стили наследуются от clean-page (defect-card, strategies-section, и т.д.) */
+
+/* Адаптивность для модуляции */
+@media (max-width: 768px) {
+    .growth-header {
+        padding: 15px;
+    }
+    
+    .growth-header .header-title span {
+        display: none;
+    }
+    
+    .growth-intro h1 {
+        font-size: 1.5rem;
+    }
+}
+
 /* Адаптивность для очистки */
 @media (max-width: 768px) {
     .clean-header {
