@@ -36,7 +36,16 @@ const tasks = [
 ];
 
 // Текущий пользователь
-let currentUserName = localStorage.getItem('retroUserName') || 'Аноним';
+const storedName = localStorage.getItem('scientistName');
+let currentUserName = storedName || 'Аноним';
+
+if (!storedName) {
+    console.warn('⚠️ Имя не найдено в localStorage. Перенаправление на титульную страницу...');
+    // Можно раскомментировать для строгой проверки:
+    // window.location.href = 'index.html';
+}
+
+console.log(`👨‍🔬 Учёный в хранилище: ${currentUserName}`);
 let currentTaskKey = null;
 
 // ============================================
@@ -117,15 +126,33 @@ function subscribeToSamples(taskKey) {
         samplesArray.forEach(sample => {
             const sampleEl = document.createElement('div');
             sampleEl.className = 'sample-item';
+            
+            // Проверка: может ли текущий пользователь удалить этот образец
+            const canDelete = (sample.author === currentUserName) && 
+                              (Date.now() - sample.timestamp < 24 * 60 * 60 * 1000); // 24 часа
+            
             sampleEl.innerHTML = `
                 <div class="sample-author">
                     <span class="sample-icon">🧪</span>
                     <span class="sample-name">${escapeHtml(sample.author)}</span>
                     <span class="sample-date">${formatDate(sample.timestamp)}</span>
+                    ${canDelete ? `<button class="btn-delete-sample" data-task="${taskKey}" data-sample-id="${sample.id}" title="Удалить образец">🗑️</button>` : ''}
                 </div>
                 <div class="sample-text">${escapeHtml(sample.text)}</div>
             `;
             container.appendChild(sampleEl);
+        });
+
+        // Обработчики кнопок удаления
+        container.querySelectorAll('.btn-delete-sample').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const taskKey = btn.dataset.task;
+                const sampleId = btn.dataset.sampleId;
+                if (confirm('Удалить этот образец?')) {
+                    deleteSample(taskKey, sampleId);
+                }
+            });
         });
     });
 }
@@ -142,6 +169,16 @@ function addSample(taskKey, text) {
         console.log('✅ Образец добавлен');
     }).catch((error) => {
         console.error('❌ Ошибка добавления образца:', error);
+    });
+}
+
+function deleteSample(taskKey, sampleId) {
+    const sampleRef = db.ref(`samples/${taskKey}/${sampleId}`);
+    
+    sampleRef.remove().then(() => {
+        console.log('✅ Образец удалён');
+    }).catch((error) => {
+        console.error('❌ Ошибка удаления образца:', error);
     });
 }
 

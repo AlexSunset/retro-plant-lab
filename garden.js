@@ -305,10 +305,27 @@ function increaseCounter(fertilizer) {
 function resetAll() {
     if (!isConnected) return;
     
-    if (confirm('Сбросить все протоколы?')) {
+    if (confirm('⚠️ Сбросить ВСЕ протоколы и образцы? Это действие необратимо!')) {
+        // Сброс счётчиков
         Object.keys(localCounters).forEach(k => localCounters[k] = 0);
         updateUI();
         updateFirebase();
+        
+        // Сброс всех образцов
+        const samplesRef = database.ref('samples');
+        samplesRef.remove().then(() => {
+            console.log('✅ Все образцы удалены');
+        }).catch((error) => {
+            console.error('❌ Ошибка удаления образцов:', error);
+        });
+        
+        // Сброс учёных
+        const scientistsRef = database.ref(`rooms/${ROOM_ID}/scientists`);
+        scientistsRef.remove().then(() => {
+            console.log('✅ Список учёных сброшен');
+        }).catch((error) => {
+            console.error('❌ Ошибка удаления учёных:', error);
+        });
     }
 }
 
