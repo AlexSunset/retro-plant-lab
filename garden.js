@@ -32,6 +32,7 @@ let isConnected = false;
 let isUpdating = false;
 let scientistName = '';
 let sessionId = '';
+let savedAvatar = '👨‍🔬'; // Аватарка по умолчанию
 
 // Стадии роста растения
 const plantStages = [
@@ -55,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Получаем имя учёного и аватарку из localStorage
     scientistName = localStorage.getItem('scientistName');
-    let savedAvatar = localStorage.getItem('scientistAvatar');
+    const storedAvatar = localStorage.getItem('scientistAvatar');
     
     if (!scientistName) {
         console.warn('⚠️ Имя не найдено, возврат на титульную');
@@ -64,8 +65,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // Если аватарка не сохранена, используем стандартную
-    if (!savedAvatar) {
+    if (!storedAvatar) {
         savedAvatar = '👨‍🔬';
+    } else {
+        savedAvatar = storedAvatar;
     }
     
     // Получаем или генерируем sessionId
@@ -83,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('scientistSessionId', sessionId);
     console.log('🆕 Сгенерирован sessionId:', sessionId);
     
-    console.log('👨‍🔬 Учёный:', scientistName, 'Session:', sessionId);
+    console.log('👨‍🔬 Учёный:', scientistName, 'Session:', sessionId, 'Avatar:', savedAvatar);
     
     document.getElementById('currentUserName').textContent = scientistName;
     
@@ -263,7 +266,8 @@ function trackScientists() {
                 id: child.key,
                 name: data.name,
                 joinedAt: data.joinedAt,
-                lastSeen: lastSeen
+                lastSeen: lastSeen,
+                avatar: data.avatar || '👨‍🔬'
             });
         });
         
@@ -472,12 +476,10 @@ function updateScientistsList(scientists) {
         return;
     }
     
-    const icons = ['👨‍🔬', '👩‍🔬', '🧑‍🔬', '👨‍⚕️', '👩‍⚕️', '🧑‍🔬'];
-    
-    grid.innerHTML = scientists.map((s, i) => {
+    grid.innerHTML = scientists.map((s) => {
         const isMe = s.id === sessionId;
-        // Берём аватарку из данных учёного (теперь она хранится прямо в scientists)
-        const avatar = s.avatar || savedAvatar || icons[i % icons.length];
+        // Берём аватарку из данных учёного
+        const avatar = s.avatar || '👨‍🔬';
         console.log('👤 Учёный', s.name, '| sessionId:', s.id, '| avatar:', avatar, '| isMe:', isMe);
         return `
             <div class="scientist-card ${isMe ? 'is-me' : ''}">
