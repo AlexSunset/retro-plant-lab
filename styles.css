@@ -2104,6 +2104,38 @@ body {
     }
 }
 
+/* Страница экипировки */
+.equip-page {
+    background: linear-gradient(135deg, #1a2e1a 0%, #1f3d2a 100%);
+}
+
+.equip-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.empty-state p {
+    font-size: 1.2rem;
+    color: #e0e0e0;
+    margin: 0 0 10px 0;
+}
+
+.empty-state .hint {
+    font-size: 0.9rem;
+    color: #888;
+    margin: 0;
+}
+
 /* Модальное окно для почвы - стили */
 .modal-overlay {
     position: fixed;
