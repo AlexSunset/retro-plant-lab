@@ -27,9 +27,11 @@ console.log('🧬 Очистка генома загружена');
 if (!scientistName || scientistName === 'undefined' || scientistName === 'null') {
     console.error('❌ Нет имени учёного, возврат на титульную');
     window.location.href = 'index.html';
-} else {
-    // Весь код внутри else
-    const sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    return; // Останавливаем выполнение
+}
+
+// Весь код после проверки
+const sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 
     console.log(`👨‍🔬 Учёный: ${scientistName} Session: ${sessionId}`);
 

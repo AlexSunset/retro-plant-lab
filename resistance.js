@@ -25,9 +25,11 @@ const scientistName = localStorage.getItem('scientistName');
 if (!scientistName || scientistName === 'undefined' || scientistName === 'null') {
     console.error('❌ Нет имени учёного, возврат на титульную');
     window.location.href = 'index.html';
-} else {
-    // Весь код внутри else
-    document.getElementById('userDisplay').textContent = `👨‍🔬 ${scientistName}`;
+    return; // Останавливаем выполнение
+}
+
+// Весь код после проверки
+document.getElementById('userDisplay').textContent = `👨‍🔬 ${scientistName}`;
 
     // ============================================
     // Утилиты

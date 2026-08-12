@@ -28,6 +28,7 @@ const scientistName = localStorage.getItem('scientistName');
 if (!scientistName || scientistName === 'undefined' || scientistName === 'null') {
     console.error('❌ Нет имени учёного, возврат на титульную');
     window.location.href = 'index.html';
+    return; // Останавливаем выполнение
 }
 
 console.log('👔 Зона экипировки загружена');
