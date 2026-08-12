@@ -320,13 +320,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // ИНИЦИАЛИЗАЦИЯ
     // ============================================
 
-    document.addEventListener('DOMContentLoaded', () => {
-        connectToClean();
-        
-        // Модальное окно дефекта
-        document.getElementById('defectModalBtn')?.addEventListener('click', () => {
-            document.getElementById('defectModal').classList.add('modal-active');
-        });
+    // Модальное окно дефекта
+    document.getElementById('addDefectBtn')?.addEventListener('click', () => {
+        document.getElementById('defectModal').classList.add('modal-active');
+    });
         
         // Кнопки отмены
         document.querySelectorAll('.btn-cancel').forEach(btn => {
