@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отсек с образцами почвы</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Шапка -->
+        <header class="header">
+            <div class="header-left">
+                <a href="garden.html" class="btn-back">← В лабораторию</a>
+                <h1>🧫 Отсек с образцами почвы</h1>
+            </div>
+            <div class="header-right">
+                <div class="status-indicator">
+                    <span class="status-dot disconnected"></span>
+                    <span id="statusText">Подключение...</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Основной контент -->
+        <main class="soil-container">
+            <div class="soil-grid" id="agreementsGrid">
+                <!-- Карточки договорённостей -->
+            </div>
+        </main>
+
+        <!-- Модальное окно для комментария -->
+        <div id="commentModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>💬 Добавить комментарий</h2>
+                    <button id="modalClose" class="btn-close">×</button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalAgreementInfo" class="task-info"></p>
+                    <textarea id="commentText" placeholder="Введите ваш комментарий..." maxlength="500"></textarea>
+                    <div class="char-counter"><span id="charCount">0</span>/500</div>
+                </div>
+                <div class="modal-footer">
+                    <button id="cancelBtn" class="btn-secondary">Отмена</button>
+                    <button id="submitBtn" class="btn-primary">Добавить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="soil.js"></script>
+</body>
+</html>
