@@ -1,236 +1,191 @@
 // ============================================
-// ОТДЕЛЕНИЕ РЕЗИСТЕНТНОСТИ
+// 🛡️ ОТДЕЛЕНИЕ РЕЗИСТЕНТНОСТИ - Отзывы
 // ============================================
 
 // Firebase конфигурация
 const firebaseConfig = {
     apiKey: "AIzaSyA7Zpsng2b6I02RZ7r7VtwXzzN-gR_kNmk",
     authDomain: "retro-tkat.firebaseapp.com",
-    databaseURL: "https://retro-tkat-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "retro-tkat",
     storageBucket: "retro-tkat.firebasestorage.app",
     messagingSenderId: "526671550405",
     appId: "1:526671550405:web:fded37933b6c890ed95dac",
-    measurementId: "G-EVC7M9W82C"
+    measurementId: "G-EVC7M9W82C",
+    databaseURL: "https://retro-tkat-default-rtdb.europe-west1.firebasedatabase.app"
 };
 
 // Инициализация Firebase
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-// Проверка имени учёного
+// Получаем имя учёного
 const scientistName = localStorage.getItem('scientistName');
 
+// Проверка имени
 if (!scientistName || scientistName === 'undefined' || scientistName === 'null') {
     console.error('❌ Нет имени учёного, возврат на титульную');
     window.location.href = 'index.html';
-}
+} else {
+    // Весь код внутри else
+    document.getElementById('scientistName').textContent = `👨‍🔬 ${scientistName}`;
 
-console.log('🛡️ Отделение резистентности загружено');
-console.log('👨‍🔬 Учёный в отделении:', scientistName);
+    // ============================================
+    // Утилиты
+    // ============================================
 
-// ============================================
-// ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
-// ============================================
+    function formatTime(timestamp) {
+        const now = Date.now();
+        const diff = now - timestamp;
+        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(diff / 3600000);
+        const days = Math.floor(diff / 86400000);
 
-let reviewModal, reviewText, reviewCharCount, reviewsGrid;
+        if (minutes < 1) return 'только что';
+        if (minutes < 60) return `${minutes} мин. назад`;
+        if (hours < 24) return `${hours} ч. назад`;
+        return `${days} дн. назад`;
+    }
 
-// ============================================
-// ИНИЦИАЛИЗАЦИЯ ПОСЛЕ ЗАГРУЗКИ DOM
-// ============================================
+    function canDelete(timestamp) {
+        const now = Date.now();
+        const hours = (now - timestamp) / 3600000;
+        return hours < 24;
+    }
 
-document.addEventListener('DOMContentLoaded', function() {
-    reviewModal = document.getElementById('reviewModal');
-    reviewText = document.getElementById('reviewText');
-    reviewCharCount = document.getElementById('reviewCharCount');
-    reviewsGrid = document.getElementById('reviewsGrid');
-    
-    // Закрытие по клику вне окна
-    reviewModal.addEventListener('click', (e) => {
-        if (e.target === reviewModal) {
-            closeReviewModal();
+    // ============================================
+    // Модальное окно отзыва
+    // ============================================
+
+    const reviewModal = document.getElementById('reviewModal');
+    const reviewModalBtn = document.getElementById('reviewModalBtn');
+    const modalClose = document.getElementById('modalClose');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const submitReviewBtn = document.getElementById('submitReviewBtn');
+    const reviewText = document.getElementById('reviewText');
+    const reviewCharCount = document.getElementById('reviewCharCount');
+
+    reviewModalBtn.addEventListener('click', () => {
+        reviewModal.classList.add('modal-active');
+        reviewText.focus();
+    });
+
+    modalClose.addEventListener('click', () => {
+        reviewModal.classList.remove('modal-active');
+    });
+
+    cancelBtn.addEventListener('click', () => {
+        reviewModal.classList.remove('modal-active');
+    });
+
+    reviewText.addEventListener('input', () => {
+        reviewCharCount.textContent = reviewText.value.length;
+    });
+
+    // Ctrl+Enter для отправки
+    reviewText.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && e.ctrlKey) {
+            submitReviewBtn.click();
         }
     });
-    
-    // Отображение имени пользователя
-    document.getElementById('userDisplay').textContent = `👤 ${scientistName}`;
-    
-    // Подключение к Firebase
-    connectToFirebase();
-});
 
-// ============================================
-// МОДАЛЬНОЕ ОКНО
-// ============================================
+    // ============================================
+    // Добавление отзыва
+    // ============================================
 
-window.openReviewModal = function() {
-    reviewText.value = '';
-    reviewCharCount.textContent = '0';
-    reviewModal.classList.add('modal-active');
-    reviewText.focus();
-};
-
-window.closeReviewModal = function() {
-    reviewModal.classList.remove('modal-active');
-};
-
-// Обновление счётчика символов
-window.updateCharCount = function(textareaId, countId) {
-    const textarea = document.getElementById(textareaId);
-    const count = document.getElementById(countId);
-    count.textContent = textarea.value.length;
-};
-
-// ============================================
-// ДОБАВЛЕНИЕ ОТЗЫВА
-// ============================================
-
-window.addReview = function() {
-    const text = reviewText.value.trim();
-    
-    if (!text) {
-        alert('⚠️ Введите текст отзыва');
-        return;
-    }
-    
-    const reviewRef = database.ref('resistance').push();
-    const now = Date.now();
-    const reviewData = {
-        text: text,
-        author: scientistName,
-        timestamp: now,
-        createdAt: now
-    };
-    
-    console.log('📝 Добавление отзыва:', reviewData);
-    
-    reviewRef.set(reviewData)
-        .then(() => {
-            console.log('✅ Отзыв добавлен');
-            closeReviewModal();
-        })
-        .catch((error) => {
-            console.error('❌ Ошибка добавления отзыва:', error);
-            alert('⚠️ Ошибка добавления отзыва');
-        });
-};
-
-// ============================================
-// УДАЛЕНИЕ ОТЗЫВА
-// ============================================
-
-window.deleteReview = function(reviewId, author) {
-    if (author !== scientistName) {
-        alert('⚠️ Можно удалить только свой отзыв');
-        return;
-    }
-    
-    if (!confirm('Удалить этот отзыв?')) return;
-    
-    database.ref(`resistance/${reviewId}`).remove()
-        .then(() => {
-            console.log('✅ Отзыв удалён');
-        })
-        .catch((error) => {
-            console.error('❌ Ошибка удаления:', error);
-        });
-};
-
-// ============================================
-// ФОРМАТИРОВАНИЕ ВРЕМЕНИ
-// ============================================
-
-function timeAgo(timestamp) {
-    if (!timestamp || isNaN(timestamp)) {
-        return 'недавно';
-    }
-    
-    const seconds = Math.floor((Date.now() - timestamp) / 1000);
-    
-    if (seconds < 60) return 'только что';
-    if (seconds < 3600) return `${Math.floor(seconds / 60)} мин. назад`;
-    if (seconds < 86400) return `${Math.floor(seconds / 3600)} час. назад`;
-    return `${Math.floor(seconds / 86400)} дн. назад`;
-}
-
-// ============================================
-// ОТОБРАЖЕНИЕ ОТЗЫВОВ
-// ============================================
-
-function renderReviews(data) {
-    reviewsGrid.innerHTML = '';
-    
-    const reviewList = [];
-    
-    console.log('📊 Получены отзывы:', data);
-    
-    // Преобразуем объект в массив
-    Object.entries(data).forEach(([id, review]) => {
-        console.log('  👤 Отзыв:', id, review);
-        reviewList.push({
-            id: id,
-            text: review.text || '',
-            author: review.author || 'Аноним',
-            timestamp: review.timestamp || review.createdAt || 0
-        });
-    });
-    
-    // Сортировка: новые сверху
-    reviewList.sort((a, b) => b.timestamp - a.timestamp);
-    
-    if (reviewList.length === 0) {
-        reviewsGrid.innerHTML = '<div class="no-data">Пока нет отзывов. Будьте первым! 💚</div>';
-        return;
-    }
-    
-    reviewList.forEach((review) => {
-        const canDelete = review.author === scientistName;
-        const time = timeAgo(review.timestamp);
-        
-        console.log('  📝 Рендер:', review.text, 'автор:', review.author, 'время:', time);
-        
-        const card = document.createElement('div');
-        card.className = 'review-card';
-        card.innerHTML = `
-            <div class="review-header">
-                <div class="review-author-info">
-                    <span class="author-icon">👤</span>
-                    <div>
-                        <div class="author-name">${escapeHtml(review.author)}</div>
-                        <div class="time-ago">${time}</div>
-                    </div>
-                </div>
-                ${canDelete ? `<button class="btn-delete-review" onclick="deleteReview('${review.id}', '${escapeHtml(review.author)}')" title="Удалить">🗑️</button>` : ''}
-            </div>
-            <div class="review-text">${escapeHtml(review.text)}</div>
-        `;
-        
-        reviewsGrid.appendChild(card);
-    });
-}
-
-// Экранирование HTML
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-// ============================================
-// ПОДКЛЮЧЕНИЕ К FIREBASE
-// ============================================
-
-function connectToFirebase() {
-    const resistanceRef = database.ref('resistance');
-    
-    resistanceRef.on('value', (snapshot) => {
-        const data = snapshot.val();
-        
-        if (!data) {
-            reviewsGrid.innerHTML = '<div class="no-data">Пока нет отзывов. Будьте первым! 💚</div>';
+    submitReviewBtn.addEventListener('click', async () => {
+        const text = reviewText.value.trim();
+        if (!text) {
+            alert('Введите текст отзыва');
             return;
         }
-        
-        renderReviews(Object.entries(data));
+
+        try {
+            const newRef = database.ref('resistance').push();
+            await newRef.set({
+                text: text,
+                author: scientistName,
+                timestamp: Date.now()
+            });
+            console.log('✅ Отзыв добавлен');
+            reviewModal.classList.remove('modal-active');
+            reviewText.value = '';
+            reviewCharCount.textContent = '0';
+        } catch (error) {
+            console.error('❌ Ошибка добавления отзыва:', error);
+            alert('Ошибка при добавлении отзыва');
+        }
     });
-}
+
+    // ============================================
+    // Удаление отзыва
+    // ============================================
+
+    window.deleteReview = async function(reviewId, timestamp) {
+        if (!canDelete(timestamp)) {
+            alert('Можно удалить только в течение 24 часов');
+            return;
+        }
+
+        if (!confirm('Удалить этот отзыв?')) return;
+
+        try {
+            await database.ref(`resistance/${reviewId}`).remove();
+            console.log('✅ Отзыв удалён');
+        } catch (error) {
+            console.error('❌ Ошибка удаления отзыва:', error);
+            alert('Ошибка при удалении отзыва');
+        }
+    };
+
+    // ============================================
+    // Отрисовка отзывов
+    // ============================================
+
+    function renderReview(reviewId, data) {
+        const canDeleteReview = canDelete(data.timestamp);
+
+        return `
+            <div class="review-card">
+                <div class="review-header">
+                    <div class="review-main">
+                        <div class="review-icon">💚</div>
+                        <div class="review-info">
+                            <div class="review-author-row">
+                                <span class="author-name">${data.author}</span>
+                                <span class="review-time">${formatTime(data.timestamp)}</span>
+                            </div>
+                            <div class="review-text">${data.text}</div>
+                        </div>
+                    </div>
+                    ${canDeleteReview ? `<button class="btn-delete-review" onclick="deleteReview('${reviewId}', ${data.timestamp})">🗑️</button>` : ''}
+                </div>
+            </div>
+        `;
+    }
+
+    // ============================================
+    // Загрузка и отображение отзывов
+    // ============================================
+
+    const reviewsGrid = document.getElementById('reviewsGrid');
+
+    // Слушаем изменения в Firebase
+    database.ref('resistance').on('value', (snapshot) => {
+        const data = snapshot.val();
+        console.log('📊 Получены отзывы:', data);
+
+        if (!data) {
+            reviewsGrid.innerHTML = '<div class="no-items">Пока нет отзывов. Будьте первым! 💚</div>';
+            return;
+        }
+
+        // Сортируем: новые сверху
+        const sorted = Object.entries(data).sort((a, b) => b[1].timestamp - a[1].timestamp);
+
+        reviewsGrid.innerHTML = sorted.map(([id, review]) => renderReview(id, review)).join('');
+    });
+
+    console.log('🛡️ Отделение резистентности загружено');
+    console.log('👨‍🔬 Учёный в отделении:', scientistName);
+
+} // Конец else
