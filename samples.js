@@ -22,6 +22,7 @@ const DEFAULT_TASKS = [
 const firebaseConfig = {
     apiKey: "AIzaSyA7Zpsng2b6I02RZ7r7VtwXzzN-gR_kNmk",
     authDomain: "retro-tkat.firebaseapp.com",
+    databaseURL: "https://retro-tkat-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "retro-tkat",
     storageBucket: "retro-tkat.firebasestorage.app",
     messagingSenderId: "526671550405",
