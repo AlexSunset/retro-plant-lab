@@ -204,6 +204,28 @@ function trackScientists() {
             console.error('❌ Ошибка heartbeat:', error);
         });
     }, HEARTBEAT_INTERVAL);
+
+    // Очистка при уходе со страницы
+    window.addEventListener('beforeunload', () => {
+        console.log('🚪 Страница закрывается, удаляем сессию:', sessionId);
+        if (heartbeatTimer) {
+            clearInterval(heartbeatTimer);
+            heartbeatTimer = null;
+        }
+        myRef.remove().catch(err => console.error('❌ Ошибка удаления сессии:', err));
+    });
+
+    // Очистка при потере видимости (переход на другую вкладку браузера)
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            console.log('👁️ Страница скрыта, удаляем сессию:', sessionId);
+            if (heartbeatTimer) {
+                clearInterval(heartbeatTimer);
+                heartbeatTimer = null;
+            }
+            myRef.remove().catch(err => console.error('❌ Ошибка удаления сессии:', err));
+        }
+    });
     
     // Слушаем список учёных
     scientistsRef.on('value', (snapshot) => {
