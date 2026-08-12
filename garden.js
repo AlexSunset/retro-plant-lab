@@ -139,9 +139,10 @@ let heartbeatTimer = null;
 
 function trackScientists() {
     console.log('👥 Отслеживание учёных, sessionId:', sessionId);
+    console.log('🔍 Проверка имени:', scientistName);
     
-    // Проверка: если имени нет, не записываем
-    if (!scientistName || scientistName === 'undefined' || scientistName === 'null') {
+    // Проверка: если имени нет, не записываем и не создаём сессию
+    if (!scientistName || scientistName === 'undefined' || scientistName === 'null' || scientistName === '') {
         console.error('❌ Нет имени учёного, возврат на титульную');
         window.location.href = 'index.html';
         return;
@@ -155,6 +156,8 @@ function trackScientists() {
         joinedAt: Date.now(),
         lastSeen: Date.now()
     };
+    
+    console.log('📝 Запись учёного:', myData);
     
     // Записываем себя
     myRef.set(myData).then(() => {
