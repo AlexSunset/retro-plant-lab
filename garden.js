@@ -163,15 +163,33 @@ function trackScientists() {
     
     const scientistsRef = database.ref(`rooms/${ROOM_ID}/scientists`);
     const myRef = scientistsRef.child(sessionId);
+    const equipRef = database.ref(`equip/${sessionId}`);
     
-    const myData = {
-        name: scientistName,
-        avatar: savedAvatar,
-        joinedAt: Date.now(),
-        lastSeen: Date.now()
-    };
-    
-    myRef.set(myData).then(() => {
+    // Сначала читаем аватарку из Firebase (equip), потом из localStorage
+    equipRef.once('value').then((snapshot) => {
+        const equipData = snapshot.val();
+        if (equipData && equipData.avatar && equipData.avatar.emoji) {
+            savedAvatar = equipData.avatar.emoji;
+            localStorage.setItem('scientistAvatar', savedAvatar);
+            console.log('🎭 Аватарка загружена из Firebase:', savedAvatar);
+        } else {
+            savedAvatar = localStorage.getItem('scientistAvatar') || '👨‍🔬';
+            console.log('🎭 Аватарка из localStorage:', savedAvatar);
+        }
+        
+        // Обновляем отображение аватарки в шапке
+        document.getElementById('headerUserAvatar').textContent = savedAvatar;
+        
+        // Записываем учёного с аватаркой
+        const myData = {
+            name: scientistName,
+            avatar: savedAvatar,
+            joinedAt: Date.now(),
+            lastSeen: Date.now()
+        };
+        
+        return myRef.set(myData);
+    }).then(() => {
         console.log('✅ Я записан в список учёных');
     }).catch((error) => {
         console.error('❌ Ошибка записи:', error);
@@ -186,10 +204,12 @@ function trackScientists() {
             heartbeatTimer = null;
             return;
         }
+        // Читаем актуальную аватарку из localStorage
+        const currentAvatar = localStorage.getItem('scientistAvatar') || savedAvatar;
         myRef.update({ 
             lastSeen: Date.now(),
             name: scientistName,
-            avatar: savedAvatar
+            avatar: currentAvatar
         }).catch((error) => {
             console.error('❌ Ошибка heartbeat:', error);
         });

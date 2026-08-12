@@ -168,15 +168,12 @@ function equipAvatar() {
         localStorage.setItem('scientistAvatar', selectedAvatar.emoji);
         console.log('💾 Аватарка сохранена в localStorage:', selectedAvatar.emoji);
         
-        // Показать текущую экипировку
-        document.getElementById('currentEquip').style.display = 'block';
-        document.getElementById('currentAvatarDisplay').textContent = selectedAvatar.emoji;
-        document.getElementById('currentAvatarName').textContent = selectedAvatar.name;
+        // Перенаправляем в лабораторию через небольшую задержку
+        alert(`✅ Экипировка надета: ${selectedAvatar.emoji} ${selectedAvatar.name}\n\n🎉 Стадия 1/6 завершена!\n\nПереход в лабораторию...`);
         
-        // Показать кнопку "Перейти в лабораторию"
-        document.getElementById('toLabBtn').style.display = 'inline-flex';
-        
-        alert(`✅ Экипировка надета: ${selectedAvatar.emoji} ${selectedAvatar.name}\n\n🎉 Стадия 1/6 завершена!\n\nТеперь можно перейти в лабораторию.`);
+        setTimeout(() => {
+            window.location.href = 'garden.html';
+        }, 1000);
     }).catch((error) => {
         console.error('❌ Ошибка сохранения экипировки:', error);
         alert('Ошибка сохранения экипировки');
