@@ -31,7 +31,7 @@
         </div>
 
         <!-- Кнопка добавления -->
-        <button class="btn-add-protocol" onclick="openReviewModal()">
+        <button id="reviewModalBtn" class="btn-add-protocol">
             <span class="btn-icon">💚</span>
             <span>Стимуляция жизненных сил</span>
         </button>
@@ -47,7 +47,7 @@
         <div class="modal-container">
             <div class="modal-header">
                 <h2>💚 Стимуляция жизненных сил</h2>
-                <button class="modal-close" onclick="closeReviewModal()">×</button>
+                <button id="modalClose" class="modal-close">×</button>
             </div>
             <div class="modal-body">
                 <p class="modal-hint">Поделитесь благодарностью или вдохновляющим отзывом о коллеге</p>
@@ -55,15 +55,14 @@
                     id="reviewText" 
                     placeholder="Хочу поблагодарить коллегу за..." 
                     maxlength="1000"
-                    oninput="updateCharCount('reviewText', 'reviewCharCount')"
                 ></textarea>
                 <div class="char-count">
                     <span id="reviewCharCount">0</span> / 1000
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeReviewModal()">Отмена</button>
-                <button class="btn-submit" onclick="addReview()">Добавить</button>
+                <button id="cancelBtn" class="btn-cancel">Отмена</button>
+                <button id="submitReviewBtn" class="btn-submit">Добавить</button>
             </div>
         </div>
     </div>
