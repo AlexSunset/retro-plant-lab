@@ -236,6 +236,11 @@ function setupCommentModal() {
     const textarea = document.getElementById('commentText');
     const charCount = document.getElementById('charCount');
     
+    if (!modal || !closeBtn || !cancelBtn || !submitBtn || !textarea || !charCount) {
+        console.error('❌ Элементы модального окна не найдены');
+        return;
+    }
+    
     closeBtn.onclick = () => closeModal();
     cancelBtn.onclick = () => closeModal();
     
@@ -261,6 +266,13 @@ function setupCommentModal() {
             submitBtn.click();
         }
     };
+    
+    // Закрытие по клику вне модального окна
+    modal.onclick = (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    };
 }
 
 function openCommentModal(agreementId, agreementText) {
@@ -272,6 +284,11 @@ function openCommentModal(agreementId, agreementText) {
     const textarea = document.getElementById('commentText');
     const charCount = document.getElementById('charCount');
     
+    if (!modal || !agreementInfo || !textarea || !charCount) {
+        console.error('❌ Элементы модального окна не найдены');
+        return;
+    }
+    
     agreementInfo.textContent = agreementText;
     textarea.value = '';
     charCount.textContent = '0';
@@ -282,7 +299,9 @@ function openCommentModal(agreementId, agreementText) {
 
 function closeModal() {
     const modal = document.getElementById('commentModal');
-    modal.classList.remove('modal-active');
+    if (modal) {
+        modal.classList.remove('modal-active');
+    }
     currentAgreementId = null;
 }
 
