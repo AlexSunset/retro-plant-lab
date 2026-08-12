@@ -47,19 +47,20 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database-compat.js"></script>
 
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyA7Zpsng2b6I02RZ7r7VtwXzzN-gR_kNmk",
-            authDomain: "retro-tkat.firebaseapp.com",
-            databaseURL: "https://retro-tkat-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "retro-tkat",
-            storageBucket: "retro-tkat.firebasestorage.app",
-            messagingSenderId: "526671550405",
-            appId: "1:526671550405:web:fded37933b6c890ed95dac",
-            measurementId: "G-EVC7M9W82C"
-        };
+        document.addEventListener('DOMContentLoaded', function() {
+            const firebaseConfig = {
+                apiKey: "AIzaSyA7Zpsng2b6I02RZ7r7VtwXzzN-gR_kNmk",
+                authDomain: "retro-tkat.firebaseapp.com",
+                databaseURL: "https://retro-tkat-default-rtdb.europe-west1.firebasedatabase.app",
+                projectId: "retro-tkat",
+                storageBucket: "retro-tkat.firebasestorage.app",
+                messagingSenderId: "526671550405",
+                appId: "1:526671550405:web:fded37933b6c890ed95dac",
+                measurementId: "G-EVC7M9W82C"
+            };
 
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+            firebase.initializeApp(firebaseConfig);
+            const database = firebase.database();
 
         // Проверка имени
         const scientistName = localStorage.getItem('scientistName');
@@ -161,6 +162,7 @@
                 console.error('❌ Ошибка сохранения экипировки:', error);
                 alert('Ошибка сохранения экипировки');
             }
+        });
         });
     </script>
 </body>
