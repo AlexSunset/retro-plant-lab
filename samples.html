@@ -17,7 +17,7 @@
             <span class="header-icon">🧫</span>
             <span>Хранилище Образцов</span>
         </div>
-        <div class="header-spacer"></div>
+        <button class="btn-add-task" id="addTaskBtn" title="Добавить задачу">+ Задача</button>
     </header>
 
     <div class="samples-container">
@@ -54,6 +54,48 @@
             <div class="modal-footer">
                 <button class="btn-cancel" id="cancelBtn">Отмена</button>
                 <button class="btn-submit" id="submitBtn">Добавить образец</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для добавления задачи -->
+    <div class="modal-overlay" id="addTaskModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>📋 Добавить задачу</h3>
+                <button class="modal-close" id="closeAddTaskModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="taskKey">Ключ задачи (Jira)</label>
+                    <input 
+                        type="text" 
+                        id="taskKey" 
+                        placeholder="Например: AS-12345"
+                        maxlength="50"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="taskTitle">Название задачи</label>
+                    <input 
+                        type="text" 
+                        id="taskTitle" 
+                        placeholder="Описание задачи"
+                        maxlength="200"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="taskUrl">Ссылка на задачу (необязательно)</label>
+                    <input 
+                        type="url" 
+                        id="taskUrl" 
+                        placeholder="https://jira.tcsbank.ru/browse/..."
+                    />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" id="cancelAddTaskBtn">Отмена</button>
+                <button class="btn-submit" id="submitAddTaskBtn">Добавить задачу</button>
             </div>
         </div>
     </div>

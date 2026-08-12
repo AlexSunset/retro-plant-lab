@@ -1,6 +1,6 @@
 // ============================================
-// 🔬 ХРАНИЛИЩЕ ОБРАЗЦОВ v3.0
-// Система комментариев для задач
+// 🔬 ХРАНИЛИЩЕ ОБРАЗЦОВ v4.0
+// Система комментариев для задач + кастомные задачи
 // ============================================
 
 // 🔥 Конфигурация Firebase
@@ -19,8 +19,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// Данные задач
-const tasks = [
+// Стандартные задачи
+const defaultTasks = [
     { key: "AS-26075", title: "Миграция EcomDirect и SharelinkDirect в новый алаймент" },
     { key: "AS-25596", title: "Создание SafeDeal" },
     { key: "ACQSP-3357", title: "Редактирование параметров sharelinkDirect" },
@@ -41,8 +41,6 @@ let currentUserName = storedName || 'Аноним';
 
 if (!storedName) {
     console.warn('⚠️ Имя не найдено в localStorage. Перенаправление на титульную страницу...');
-    // Можно раскомментировать для строгой проверки:
-    // window.location.href = 'index.html';
 }
 
 console.log(`👨‍🔬 Учёный в хранилище: ${currentUserName}`);
@@ -54,29 +52,67 @@ let currentTaskKey = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🧫 Хранилище образцов загружено');
-    renderTasks();
+    
+    // Загрузка стандартных и кастомных задач
+    loadAllTasks();
     setupModal();
+    setupAddTaskModal();
 });
+
+// ============================================
+// 📋 Загрузка всех задач
+// ============================================
+
+function loadAllTasks() {
+    // Подписка на кастомные задачи
+    const customTasksRef = db.ref('customTasks');
+    
+    customTasksRef.on('value', (snapshot) => {
+        const customTasks = snapshot.val() || {};
+        
+        // Преобразуем кастомные задачи в массив
+        const customArray = Object.entries(customTasks).map(([id, data]) => ({
+            key: data.key,
+            title: data.title,
+            url: data.url,
+            isCustom: true,
+            customId: id
+        }));
+        
+        // Объединяем стандартные и кастомные
+        const allTasks = [
+            ...defaultTasks.map(t => ({ ...t, isCustom: false })),
+            ...customArray
+        ];
+        
+        renderTasks(allTasks);
+    });
+}
 
 // ============================================
 // 📋 Рендеринг задач
 // ============================================
 
-function renderTasks() {
+function renderTasks(allTasks) {
     const grid = document.getElementById('samplesGrid');
     grid.innerHTML = '';
 
-    tasks.forEach(task => {
+    allTasks.forEach(task => {
         const taskCard = document.createElement('div');
         taskCard.className = 'task-card';
+        
+        // Определяем ссылку
+        const taskUrl = task.url || `https://jira.tcsbank.ru/browse/${task.key}`;
+        
         taskCard.innerHTML = `
             <div class="task-header">
-                <a href="https://jira.tcsbank.ru/browse/${task.key}" target="_blank" class="task-key">
+                <a href="${taskUrl}" target="_blank" class="task-key">
                     ${task.key}
                 </a>
                 <button class="btn-add-sample" data-task="${task.key}" title="Добавить образец">
                     + Образец
                 </button>
+                ${task.isCustom ? `<button class="btn-delete-task" data-task-id="${task.customId}" title="Удалить задачу">🗑️</button>` : ''}
             </div>
             <p class="task-title">${task.title}</p>
             <div class="samples-list" id="samples-${task.key}">
@@ -92,9 +128,104 @@ function renderTasks() {
     // Обработчики кнопок "Добавить образец"
     document.querySelectorAll('.btn-add-sample').forEach(btn => {
         btn.addEventListener('click', (e) => {
+            e.stopPropagation();
             currentTaskKey = e.target.dataset.task;
             openModal();
         });
+    });
+    
+    // Обработчики кнопок удаления кастомных задач
+    document.querySelectorAll('.btn-delete-task').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const taskId = btn.dataset.taskId;
+            if (confirm('Удалить эту кастомную задачу? Все образцы также будут удалены.')) {
+                deleteCustomTask(taskId);
+            }
+        });
+    });
+}
+
+// ============================================
+// ➕ Добавление кастомной задачи
+// ============================================
+
+function setupAddTaskModal() {
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    const modal = document.getElementById('addTaskModal');
+    const closeBtn = document.getElementById('closeAddTaskModal');
+    const cancelBtn = document.getElementById('cancelAddTaskBtn');
+    const submitBtn = document.getElementById('submitAddTaskBtn');
+    const taskKeyInput = document.getElementById('taskKey');
+    const taskTitleInput = document.getElementById('taskTitle');
+    const taskUrlInput = document.getElementById('taskUrl');
+
+    addTaskBtn.addEventListener('click', () => {
+        modal.classList.add('modal-active');
+        taskKeyInput.focus();
+    });
+
+    closeBtn.addEventListener('click', closeModalAddTask);
+    cancelBtn.addEventListener('click', closeModalAddTask);
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModalAddTask();
+    });
+
+    submitBtn.addEventListener('click', () => {
+        const key = taskKeyInput.value.trim();
+        const title = taskTitleInput.value.trim();
+        const url = taskUrlInput.value.trim();
+        
+        if (key && title) {
+            addCustomTask(key, title, url);
+            closeModalAddTask();
+            taskKeyInput.value = '';
+            taskTitleInput.value = '';
+            taskUrlInput.value = '';
+        } else {
+            alert('Заполните ключ и название задачи');
+        }
+    });
+
+    // Enter для отправки
+    taskUrlInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            submitBtn.click();
+        }
+    });
+}
+
+function addCustomTask(key, title, url) {
+    const customTasksRef = db.ref('customTasks');
+    const newTaskRef = customTasksRef.push();
+    
+    newTaskRef.set({
+        key: key,
+        title: title,
+        url: url || '',
+        addedBy: currentUserName,
+        timestamp: Date.now()
+    }).then(() => {
+        console.log('✅ Кастомная задача добавлена');
+    }).catch((error) => {
+        console.error('❌ Ошибка добавления задачи:', error);
+    });
+}
+
+function deleteCustomTask(taskId) {
+    // Удаляем задачу
+    const taskRef = db.ref(`customTasks/${taskId}`);
+    
+    taskRef.remove().then(() => {
+        console.log('✅ Кастомная задача удалена');
+        
+        // Удаляем все образцы этой задачи
+        const taskKey = defaultTasks.find(t => t.key === taskId)?.key || taskId;
+        const samplesRef = db.ref(`samples/${taskKey}`);
+        samplesRef.remove().catch(err => console.error('Ошибка удаления образцов:', err));
+    }).catch((error) => {
+        console.error('❌ Ошибка удаления задачи:', error);
     });
 }
 
@@ -183,7 +314,7 @@ function deleteSample(taskKey, sampleId) {
 }
 
 // ============================================
-// 🪟 Модальное окно
+// 🪟 Модальное окно для образца
 // ============================================
 
 function setupModal() {
@@ -231,7 +362,10 @@ function setupModal() {
 function openModal() {
     const modal = document.getElementById('commentModal');
     const taskInfo = document.getElementById('modalTaskInfo');
-    const task = tasks.find(t => t.key === currentTaskKey);
+    
+    // Ищем задачу во всех задачах
+    const task = [...defaultTasks].find(t => t.key === currentTaskKey) || 
+                 (window.currentCustomTasks || []).find(t => t.key === currentTaskKey);
     
     if (task) {
         taskInfo.innerHTML = `
@@ -245,6 +379,15 @@ function openModal() {
 
 function closeModal() {
     const modal = document.getElementById('commentModal');
+    modal.classList.remove('modal-active');
+}
+
+// ============================================
+// 🪟 Модальное окно для добавления задачи
+// ============================================
+
+function closeModalAddTask() {
+    const modal = document.getElementById('addTaskModal');
     modal.classList.remove('modal-active');
 }
 
