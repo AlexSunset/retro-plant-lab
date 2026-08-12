@@ -146,6 +146,8 @@ function createTaskCard(key, title, url, isCustom, taskId = null, addedBy = null
     const card = document.createElement('div');
     card.className = 'task-card' + (isCustom ? ' custom-task' : '');
     card.dataset.taskKey = key;
+    card.dataset.taskTitle = title;
+    card.dataset.taskUrl = url;
     
     const header = document.createElement('div');
     header.className = 'task-header';
@@ -163,7 +165,10 @@ function createTaskCard(key, title, url, isCustom, taskId = null, addedBy = null
     const addSampleBtn = document.createElement('button');
     addSampleBtn.className = 'btn-add-sample';
     addSampleBtn.textContent = '+ Образец';
-    addSampleBtn.onclick = () => openCommentModal(key, title);
+    addSampleBtn.onclick = (e) => {
+        e.stopPropagation();
+        openCommentModal(key, title);
+    };
     
     actions.appendChild(addSampleBtn);
     
