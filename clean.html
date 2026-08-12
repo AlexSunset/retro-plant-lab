@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Очистка Генома | Ретро</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="clean-page">
+    <!-- Верхняя панель -->
+    <header class="clean-header">
+        <div class="header-left">
+            <a href="index.html" class="btn-back">← На базу</a>
+            <a href="garden.html" class="btn-back" style="font-size: 0.85rem; padding: 8px 16px;">
+                🔬 Лаборатория
+            </a>
+        </div>
+        <div class="header-title">
+            <span class="header-icon">🧬</span>
+            <span>Очистка Генома</span>
+        </div>
+        <div class="header-right">
+            <div class="connection-status">
+                <span class="status-dot"></span>
+                <span id="statusText">Подключение...</span>
+            </div>
+            <div class="header-user">
+                <span class="user-icon">👨‍🔬</span>
+                <span id="currentUserName">Гость</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="clean-container">
+        <!-- Вступление -->
+        <div class="clean-intro">
+            <h1>🧬 Очистка Генома</h1>
+            <p>Идентифицируем дефектный геном и находим пути его извлечения</p>
+            <p class="clean-hint">Анализируем негативные моменты и находим стратегии решения</p>
+        </div>
+
+        <!-- Две колонки -->
+        <div class="clean-grid">
+            <!-- Левая колонка: Дефектный геном -->
+            <div class="clean-column">
+                <div class="column-header">
+                    <h2>🔴 Дефектный Геном</h2>
+                    <button class="btn-add-genome" id="defectModalBtn">+ Проблема</button>
+                </div>
+                <div class="genome-list" id="defectsList">
+                    <div class="loading-genomes">Загрузка дефектных геномов...</div>
+                </div>
+            </div>
+
+            <!-- Правая колонка: Стратегия извлечения -->
+            <div class="clean-column">
+                <div class="column-header">
+                    <h2>🟢 Стратегия Извлечения</h2>
+                    <button class="btn-add-genome" id="strategyModalBtn">+ Решение</button>
+                </div>
+                <div class="genome-list" id="strategiesList">
+                    <div class="loading-genomes">Загрузка стратегий...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно: Дефектный геном -->
+    <div class="modal-overlay" id="defectModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>🔴 Добавить Дефектный Геном</h3>
+                <button class="modal-close" onclick="closeModal('defectModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-hint">Опишите проблему или негативный момент</p>
+                <textarea id="defectText" placeholder="Что пошло не так? Какие были трудности?" maxlength="500"></textarea>
+                <div class="char-count" id="defectCharCount">0/500</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('defectModal')">Отмена</button>
+                <button class="btn-submit">Добавить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно: Стратегия извлечения -->
+    <div class="modal-overlay" id="strategyModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>🟢 Добавить Стратегию Извлечения</h3>
+                <button class="modal-close" onclick="closeModal('strategyModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-hint">Предложите решение или путь преодоления</p>
+                <textarea id="strategyText" placeholder="Как можно решить эту проблему?" maxlength="500"></textarea>
+                <div class="char-count" id="strategyCharCount">0/500</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('strategyModal')">Отмена</button>
+                <button class="btn-submit">Добавить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно: Комментарий -->
+    <div class="modal-overlay" id="commentModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>💬 Добавить Комментарий</h3>
+                <button class="modal-close" onclick="closeCommentModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <textarea id="commentText" placeholder="Ваш комментарий..." maxlength="500"></textarea>
+                <div class="char-count" id="charCount">0/500</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeCommentModal()">Отмена</button>
+                <button class="btn-submit">Отправить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="clean.js"></script>
+</body>
+</html>
