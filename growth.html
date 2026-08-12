@@ -50,11 +50,39 @@
                         maxlength="1000"
                         rows="4"
                     ></textarea>
+                    <div class="char-count"><span id="protocolCharCount">0</span>/1000</div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn-cancel" id="cancelProtocolBtn">Отмена</button>
                 <button class="btn-submit" id="submitProtocolBtn">Добавить протокол</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для комментария -->
+    <div class="modal-overlay" id="commentModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>💬 Добавить комментарий</h3>
+                <button class="modal-close" id="closeCommentModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="commentText">Текст комментария</label>
+                    <div class="modal-protocol-info" id="modalProtocolInfo"></div>
+                    <textarea 
+                        id="commentText" 
+                        placeholder="Напишите ваш комментарий..."
+                        maxlength="1000"
+                        rows="4"
+                    ></textarea>
+                    <div class="char-count"><span id="commentCharCount">0</span>/1000</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" id="cancelCommentBtn">Отмена</button>
+                <button class="btn-submit" id="submitCommentBtn">Добавить комментарий</button>
             </div>
         </div>
     </div>
