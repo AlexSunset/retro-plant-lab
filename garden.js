@@ -63,12 +63,17 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
     
-    // Если sessionId нет, генерируем новый
-    if (!sessionId) {
-        sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        localStorage.setItem('scientistSessionId', sessionId);
-        console.log('🆕 Сгенерирован sessionId:', sessionId);
+    // Если sessionId есть — удаляем старую сессию из Firebase (на случай краша)
+    if (sessionId) {
+        const oldSessionRef = database.ref(`rooms/${ROOM_ID}/scientists/${sessionId}`);
+        oldSessionRef.remove().catch(() => {});
+        console.log('🗑️ Старая сессия удалена:', sessionId);
     }
+    
+    // Генерируем новый sessionId
+    sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('scientistSessionId', sessionId);
+    console.log('🆕 Сгенерирован sessionId:', sessionId);
     
     console.log('👨‍🔬 Учёный:', scientistName, 'Session:', sessionId);
     
