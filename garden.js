@@ -213,7 +213,7 @@ function trackScientists() {
     // Затем каждые 5 секунд
     heartbeatTimer = setInterval(sendHeartbeat, HEARTBEAT_INTERVAL);
 
-    // Очистка при уходе со страницы
+    // Очистка ТОЛЬКО при полном закрытии страницы/вкладки
     window.addEventListener('beforeunload', () => {
         console.log('🚪 Страница закрывается, удаляем сессию:', sessionId);
         if (heartbeatTimer) {
@@ -222,18 +222,7 @@ function trackScientists() {
         }
         myRef.remove().catch(err => console.error('❌ Ошибка удаления сессии:', err));
     });
-
-    // Очистка при потере видимости (переход на другую вкладку браузера)
-    document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-            console.log('👁️ Страница скрыта, удаляем сессию:', sessionId);
-            if (heartbeatTimer) {
-                clearInterval(heartbeatTimer);
-                heartbeatTimer = null;
-            }
-            myRef.remove().catch(err => console.error('❌ Ошибка удаления сессии:', err));
-        }
-    });
+    // visibilitychange убрали - сессия остаётся при переключении вкладок
     
     // Слушаем список учёных
     scientistsRef.on('value', (snapshot) => {
