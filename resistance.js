@@ -27,7 +27,7 @@ if (!scientistName || scientistName === 'undefined' || scientistName === 'null')
     window.location.href = 'index.html';
 } else {
     // Весь код внутри else
-    document.getElementById('scientistName').textContent = `👨‍🔬 ${scientistName}`;
+    document.getElementById('userDisplay').textContent = `👨‍🔬 ${scientistName}`;
 
     // ============================================
     // Утилиты
