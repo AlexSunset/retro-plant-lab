@@ -94,11 +94,15 @@ window.addReview = function() {
     }
     
     const reviewRef = database.ref('resistance').push();
+    const now = Date.now();
     const reviewData = {
         text: text,
         author: scientistName,
-        timestamp: Date.now()
+        timestamp: now,
+        createdAt: now
     };
+    
+    console.log('📝 Добавление отзыва:', reviewData);
     
     reviewRef.set(reviewData)
         .then(() => {
@@ -137,6 +141,10 @@ window.deleteReview = function(reviewId, author) {
 // ============================================
 
 function timeAgo(timestamp) {
+    if (!timestamp || isNaN(timestamp)) {
+        return 'недавно';
+    }
+    
     const seconds = Math.floor((Date.now() - timestamp) / 1000);
     
     if (seconds < 60) return 'только что';
@@ -154,11 +162,16 @@ function renderReviews(data) {
     
     const reviewList = [];
     
+    console.log('📊 Получены отзывы:', data);
+    
     // Преобразуем объект в массив
     Object.entries(data).forEach(([id, review]) => {
+        console.log('  👤 Отзыв:', id, review);
         reviewList.push({
             id: id,
-            ...review
+            text: review.text || '',
+            author: review.author || 'Аноним',
+            timestamp: review.timestamp || review.createdAt || 0
         });
     });
     
@@ -173,6 +186,8 @@ function renderReviews(data) {
     reviewList.forEach((review) => {
         const canDelete = review.author === scientistName;
         const time = timeAgo(review.timestamp);
+        
+        console.log('  📝 Рендер:', review.text, 'автор:', review.author, 'время:', time);
         
         const card = document.createElement('div');
         card.className = 'review-card';
