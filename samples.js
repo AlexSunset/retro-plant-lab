@@ -298,12 +298,18 @@ if (!currentUserName || currentUserName === 'undefined' || currentUserName === '
     
     function addSample(taskKey, taskTitle, text) {
         const newSampleRef = db.ref('samples/' + taskKey).push();
-        newSampleRef.set({
-            author: currentUserName,
-            text: text,
-            timestamp: Date.now()
-        }).then(() => {
+        
+        // Добавляем образец и отмечаем стадию 3 (Хранилище)
+        Promise.all([
+            newSampleRef.set({
+                author: currentUserName,
+                text: text,
+                timestamp: Date.now()
+            }),
+            db.ref(`rooms/retro-main/stages/stage3_samples`).set(true)
+        ]).then(() => {
             console.log('✅ Образец добавлен');
+            console.log('✅ Стадия 3 (Набор генома) завершена');
             closeModal('commentModal');
         }).catch(error => {
             console.error('❌ Ошибка добавления образца:', error);

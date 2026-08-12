@@ -17,30 +17,32 @@
             <span class="header-icon">🔬</span>
             <span>Лаборатория Адаптации</span>
         </div>
-        <a href="samples.html" class="btn-back" style="font-size: 0.85rem; padding: 8px 16px;">
-            🧫 Хранилище
-        </a>
-        <a href="soil.html" class="btn-back" style="font-size: 0.85rem; padding: 8px 16px;">
-            🌱 Почва
-        </a>
-        <a href="clean.html" class="btn-back" style="font-size: 0.85rem; padding: 8px 16px;">
-            🧬 Очистка
-        </a>
-        <a href="growth.html" class="btn-back" style="font-size: 0.85rem; padding: 8px 16px;">
-            📈 Модуляция
-        </a>
-        <a href="resistance.html" class="btn-back" style="font-size: 0.85rem; padding: 8px 16px;">
-            🛡️ Резистентность
-        </a>
-        <a href="equip.html" class="btn-back" style="font-size: 0.85rem; padding: 8px 16px;">
-            👔 Экипировка
-        </a>
+        <div class="header-actions">
+            <a href="equip.html" class="btn-nav" title="Экипировка">
+                <span>👔</span>
+            </a>
+            <a href="resistance.html" class="btn-nav" title="Резистентность">
+                <span>🛡️</span>
+            </a>
+            <a href="growth.html" class="btn-nav" title="Модуляция">
+                <span>📈</span>
+            </a>
+            <a href="clean.html" class="btn-nav" title="Очистка">
+                <span>🧬</span>
+            </a>
+            <a href="soil.html" class="btn-nav" title="Почва">
+                <span>🌱</span>
+            </a>
+            <a href="samples.html" class="btn-nav" title="Хранилище">
+                <span>🧫</span>
+            </a>
+        </div>
         <div class="connection-status">
             <span class="status-dot"></span>
             <span id="statusText">Подключение...</span>
         </div>
         <div class="header-user">
-            <span class="user-icon">👨‍🔬</span>
+            <span class="user-icon" id="headerUserAvatar">👨‍🔬</span>
             <span id="currentUserName">Гость</span>
         </div>
     </header>
@@ -51,13 +53,13 @@
             <div class="plant-display-area">
                 <div class="plant-info-panel">
                     <h2>Объект: <span class="plant-name">ПРОЕКТ</span></h2>
-                    <div class="plant-stage" id="plantStageInfo">Стадия: Росток</div>
-                    <div class="plant-health">
-                        <span>💚 Адаптация:</span>
-                        <span id="adaptationScore">0%</span>
+                    <div class="plant-stage" id="plantStageInfo">Стадия: Семя</div>
+                    <div class="plant-progress">
+                        <span>📊 Прогресс:</span>
+                        <span id="stageProgress">0/6</span>
                     </div>
                 </div>
-                <div class="plant-visual" id="plantDisplay">🌱</div>
+                <div class="plant-visual" id="plantDisplay">🌰</div>
                 <div class="environment-status">
                     <p>🌡️ Среда: <strong>Агрессивная</strong></p>
                 </div>
@@ -77,91 +79,97 @@
             </div>
         </div>
 
-        <!-- Панель удобрений -->
-        <div class="fertilizers-panel">
-            <h2 class="panel-title">🧪 Протоколы Улучшения</h2>
-            <p class="panel-subtitle">Выберите протокол для применения к объекту</p>
+        <!-- Панель протоколов -->
+        <div class="protocols-panel">
+            <h2 class="panel-title">🧪 Протоколы Развития</h2>
+            <p class="panel-subtitle">Примените протоколы для роста растения</p>
             
-            <div class="fertilizers-grid">
-                <!-- Вода -->
-                <div class="fertilizer-card" data-fertilizer="water">
-                    <div class="card-icon">💧</div>
-                    <div class="card-name">Гидратация</div>
-                    <div class="card-desc">Базовое увлажнение</div>
-                    <div class="card-counter" id="waterCounter">0</div>
-                    <button class="btn-apply" onclick="increaseCounter('water')">
-                        <span>Применить</span>
-                        <span class="btn-plus">+1</span>
-                    </button>
+            <div class="protocols-grid">
+                <!-- Этап 1: Экипировка -->
+                <div class="protocol-card" data-stage="1" data-completed="false">
+                    <div class="card-stage">Этап 1</div>
+                    <div class="card-icon">👔</div>
+                    <div class="card-name">Экипировка</div>
+                    <div class="card-desc">Выберите аватарку учёного</div>
+                    <div class="card-status" id="stage1Status">Не выполнено</div>
+                    <a href="equip.html" class="btn-protocol">
+                        <span>Перейти</span>
+                        <span class="btn-arrow">→</span>
+                    </a>
                 </div>
 
-                <!-- Солнечный свет -->
-                <div class="fertilizer-card" data-fertilizer="sunlight">
-                    <div class="card-icon">☀️</div>
-                    <div class="card-name">Фотосинтез</div>
-                    <div class="card-desc">Энергетическая поддержка</div>
-                    <div class="card-counter" id="sunlightCounter">0</div>
-                    <button class="btn-apply" onclick="increaseCounter('sunlight')">
-                        <span>Применить</span>
-                        <span class="btn-plus">+1</span>
-                    </button>
+                <!-- Этап 2: Почва -->
+                <div class="protocol-card" data-stage="2" data-completed="false">
+                    <div class="card-stage">Этап 2</div>
+                    <div class="card-icon">🌱</div>
+                    <div class="card-name">Подготовленная почва</div>
+                    <div class="card-desc">Зафиксируйте договорённости</div>
+                    <div class="card-status" id="stage2Status">Не выполнено</div>
+                    <a href="soil.html" class="btn-protocol">
+                        <span>Перейти</span>
+                        <span class="btn-arrow">→</span>
+                    </a>
                 </div>
 
-                <!-- Азот -->
-                <div class="fertilizer-card" data-fertilizer="nitrogen">
-                    <div class="card-icon">🧪</div>
-                    <div class="card-name">Азот N</div>
-                    <div class="card-desc">Стимулятор роста</div>
-                    <div class="card-counter" id="nitrogenCounter">0</div>
-                    <button class="btn-apply" onclick="increaseCounter('nitrogen')">
-                        <span>Применить</span>
-                        <span class="btn-plus">+1</span>
-                    </button>
+                <!-- Этап 3: Хранилище -->
+                <div class="protocol-card" data-stage="3" data-completed="false">
+                    <div class="card-stage">Этап 3</div>
+                    <div class="card-icon">🧫</div>
+                    <div class="card-name">Набор генома</div>
+                    <div class="card-desc">Добавьте задачи из хранилища</div>
+                    <div class="card-status" id="stage3Status">Не выполнено</div>
+                    <a href="samples.html" class="btn-protocol">
+                        <span>Перейти</span>
+                        <span class="btn-arrow">→</span>
+                    </a>
                 </div>
 
-                <!-- Фосфор -->
-                <div class="fertilizer-card" data-fertilizer="phosphorus">
-                    <div class="card-icon">⚗️</div>
-                    <div class="card-name">Фосфор P</div>
-                    <div class="card-desc">Развитие корней</div>
-                    <div class="card-counter" id="phosphorusCounter">0</div>
-                    <button class="btn-apply" onclick="increaseCounter('phosphorus')">
-                        <span>Применить</span>
-                        <span class="btn-plus">+1</span>
-                    </button>
+                <!-- Этап 4: Очистка -->
+                <div class="protocol-card" data-stage="4" data-completed="false">
+                    <div class="card-stage">Этап 4</div>
+                    <div class="card-icon">🧬</div>
+                    <div class="card-name">Очищенный геном</div>
+                    <div class="card-desc">Выявите дефекты и стратегии</div>
+                    <div class="card-status" id="stage4Status">Не выполнено</div>
+                    <a href="clean.html" class="btn-protocol">
+                        <span>Перейти</span>
+                        <span class="btn-arrow">→</span>
+                    </a>
                 </div>
 
-                <!-- Калий -->
-                <div class="fertilizer-card" data-fertilizer="potassium">
-                    <div class="card-icon">🔮</div>
-                    <div class="card-name">Калий K</div>
-                    <div class="card-desc">Защита иммунитета</div>
-                    <div class="card-counter" id="potassiumCounter">0</div>
-                    <button class="btn-apply" onclick="increaseCounter('potassium')">
-                        <span>Применить</span>
-                        <span class="btn-plus">+1</span>
-                    </button>
+                <!-- Этап 5: Модуляция -->
+                <div class="protocol-card" data-stage="5" data-completed="false">
+                    <div class="card-stage">Этап 5</div>
+                    <div class="card-icon">📈</div>
+                    <div class="card-name">Модуляция роста</div>
+                    <div class="card-desc">Предложите улучшения процессов</div>
+                    <div class="card-status" id="stage5Status">Не выполнено</div>
+                    <a href="growth.html" class="btn-protocol">
+                        <span>Перейти</span>
+                        <span class="btn-arrow">→</span>
+                    </a>
                 </div>
 
-                <!-- Компост -->
-                <div class="fertilizer-card" data-fertilizer="compost">
-                    <div class="card-icon">🍂</div>
-                    <div class="card-name">Биогумус</div>
-                    <div class="card-desc">Органическая подкормка</div>
-                    <div class="card-counter" id="compostCounter">0</div>
-                    <button class="btn-apply" onclick="increaseCounter('compost')">
-                        <span>Применить</span>
-                        <span class="btn-plus">+1</span>
-                    </button>
+                <!-- Этап 6: Резистентность -->
+                <div class="protocol-card" data-stage="6" data-completed="false">
+                    <div class="card-stage">Этап 6</div>
+                    <div class="card-icon">🛡️</div>
+                    <div class="card-name">Сильный иммунитет</div>
+                    <div class="card-desc">Поделитесь вдохновляющими отзывами</div>
+                    <div class="card-status" id="stage6Status">Не выполнено</div>
+                    <a href="resistance.html" class="btn-protocol">
+                        <span>Перейти</span>
+                        <span class="btn-arrow">→</span>
+                    </a>
                 </div>
             </div>
 
-            <!-- Общий счёт -->
+            <!-- Общий прогресс -->
             <div class="total-section">
                 <div class="total-info">
-                    <h3>📊 Общий прогресс</h3>
-                    <div class="total-score" id="totalScore">0</div>
-                    <p>единиц адаптации</p>
+                    <h3>📊 Прогресс адаптации</h3>
+                    <div class="total-score" id="totalScore">0/6</div>
+                    <p>этапов завершено</p>
                 </div>
                 <button class="btn-reset" onclick="resetAll()">
                     <span>🔄</span>
@@ -174,6 +182,6 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-    <script src="garden.js?v=2"></script>
+    <script src="garden.js?v=3"></script>
 </body>
 </html>

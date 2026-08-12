@@ -148,13 +148,21 @@ function equipAvatar() {
     }
     
     const equipRef = database.ref(`equip/${sessionId}`);
+    const stagesRef = database.ref(`rooms/retro-main/stages`);
     
-    equipRef.set({
-        name: scientistName,
-        avatar: selectedAvatar,
-        equippedAt: Date.now()
-    }).then(() => {
+    // Сохраняем экипировку и отмечаем стадию 1
+    Promise.all([
+        equipRef.set({
+            name: scientistName,
+            avatar: selectedAvatar,
+            equippedAt: Date.now()
+        }),
+        stagesRef.update({
+            stage1_equipment: true
+        })
+    ]).then(() => {
         console.log('✅ Экипировка надета:', selectedAvatar);
+        console.log('✅ Стадия 1 (Экипировка) завершена');
         
         // Сохраняем аватарку в localStorage для использования на других страницах
         localStorage.setItem('scientistAvatar', selectedAvatar.emoji);
@@ -165,7 +173,10 @@ function equipAvatar() {
         document.getElementById('currentAvatarDisplay').textContent = selectedAvatar.emoji;
         document.getElementById('currentAvatarName').textContent = selectedAvatar.name;
         
-        alert(`Экипировка надета: ${selectedAvatar.emoji} ${selectedAvatar.name}`);
+        // Показать кнопку "Перейти в лабораторию"
+        document.getElementById('toLabBtn').style.display = 'inline-flex';
+        
+        alert(`✅ Экипировка надета: ${selectedAvatar.emoji} ${selectedAvatar.name}\n\n🎉 Стадия 1/6 завершена!\n\nТеперь можно перейти в лабораторию.`);
     }).catch((error) => {
         console.error('❌ Ошибка сохранения экипировки:', error);
         alert('Ошибка сохранения экипировки');

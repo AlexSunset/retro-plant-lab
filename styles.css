@@ -321,6 +321,28 @@ body {
     font-size: 1.3rem;
 }
 
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-nav {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 1.2rem;
+    padding: 8px 12px;
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-nav:hover {
+    background: rgba(102, 126, 234, 0.2);
+    border-color: #667eea;
+    transform: translateY(-2px);
+}
+
 .header-user {
     display: flex;
     align-items: center;
@@ -405,91 +427,99 @@ body {
     color: #e0e0e0;
 }
 
-/* Панель удобрений */
-.fertilizers-panel {
+/* Панель протоколов */
+.protocols-panel {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(102, 126, 234, 0.2);
     border-radius: 20px;
     padding: 30px;
 }
 
-.panel-title {
-    text-align: center;
-    color: #667eea;
-    font-size: 1.8rem;
-    margin-bottom: 10px;
-}
-
-.panel-subtitle {
-    text-align: center;
-    color: #666;
-    margin-bottom: 30px;
-}
-
-.fertilizers-grid {
+.protocols-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
     margin-bottom: 40px;
 }
 
-.fertilizer-card {
+.protocol-card {
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(102, 126, 234, 0.2);
+    border: 2px solid rgba(102, 126, 234, 0.2);
     border-radius: 15px;
     padding: 25px;
     text-align: center;
     transition: all 0.3s ease;
-    cursor: pointer;
+    position: relative;
+    overflow: hidden;
 }
 
-.fertilizer-card:hover {
+.protocol-card:hover {
     background: rgba(102, 126, 234, 0.1);
     border-color: rgba(102, 126, 234, 0.5);
     transform: translateY(-5px);
 }
 
-.fertilizer-card.card-applied {
-    animation: card-pulse 0.3s ease;
+.protocol-card.completed {
+    background: rgba(152, 251, 152, 0.05);
+    border-color: rgba(152, 251, 152, 0.4);
 }
 
-@keyframes card-pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+.protocol-card.completed::before {
+    content: '✅';
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5rem;
+}
+
+.card-stage {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(102, 126, 234, 0.3);
+    color: #98fb98;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 0 0 10px 0;
 }
 
 .card-icon {
-    font-size: 50px;
-    margin-bottom: 15px;
+    font-size: 60px;
+    margin: 20px 0 15px 0;
 }
 
 .card-name {
     color: #e0e0e0;
-    font-size: 1.2rem;
-    font-weight: 600;
+    font-size: 1.3rem;
+    font-weight: 700;
     margin-bottom: 8px;
 }
 
 .card-desc {
     color: #666;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     margin-bottom: 15px;
+    min-height: 40px;
 }
 
-.card-counter {
-    background: rgba(102, 126, 234, 0.2);
-    color: #667eea;
-    font-size: 2rem;
-    font-weight: 700;
-    padding: 10px 30px;
-    border-radius: 25px;
+.card-status {
+    background: rgba(255, 193, 7, 0.2);
+    color: #ffc107;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 20px;
     display: inline-block;
     margin-bottom: 20px;
-    min-width: 80px;
 }
 
-.btn-apply {
+.protocol-card.completed .card-status {
+    background: rgba(152, 251, 152, 0.2);
+    color: #98fb98;
+}
+
+.btn-protocol {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
@@ -502,24 +532,22 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 10px;
+    text-decoration: none;
 }
 
-.btn-apply:hover {
+.btn-protocol:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
 }
 
-.btn-plus {
-    background: rgba(255, 255, 255, 0.2);
-    padding: 3px 10px;
-    border-radius: 15px;
-    font-size: 0.85rem;
+.btn-arrow {
+    font-size: 1.2rem;
 }
 
-/* Общий счёт */
+/* Общий прогресс */
 .total-section {
-    background: linear-gradient(135deg, rgba(240, 147, 251, 0.2) 0%, rgba(245, 87, 108, 0.2) 100%);
-    border: 1px solid rgba(245, 87, 108, 0.3);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(152, 251, 152, 0.2) 100%);
+    border: 1px solid rgba(152, 251, 152, 0.3);
     border-radius: 15px;
     padding: 25px;
     display: flex;
@@ -542,8 +570,8 @@ body {
 .total-score {
     font-size: 3rem;
     font-weight: 700;
-    color: #f5576c;
-    text-shadow: 0 0 20px rgba(245, 87, 108, 0.5);
+    color: #98fb98;
+    text-shadow: 0 0 20px rgba(152, 251, 152, 0.5);
 }
 
 .total-info p {
