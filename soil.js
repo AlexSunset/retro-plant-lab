@@ -147,7 +147,7 @@ function loadAgreements() {
 }
 
 function renderAgreements(data) {
-    const grid = document.getElementById('agreementsGrid');
+    const grid = document.getElementById('soilGrid');
     
     if (!grid) return;
     
