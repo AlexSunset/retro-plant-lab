@@ -1945,6 +1945,7 @@ body {
    ============================================ */
 .resistance-page {
     background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
 }
 
 .resistance-header {
@@ -1980,8 +1981,13 @@ body {
     gap: 20px;
 }
 
+.user-display {
+    color: #98fb98;
+    font-size: 0.95rem;
+}
+
 .resistance-container {
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto;
     padding: 40px 20px;
 }
@@ -2004,12 +2010,6 @@ body {
 .resistance-intro p {
     color: #98fb98;
     font-size: 1.1rem;
-}
-
-.resistance-hint {
-    color: #666;
-    font-size: 0.9rem;
-    margin-top: 10px;
 }
 
 /* Карточка отзыва */
@@ -2035,7 +2035,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .review-author-info {
@@ -2046,7 +2046,7 @@ body {
 }
 
 .author-icon {
-    font-size: 2rem;
+    font-size: 1.8rem;
 }
 
 .author-name {
@@ -2058,6 +2058,7 @@ body {
 .time-ago {
     color: #666;
     font-size: 0.8rem;
+    margin-top: 3px;
 }
 
 .btn-delete-review {
@@ -2082,133 +2083,13 @@ body {
     font-size: 1.05rem;
     line-height: 1.6;
     word-wrap: break-word;
-    margin-bottom: 20px;
-}
-
-/* Комментарии к отзывам */
-.comments-section {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 15px;
-    padding: 20px;
-}
-
-.comments-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid rgba(102, 126, 234, 0.2);
-}
-
-.comments-title {
-    color: #98fb98;
-    font-weight: 600;
-    font-size: 1rem;
-}
-
-.btn-add-comment {
-    background: rgba(152, 251, 152, 0.1);
-    color: #98fb98;
-    border: 1px solid rgba(152, 251, 152, 0.3);
-    padding: 6px 14px;
-    border-radius: 15px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-add-comment:hover {
-    background: rgba(152, 251, 152, 0.2);
-    border-color: #98fb98;
-    transform: translateY(-1px);
-}
-
-.comments-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.no-comments {
-    color: #666;
-    font-size: 0.9rem;
-    text-align: center;
-    padding: 15px;
-}
-
-.comment-item {
-    background: rgba(255, 255, 255, 0.03);
-    border-left: 3px solid #4caf50;
-    border-radius: 10px;
-    padding: 15px;
-    transition: all 0.3s ease;
-}
-
-.comment-item:hover {
-    background: rgba(76, 175, 80, 0.1);
-    border-color: #4caf50;
-}
-
-.comment-author {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.comment-icon {
-    font-size: 1rem;
-}
-
-.comment-name {
-    color: #98fb98;
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-.comment-date {
-    color: #666;
-    font-size: 0.75rem;
-    margin-left: auto;
-}
-
-.btn-delete-comment {
-    background: none;
-    border: none;
-    color: #ff5757;
-    cursor: pointer;
-    font-size: 1rem;
-    padding: 2px 6px;
-    opacity: 0.7;
-    transition: all 0.3s ease;
-}
-
-.btn-delete-comment:hover {
-    opacity: 1;
-    transform: scale(1.2);
-}
-
-.comment-text {
-    color: #e0e0e0;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    word-wrap: break-word;
-}
-
-.loading-comments {
-    color: #666;
-    font-size: 0.85rem;
-    text-align: center;
-    padding: 15px;
 }
 
 .no-data {
     color: #666;
     font-size: 1rem;
     text-align: center;
-    padding: 40px;
+    padding: 60px 20px;
 }
 
 /* Кнопка добавления отзыва */
