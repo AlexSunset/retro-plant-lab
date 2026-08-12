@@ -25,6 +25,7 @@
         <div class="samples-intro">
             <h1>🧫 Хранилище Образцов</h1>
             <p>Коллекция задач, над которыми команда работала в прошлом месяце</p>
+            <p class="samples-hint">💡 Оставляйте заметки-образцы по каждой задаче</p>
         </div>
 
         <!-- Список задач -->
@@ -33,6 +34,32 @@
         </div>
     </div>
 
+    <!-- Модальное окно для комментария -->
+    <div class="modal-overlay" id="commentModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>📝 Добавить образец</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="task-info" id="modalTaskInfo"></div>
+                <textarea 
+                    id="commentText" 
+                    placeholder="Опишите ваш образец... (инсайт, проблема, достижение)"
+                    maxlength="500"
+                    rows="4"
+                ></textarea>
+                <div class="char-count"><span id="charCount">0</span>/500</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" id="cancelBtn">Отмена</button>
+                <button class="btn-submit" id="submitBtn">Добавить образец</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <script src="samples.js"></script>
 </body>
 </html>
