@@ -245,10 +245,10 @@ function trackScientists() {
             const lastSeen = data.lastSeen || 0;
             const timeSinceLastSeen = now - lastSeen;
             
-            // Удаляем сессии с undefined или пустым именем
+            // ИГНОРИРУЕМ сессии с undefined или пустым именем (не показываем, но и не удаляем)
             if (!data.name || data.name === 'undefined' || data.name === 'null' || data.name === '') {
-                console.log('🗑️ Удаляем сессию с некорректным именем:', child.key, 'data:', data);
-                child.ref.remove();
+                console.log('⚠️ Пропускаем сессию с некорректным именем:', child.key);
+                // НЕ удаляем, просто игнорируем
                 return;
             }
             
