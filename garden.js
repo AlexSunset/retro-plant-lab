@@ -139,6 +139,13 @@ let heartbeatTimer = null;
 
 function trackScientists() {
     console.log('👥 Отслеживание учёных, sessionId:', sessionId);
+    
+    // Защита от повторного вызова
+    if (heartbeatTimer) {
+        console.warn('⚠️ Heartbeat уже запущен, пропускаем повторный вызов');
+        return;
+    }
+    
     console.log('🔍 Проверка имени:', JSON.stringify(scientistName), 'type:', typeof scientistName);
     console.log('🔍 localStorage scientistName:', JSON.stringify(localStorage.getItem('scientistName')));
     
@@ -180,9 +187,19 @@ function trackScientists() {
     myRef.onDisconnect().remove();
     
     // Heartbeat - обновляем lastSeen каждые 5 секунд
+    console.log('⏰ Запуск heartbeat для sessionId:', sessionId, 'name:', scientistName);
     heartbeatTimer = setInterval(() => {
+        // Проверка имени перед отправкой
+        if (!scientistName || scientistName === 'undefined' || scientistName === 'null' || scientistName === '') {
+            console.error('❌ Heartbeat: имя потеряно, остановка таймера');
+            clearInterval(heartbeatTimer);
+            heartbeatTimer = null;
+            return;
+        }
+        console.log('💓 Heartbeat tick, sessionId:', sessionId, 'name:', scientistName);
         myRef.update({ 
-            lastSeen: Date.now() 
+            lastSeen: Date.now(),
+            name: scientistName  // Явно обновляем имя
         }).catch((error) => {
             console.error('❌ Ошибка heartbeat:', error);
         });
