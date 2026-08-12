@@ -149,14 +149,16 @@ function timeAgo(timestamp) {
 // ОТОБРАЖЕНИЕ ОТЗЫВОВ
 // ============================================
 
-function renderReviews(reviews) {
+function renderReviews(data) {
     reviewsGrid.innerHTML = '';
     
     const reviewList = [];
-    reviews.forEach((snapshot) => {
+    
+    // Преобразуем объект в массив
+    Object.entries(data).forEach(([id, review]) => {
         reviewList.push({
-            id: snapshot.key,
-            ...snapshot.val()
+            id: id,
+            ...review
         });
     });
     
