@@ -58,7 +58,6 @@ function connectToClean() {
             console.log('✅ Подключение к Firebase установлено');
             setupPresence();
             loadDefects();
-            loadStrategies();
         }
     });
 }
@@ -104,7 +103,7 @@ function setupPresence() {
 }
 
 // ============================================
-// ДЕФЕКТНЫЕ ГЕНОМЫ (ПРОБЛЕМЫ)
+// ДЕФЕКТНЫЕ ГЕНОМЫ (ПРОБЛЕМЫ) СО СТРАТЕГИЯМИ
 // ============================================
 
 function loadDefects() {
@@ -117,34 +116,44 @@ function loadDefects() {
         console.log(`📝 Получено дефектов: ${Object.keys(defects).length}`);
         
         if (Object.keys(defects).length === 0) {
-            container.innerHTML = '<div class="no-items">Пока нет дефектных геномов</div>';
+            container.innerHTML = '<div class="no-items">Пока нет дефектных геномов. Добавьте первый!</div>';
             return;
         }
         
         container.innerHTML = '';
         
-        Object.entries(defects).forEach(([id, defect]) => {
+        // Сортируем: новые сверху
+        const sortedDefects = Object.entries(defects).sort((a, b) => b[1].timestamp - a[1].timestamp);
+        
+        sortedDefects.forEach(([id, defect]) => {
             const canDelete = defect.author === scientistName && (Date.now() - defect.timestamp < 86400000);
+            const strategies = defect.strategies || {};
             
             const defectEl = document.createElement('div');
-            defectEl.className = 'genome-item defect';
+            defectEl.className = 'defect-card';
             defectEl.innerHTML = `
-                <div class="genome-header">
-                    <div class="genome-author">
-                        <span class="genome-icon">🔴</span>
-                        <span class="author-name">${defect.author}</span>
-                        <span class="genome-time">${formatTime(defect.timestamp)}</span>
+                <div class="defect-header">
+                    <div class="defect-main">
+                        <span class="defect-icon">🔴</span>
+                        <div class="defect-info">
+                            <div class="defect-author-row">
+                                <span class="author-name">${defect.author}</span>
+                                <span class="genome-time">${formatTime(defect.timestamp)}</span>
+                            </div>
+                            <div class="defect-text">${defect.text}</div>
+                        </div>
                     </div>
-                    ${canDelete ? `<button class="btn-delete-genome" onclick="deleteDefect('${id}')">🗑️</button>` : ''}
+                    ${canDelete ? `<button class="btn-delete-defect" onclick="deleteDefect('${id}')">🗑️</button>` : ''}
                 </div>
-                <div class="genome-text">${defect.text}</div>
-                <div class="genome-comments">
-                    <div class="comments-header">
-                        <span>💬 Комментарии</span>
-                        <button class="btn-add-comment" onclick="openCommentModal('defect', '${id}')">+ Комментарий</button>
+                
+                <div class="strategies-section">
+                    <div class="strategies-header">
+                        <span class="strategies-title">🟢 Стратегии извлечения</span>
+                        <button class="btn-add-strategy" onclick="openStrategyModal('${id}')">+ Стратегия</button>
                     </div>
-                    <div class="comments-list" id="defect-comments-${id}">
-                        ${renderComments(defect.comments || {}, 'defect', id)}
+                    
+                    <div class="strategies-list" id="strategies-${id}">
+                        ${renderStrategies(strategies, id)}
                     </div>
                 </div>
             `;
@@ -167,7 +176,7 @@ function addDefect() {
         text: text,
         author: scientistName,
         timestamp: Date.now(),
-        comments: {}
+        strategies: {}
     }).then(() => {
         console.log('✅ Дефектный геном добавлен');
         document.getElementById('defectText').value = '';
@@ -179,7 +188,7 @@ function addDefect() {
 }
 
 function deleteDefect(id) {
-    if (!confirm('Удалить этот дефектный геном?')) return;
+    if (!confirm('Удалить этот дефектный геном и все стратегии?')) return;
     
     db.ref(`clean/defects/${id}`).remove().then(() => {
         console.log('✅ Дефектный геном удалён');
@@ -189,54 +198,17 @@ function deleteDefect(id) {
 }
 
 // ============================================
-// СТРАТЕГИИ ИЗВЛЕЧЕНИЯ (РЕШЕНИЯ)
+// СТРАТЕГИИ ИЗВЛЕЧЕНИЯ (ВНУТРИ ДЕФЕКТА)
 // ============================================
 
-function loadStrategies() {
-    console.log('📊 Загрузка стратегий извлечения...');
-    
-    db.ref('clean/strategies').on('value', (snapshot) => {
-        const strategies = snapshot.val() || {};
-        const container = document.getElementById('strategiesList');
-        
-        console.log(`📝 Получено стратегий: ${Object.keys(strategies).length}`);
-        
-        if (Object.keys(strategies).length === 0) {
-            container.innerHTML = '<div class="no-items">Пока нет стратегий извлечения</div>';
-            return;
-        }
-        
-        container.innerHTML = '';
-        
-        Object.entries(strategies).forEach(([id, strategy]) => {
-            const canDelete = strategy.author === scientistName && (Date.now() - strategy.timestamp < 86400000);
-            
-            const strategyEl = document.createElement('div');
-            strategyEl.className = 'genome-item strategy';
-            strategyEl.innerHTML = `
-                <div class="genome-header">
-                    <div class="genome-author">
-                        <span class="genome-icon">🟢</span>
-                        <span class="author-name">${strategy.author}</span>
-                        <span class="genome-time">${formatTime(strategy.timestamp)}</span>
-                    </div>
-                    ${canDelete ? `<button class="btn-delete-genome" onclick="deleteStrategy('${id}')">🗑️</button>` : ''}
-                </div>
-                <div class="genome-text">${strategy.text}</div>
-                <div class="genome-comments">
-                    <div class="comments-header">
-                        <span>💬 Комментарии</span>
-                        <button class="btn-add-comment" onclick="openCommentModal('strategy', '${id}')">+ Комментарий</button>
-                    </div>
-                    <div class="comments-list" id="strategy-comments-${id}">
-                        ${renderComments(strategy.comments || {}, 'strategy', id)}
-                    </div>
-                </div>
-            `;
-            container.appendChild(strategyEl);
-        });
-    });
+function openStrategyModal(defectId) {
+    currentStrategyDefectId = defectId;
+    document.getElementById('strategyModal').classList.add('modal-active');
+    document.getElementById('strategyText').value = '';
+    updateStrategyCharCount();
 }
+
+let currentStrategyDefectId = '';
 
 function addStrategy() {
     const text = document.getElementById('strategyText').value.trim();
@@ -246,110 +218,56 @@ function addStrategy() {
         return;
     }
     
-    console.log('📝 Добавление стратегии извлечения...');
+    if (!currentStrategyDefectId) {
+        alert('Ошибка: не выбран дефект');
+        return;
+    }
     
-    db.ref('clean/strategies').push({
+    console.log(`📝 Добавление стратегии к дефекту ${currentStrategyDefectId}`);
+    
+    const strategyId = db.ref(`clean/defects/${currentStrategyDefectId}/strategies`).push().key;
+    
+    db.ref(`clean/defects/${currentStrategyDefectId}/strategies/${strategyId}`).set({
         text: text,
         author: scientistName,
-        timestamp: Date.now(),
-        comments: {}
+        timestamp: Date.now()
     }).then(() => {
-        console.log('✅ Стратегия извлечения добавлена');
-        document.getElementById('strategyText').value = '';
+        console.log('✅ Стратегия добавлена');
         closeModal('strategyModal');
+        currentStrategyDefectId = '';
     }).catch(err => {
         console.error('❌ Ошибка добавления:', err);
         alert('Ошибка: ' + err.message);
     });
 }
 
-function deleteStrategy(id) {
+function deleteStrategy(defectId, strategyId) {
     if (!confirm('Удалить эту стратегию?')) return;
     
-    db.ref(`clean/strategies/${id}`).remove().then(() => {
+    db.ref(`clean/defects/${defectId}/strategies/${strategyId}`).remove().then(() => {
         console.log('✅ Стратегия удалена');
     }).catch(err => {
         console.error('❌ Ошибка удаления:', err);
     });
 }
 
-// ============================================
-// КОММЕНТАРИИ
-// ============================================
-
-let currentCommentType = '';
-let currentCommentId = '';
-
-function openCommentModal(type, id) {
-    currentCommentType = type;
-    currentCommentId = id;
+function renderStrategies(strategies, defectId) {
+    const strategyList = Object.values(strategies || {}).sort((a, b) => a.timestamp - b.timestamp);
     
-    console.log(`📝 Открытие модального окна: ${type} ${id}`);
-    
-    const modal = document.getElementById('commentModal');
-    modal.classList.add('modal-active');
-    
-    document.getElementById('commentText').value = '';
-    updateCharCount();
-}
-
-function closeCommentModal() {
-    const modal = document.getElementById('commentModal');
-    modal.classList.remove('modal-active');
-    currentCommentType = '';
-    currentCommentId = '';
-}
-
-function addComment() {
-    const text = document.getElementById('commentText').value.trim();
-    
-    if (!text) {
-        alert('Введите текст комментария');
-        return;
+    if (strategyList.length === 0) {
+        return '<div class="no-strategies">Пока нет стратегий. Добавьте первую!</div>';
     }
     
-    console.log(`📝 Добавление комментария к ${currentCommentType} ${currentCommentId}`);
-    
-    const commentId = db.ref(`clean/${currentCommentType}s/${currentCommentId}/comments`).push().key;
-    
-    db.ref(`clean/${currentCommentType}s/${currentCommentId}/comments/${commentId}`).set({
-        author: scientistName,
-        text: text,
-        timestamp: Date.now()
-    }).then(() => {
-        console.log('✅ Комментарий добавлен');
-        closeCommentModal();
-    }).catch(err => {
-        console.error('❌ Ошибка добавления:', err);
-        alert('Ошибка: ' + err.message);
-    });
-}
-
-function deleteComment(type, id, commentId) {
-    db.ref(`clean/${type}s/${id}/comments/${commentId}`).remove().then(() => {
-        console.log('✅ Комментарий удалён');
-    }).catch(err => {
-        console.error('❌ Ошибка удаления:', err);
-    });
-}
-
-function renderComments(comments, type, id) {
-    const commentList = Object.values(comments || {}).sort((a, b) => b.timestamp - a.timestamp);
-    
-    if (commentList.length === 0) {
-        return '<div class="no-comments">Пока нет комментариев</div>';
-    }
-    
-    return commentList.map(comment => {
-        const canDelete = comment.author === scientistName && (Date.now() - comment.timestamp < 86400000);
+    return strategyList.map(strategy => {
+        const canDelete = strategy.author === scientistName && (Date.now() - strategy.timestamp < 86400000);
         return `
-            <div class="comment-item">
-                <div class="comment-header">
-                    <span class="comment-author">${comment.author}</span>
-                    <span class="comment-time">${formatTime(comment.timestamp)}</span>
-                    ${canDelete ? `<button class="btn-delete-comment" onclick="deleteComment('${type}', '${id}', '${comment.id || Object.keys(comments).find(k => comments[k] === comment)}')">🗑️</button>` : ''}
+            <div class="strategy-item">
+                <div class="strategy-header">
+                    <span class="strategy-author">${strategy.author}</span>
+                    <span class="strategy-time">${formatTime(strategy.timestamp)}</span>
+                    ${canDelete ? `<button class="btn-delete-strategy" onclick="deleteStrategy('${defectId}', '${Object.keys(strategies).find(k => strategies[k] === strategy)}')">🗑️</button>` : ''}
                 </div>
-                <div class="comment-text">${comment.text}</div>
+                <div class="strategy-text">${strategy.text}</div>
             </div>
         `;
     }).join('');
@@ -372,13 +290,22 @@ function formatTime(timestamp) {
 }
 
 function updateCharCount() {
-    const textarea = document.getElementById('commentText');
-    const counter = document.getElementById('charCount');
+    const textarea = document.getElementById('defectText');
+    const counter = document.getElementById('defectCharCount');
+    counter.textContent = `${textarea.value.length}/500`;
+}
+
+function updateStrategyCharCount() {
+    const textarea = document.getElementById('strategyText');
+    const counter = document.getElementById('strategyCharCount');
     counter.textContent = `${textarea.value.length}/500`;
 }
 
 function closeModal(modalId) {
     document.getElementById(modalId).classList.remove('modal-active');
+    if (modalId === 'strategyModal') {
+        currentStrategyDefectId = '';
+    }
 }
 
 // ============================================
@@ -388,13 +315,9 @@ function closeModal(modalId) {
 document.addEventListener('DOMContentLoaded', () => {
     connectToClean();
     
-    // Модальные окна
+    // Модальное окно дефекта
     document.getElementById('defectModalBtn')?.addEventListener('click', () => {
         document.getElementById('defectModal').classList.add('modal-active');
-    });
-    
-    document.getElementById('strategyModalBtn')?.addEventListener('click', () => {
-        document.getElementById('strategyModal').classList.add('modal-active');
     });
     
     // Кнопки отмены
@@ -407,10 +330,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Кнопки отправки
     document.querySelector('#defectModal .btn-submit')?.addEventListener('click', addDefect);
     document.querySelector('#strategyModal .btn-submit')?.addEventListener('click', addStrategy);
-    document.querySelector('#commentModal .btn-submit')?.addEventListener('click', addComment);
     
-    // Счётчик символов
-    document.getElementById('commentText')?.addEventListener('input', updateCharCount);
+    // Счётчики символов
+    document.getElementById('defectText')?.addEventListener('input', updateCharCount);
+    document.getElementById('strategyText')?.addEventListener('input', updateStrategyCharCount);
     
     // Закрытие по клику вне модального окна
     document.querySelectorAll('.modal-overlay').forEach(modal => {
