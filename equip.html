@@ -42,10 +42,11 @@
         </main>
     </div>
 
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+    <!-- Firebase Compat версии -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database-compat.js"></script>
 
+    <script>
         const firebaseConfig = {
             apiKey: "AIzaSyA7Zpsng2b6I02RZ7r7VtwXzzN-gR_kNmk",
             authDomain: "retro-tkat.firebaseapp.com",
@@ -57,8 +58,8 @@
             measurementId: "G-EVC7M9W82C"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
         // Проверка имени
         const scientistName = localStorage.getItem('scientistName');
@@ -125,7 +126,7 @@
 
         // Проверка текущей экипировки
         const equipRef = database.ref(`equip/${sessionId}`);
-        onValue(equipRef, (snapshot) => {
+        equipRef.on('value', (snapshot) => {
             const data = snapshot.val();
             if (data && data.avatar) {
                 document.getElementById('currentEquip').style.display = 'block';
@@ -143,7 +144,7 @@
             }
 
             try {
-                await set(equipRef, {
+                await equipRef.set({
                     name: scientistName,
                     avatar: selectedAvatar,
                     equippedAt: Date.now()
