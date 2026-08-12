@@ -319,6 +319,22 @@ function resetAll() {
             console.error('❌ Ошибка удаления образцов:', error);
         });
         
+        // Сброс всех договорённостей (почва)
+        const soilRef = database.ref('soil');
+        soilRef.remove().then(() => {
+            console.log('✅ Все договорённости сброшены');
+        }).catch((error) => {
+            console.error('❌ Ошибка удаления договорённостей:', error);
+        });
+        
+        // Сброс кастомных задач
+        const customTasksRef = database.ref('customTasks');
+        customTasksRef.remove().then(() => {
+            console.log('✅ Кастомные задачи удалены');
+        }).catch((error) => {
+            console.error('❌ Ошибка удаления задач:', error);
+        });
+        
         // Сброс учёных
         const scientistsRef = database.ref(`rooms/${ROOM_ID}/scientists`);
         scientistsRef.remove().then(() => {
