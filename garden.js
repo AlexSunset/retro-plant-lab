@@ -135,6 +135,13 @@ let heartbeatTimer = null;
 function trackScientists() {
     console.log('👥 Отслеживание учёных, sessionId:', sessionId);
     
+    // Проверка: если имени нет, не записываем
+    if (!scientistName || scientistName === 'undefined' || scientistName === 'null') {
+        console.error('❌ Нет имени учёного, возврат на титульную');
+        window.location.href = 'index.html';
+        return;
+    }
+    
     const scientistsRef = database.ref(`rooms/${ROOM_ID}/scientists`);
     const myRef = scientistsRef.child(sessionId);
     
