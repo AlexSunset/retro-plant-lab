@@ -3,39 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Зона Экипировки | T-KAT Retro</title>
+    <title>Зона Экипировки - Ретро Лаборатория</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="equip-page">
-    <!-- Верхняя панель -->
-    <header class="samples-header">
-        <a href="garden.html" class="btn-back">← В лабораторию</a>
-        <div class="header-title">
-            <span class="header-icon">👔</span>
-            <span>Зона Экипировки</span>
-        </div>
-        <div class="header-spacer"></div>
-    </header>
-
-    <div class="samples-container">
-        <!-- Описание -->
-        <div class="samples-intro">
+<body>
+    <div class="container">
+        <!-- Шапка как в хранилище -->
+        <header class="samples-header">
+            <a href="garden.html" class="back-btn">← В лабораторию</a>
             <h1>👔 Зона Экипировки</h1>
-            <p>Место для подготовки к работе</p>
-            <p class="samples-hint">💡 Концепция в разработке...</p>
-        </div>
+            <div style="width: 100px;"></div> <!-- Spacer для центрирования -->
+        </header>
 
-        <!-- Контент -->
-        <div class="equip-content" id="equipContent">
-            <!-- Будет добавлено позже -->
-        </div>
+        <!-- Основной контент -->
+        <main class="equip-main">
+            <div class="equip-info">
+                <p>Выберите аватар для идентификации в лаборатории</p>
+            </div>
+
+            <!-- Сетка аватарок -->
+            <div class="avatar-grid" id="avatarGrid">
+                <!-- Аватарки генерируются через JS -->
+            </div>
+
+            <!-- Кнопка надеть -->
+            <button class="equip-btn" id="equipBtn" disabled>
+                🎒 Надеть экипировку
+            </button>
+
+            <!-- Текущая экипировка -->
+            <div class="current-equip" id="currentEquip" style="display: none;">
+                <h3>Ваша экипировка:</h3>
+                <div class="current-avatar">
+                    <span class="avatar" id="currentAvatarDisplay">🧑‍🔬</span>
+                    <span id="currentAvatarName">Учёный</span>
+                </div>
+            </div>
+        </main>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
-    <script src="equip.js"></script>
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA7Zpsng2b6I02RZ7r7VtwXzzN-gR_kNmk",
+            authDomain: "retro-tkat.firebaseapp.com",
+            databaseURL: "https://retro-tkat-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "retro-tkat",
+            storageBucket: "retro-tkat.firebasestorage.app",
+            messagingSenderId: "526671550405",
+            appId: "1:526671550405:web:fded37933b6c890ed95dac",
+            measurementId: "G-EVC7M9W82C"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // Проверка имени
+        const scientistName = localStorage.getItem('scientistName');
+        if (!scientistName || scientistName === 'undefined' || scientistName === 'null') {
+            console.error('❌ Нет имени учёного, возврат на титульную');
+            window.location.href = 'index.html';
+        }
+
+        const sessionId = localStorage.getItem('sessionId') || 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('sessionId', sessionId);
+
+        console.log('👔 Зона Экипировки загружена');
+        console.log('👨‍🔬 Учёный в зоне экипировки:', scientistName);
+
+        // Список аватарок
+        const avatars = [
+            { emoji: '🧑‍🔬', name: 'Учёный' },
+            { emoji: '👨‍🔬', name: 'Учёный М' },
+            { emoji: '👩‍🔬', name: 'Учёный Ж' },
+            { emoji: '🧙‍♂️', name: 'Алхимик' },
+            { emoji: '🧙‍♀️', name: 'Алхимик Ж' },
+            { emoji: '🦸‍♂️', name: 'Герой' },
+            { emoji: '🦸‍♀️', name: 'Героиня' },
+            { emoji: '🤖', name: 'Робот' },
+            { emoji: '👽', name: 'Пришелец' },
+            { emoji: '🦖', name: 'Динозавр' },
+            { emoji: '🦄', name: 'Единорог' },
+            { emoji: '🐱‍🚀', name: 'Котокосмонавт' },
+            { emoji: '🧟‍♂️', name: 'Зомби' },
+            { emoji: '🧞‍♂️', name: 'Джинн' },
+            { emoji: '👻', name: 'Призрак' },
+            { emoji: '🦹‍♂️', name: 'Злодей' },
+            { emoji: '🦹‍♀️', name: 'Злодейка' },
+            { emoji: '🕵️‍♂️', name: 'Детектив' },
+            { emoji: '🕵️‍♀️', name: 'Детектив Ж' },
+            { emoji: '🧑‍💼', name: 'Менеджер' }
+        ];
+
+        let selectedAvatar = null;
+
+        // Рендеринг аватарок
+        const avatarGrid = document.getElementById('avatarGrid');
+        
+        avatars.forEach(avatar => {
+            const avatarEl = document.createElement('div');
+            avatarEl.className = 'avatar-card';
+            avatarEl.innerHTML = `
+                <span class="avatar-emoji">${avatar.emoji}</span>
+                <span class="avatar-name">${avatar.name}</span>
+            `;
+            avatarEl.addEventListener('click', () => {
+                // Снять выделение со всех
+                document.querySelectorAll('.avatar-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                // Выделить текущую
+                avatarEl.classList.add('selected');
+                selectedAvatar = avatar;
+                // Активировать кнопку
+                document.getElementById('equipBtn').disabled = false;
+            });
+            avatarGrid.appendChild(avatarEl);
+        });
+
+        // Проверка текущей экипировки
+        const equipRef = database.ref(`equip/${sessionId}`);
+        onValue(equipRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data && data.avatar) {
+                document.getElementById('currentEquip').style.display = 'block';
+                document.getElementById('currentAvatarDisplay').textContent = data.avatar.emoji;
+                document.getElementById('currentAvatarName').textContent = data.avatar.name;
+                console.log('✅ Текущая экипировка:', data.avatar);
+            }
+        });
+
+        // Кнопка "Надеть экипировку"
+        document.getElementById('equipBtn').addEventListener('click', async () => {
+            if (!selectedAvatar) {
+                alert('Выберите аватарку!');
+                return;
+            }
+
+            try {
+                await set(equipRef, {
+                    name: scientistName,
+                    avatar: selectedAvatar,
+                    equippedAt: Date.now()
+                });
+                console.log('✅ Экипировка надета:', selectedAvatar);
+                
+                // Показать текущую экипировку
+                document.getElementById('currentEquip').style.display = 'block';
+                document.getElementById('currentAvatarDisplay').textContent = selectedAvatar.emoji;
+                document.getElementById('currentAvatarName').textContent = selectedAvatar.name;
+                
+                alert(`Экипировка надета: ${selectedAvatar.emoji} ${selectedAvatar.name}`);
+            } catch (error) {
+                console.error('❌ Ошибка сохранения экипировки:', error);
+                alert('Ошибка сохранения экипировки');
+            }
+        });
+    </script>
 </body>
 </html>

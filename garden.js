@@ -462,23 +462,39 @@ function updateScientistsList(scientists) {
         return;
     }
     
-    const icons = ['👨‍🔬', '👩‍🔬', '🧑‍🔬', '👨‍⚕️', '👩‍⚕️', '🧑‍🔬'];
-    
-    grid.innerHTML = scientists.map((s, i) => {
-        const isMe = s.id === sessionId;
-        return `
-            <div class="scientist-card ${isMe ? 'is-me' : ''}">
-                <div class="scientist-icon">${icons[i % icons.length]}</div>
-                <div class="scientist-info">
-                    <div class="scientist-name">${escapeHtml(s.name)} ${isMe ? '<span class="badge-me">Вы</span>' : ''}</div>
-                    <div class="scientist-status">
-                        <span class="status-indicator online"></span>
-                        <span>В сети</span>
+    // Загружаем аватарки для всех учёных
+    const equipRef = database.ref('equip');
+    equipRef.once('value', (snapshot) => {
+        const allAvatars = snapshot.val() || {};
+        
+        // Сопоставляем sessionId с аватаркой
+        const avatarMap = {};
+        Object.keys(allAvatars).forEach(sessionIdKey => {
+            const equipData = allAvatars[sessionIdKey];
+            if (equipData && equipData.avatar) {
+                avatarMap[sessionIdKey] = equipData.avatar.emoji;
+            }
+        });
+        
+        const icons = ['👨‍🔬', '👩‍🔬', '🧑‍🔬', '👨‍⚕️', '👩‍⚕️', '🧑‍🔬'];
+        
+        grid.innerHTML = scientists.map((s, i) => {
+            const isMe = s.id === sessionId;
+            const avatar = avatarMap[s.id] || icons[i % icons.length];
+            return `
+                <div class="scientist-card ${isMe ? 'is-me' : ''}">
+                    <div class="scientist-icon">${avatar}</div>
+                    <div class="scientist-info">
+                        <div class="scientist-name">${escapeHtml(s.name)} ${isMe ? '<span class="badge-me">Вы</span>' : ''}</div>
+                        <div class="scientist-status">
+                            <span class="status-indicator online"></span>
+                            <span>В сети</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
-    }).join('');
+            `;
+        }).join('');
+    });
 }
 
 function escapeHtml(text) {

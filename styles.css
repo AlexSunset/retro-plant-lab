@@ -2109,31 +2109,139 @@ body {
     background: linear-gradient(135deg, #1a2e1a 0%, #1f3d2a 100%);
 }
 
-.equip-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 400px;
+.equip-main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
 }
 
-.empty-state {
+.equip-info {
     text-align: center;
-    padding: 40px;
+    margin-bottom: 40px;
+    padding: 30px;
     background: rgba(255, 255, 255, 0.05);
-    border-radius: 15px;
-    border: 1px solid rgba(102, 126, 234, 0.2);
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    border-radius: 20px;
 }
 
-.empty-state p {
-    font-size: 1.2rem;
-    color: #e0e0e0;
-    margin: 0 0 10px 0;
-}
-
-.empty-state .hint {
-    font-size: 0.9rem;
-    color: #888;
+.equip-info p {
+    color: #98fb98;
+    font-size: 1.1rem;
     margin: 0;
+}
+
+/* Сетка аватарок */
+.avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.avatar-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(102, 126, 234, 0.2);
+    border-radius: 15px;
+    padding: 20px 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.avatar-card:hover {
+    background: rgba(102, 126, 234, 0.1);
+    border-color: rgba(102, 126, 234, 0.5);
+    transform: translateY(-3px);
+}
+
+.avatar-card.selected {
+    background: rgba(152, 251, 152, 0.1);
+    border-color: #98fb98;
+    box-shadow: 0 0 20px rgba(152, 251, 152, 0.3);
+}
+
+.avatar-emoji {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.avatar-name {
+    color: #e0e0e0;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+/* Кнопка надеть экипировку */
+.equip-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: block;
+    margin: 0 auto 30px;
+}
+
+.equip-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+.equip-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Текущая экипировка */
+.current-equip {
+    text-align: center;
+    padding: 30px;
+    background: rgba(152, 251, 152, 0.05);
+    border: 1px solid rgba(152, 251, 152, 0.3);
+    border-radius: 20px;
+}
+
+.current-equip h3 {
+    color: #98fb98;
+    margin-bottom: 20px;
+}
+
+.current-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.current-avatar .avatar {
+    font-size: 4rem;
+}
+
+.current-avatar #currentAvatarName {
+    color: #e0e0e0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+/* Адаптивность для экипировки */
+@media (max-width: 768px) {
+    .avatar-grid {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+        gap: 15px;
+    }
+    
+    .avatar-emoji {
+        font-size: 2.5rem;
+    }
+    
+    .equip-info {
+        padding: 20px;
+    }
 }
 
 /* Модальное окно для почвы - стили */
