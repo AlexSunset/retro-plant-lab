@@ -165,9 +165,14 @@ function createTaskCard(key, title, url, isCustom, taskId = null, addedBy = null
     const addSampleBtn = document.createElement('button');
     addSampleBtn.className = 'btn-add-sample';
     addSampleBtn.textContent = '+ Образец';
-    addSampleBtn.onclick = (e) => {
+    addSampleBtn.dataset.action = 'addSample';
+    addSampleBtn.dataset.taskKey = key;
+    addSampleBtn.dataset.taskTitle = title;
+    addSampleBtn.onclick = function(e) {
         e.stopPropagation();
-        openCommentModal(key, title);
+        const taskKey = this.dataset.taskKey;
+        const taskTitle = this.dataset.taskTitle;
+        openCommentModal(taskKey, taskTitle);
     };
     
     actions.appendChild(addSampleBtn);
@@ -318,6 +323,15 @@ let currentTaskKey = null;
 let currentTaskTitle = null;
 
 function setupCommentModal() {
+    // Делегирование событий для всех кнопок "+ Образец"
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-add-sample')) {
+            const taskKey = e.target.dataset.taskKey;
+            const taskTitle = e.target.dataset.taskTitle;
+            openCommentModal(taskKey, taskTitle);
+        }
+    });
+    
     const modal = document.getElementById('commentModal');
     const closeBtn = document.getElementById('modalClose');
     const cancelBtn = document.getElementById('cancelBtn');
@@ -332,6 +346,10 @@ function setupCommentModal() {
         const text = textarea.value.trim();
         if (!text) {
             alert('Введите текст образца');
+            return;
+        }
+        if (!currentTaskKey || !currentTaskTitle) {
+            alert('Ошибка: задача не выбрана');
             return;
         }
         addSample(currentTaskKey, currentTaskTitle, text);
@@ -350,6 +368,7 @@ function setupCommentModal() {
 }
 
 function openCommentModal(taskKey, taskTitle) {
+    console.log('📝 Открытие модального окна:', taskKey, taskTitle);
     currentTaskKey = taskKey;
     currentTaskTitle = taskTitle;
     
