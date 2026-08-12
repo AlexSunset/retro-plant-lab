@@ -1,13 +1,27 @@
 // ============================================
-// 🔬 ХРАНИЛИЩЕ ОБРАЗЦОВ v4.0
-// Система комментариев для задач + кастомные задачи
+// ХРАНИЛИЩЕ ОБРАЗЦОВ | T-KAT Retro
 // ============================================
 
-// 🔥 Конфигурация Firebase
+// Стандартные задачи
+const DEFAULT_TASKS = [
+    { key: 'AS-26075', title: 'Миграция EcomDirect и SharelinkDirect в новый алаймент', url: 'https://jira.tcsbank.ru/browse/AS-26075' },
+    { key: 'AS-25596', title: 'Создание SafeDeal', url: 'https://jira.tcsbank.ru/browse/AS-25596' },
+    { key: 'ACQSP-3357', title: 'Редактирование параметров sharelinkDirect', url: 'https://jira.tcsbank.ru/browse/ACQSP-3357' },
+    { key: 'AS-26308', title: '[T-KAT] Доработать процки для проекта по объединению гардов (убрать старый тег)', url: 'https://jira.tcsbank.ru/browse/AS-26308' },
+    { key: 'ACQSP-2503', title: 'Услуги в FineDog', url: 'https://jira.tcsbank.ru/browse/ACQSP-2503' },
+    { key: 'AS-25674', title: 'SafeDeal: отображение общих данных по магазину', url: 'https://jira.tcsbank.ru/browse/AS-25674' },
+    { key: 'AS-26532', title: '[T-KAT] Отключить установку ставок С2А', url: 'https://jira.tcsbank.ru/browse/AS-26532' },
+    { key: 'AS-26352', title: 'Доступ к админке ИЭ для диспутов', url: 'https://jira.tcsbank.ru/browse/AS-26352' },
+    { key: 'AS-26585', title: '[T-KAT] Выгрузка по компании в синей с логинами', url: 'https://jira.tcsbank.ru/browse/AS-26585' },
+    { key: 'AS-21634', title: 'Аналитика в Twork', url: 'https://jira.tcsbank.ru/browse/AS-21634' },
+    { key: 'ACQSP-1401', title: 'Переход на Angular 21 и Taiga UI 4', url: 'https://jira.tcsbank.ru/browse/ACQSP-1401' },
+    { key: 'ACQSP-1805', title: 'Магазин safeDeal. Просмотр списка магазинов', url: 'https://jira.tcsbank.ru/browse/ACQSP-1805' }
+];
+
+// Конфигурация Firebase
 const firebaseConfig = {
     apiKey: "AIzaSyA7Zpsng2b6I02RZ7r7VtwXzzN-gR_kNmk",
     authDomain: "retro-tkat.firebaseapp.com",
-    databaseURL: "https://retro-tkat-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "retro-tkat",
     storageBucket: "retro-tkat.firebasestorage.app",
     messagingSenderId: "526671550405",
@@ -19,413 +33,401 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// Стандартные задачи
-const defaultTasks = [
-    { key: "AS-26075", title: "Миграция EcomDirect и SharelinkDirect в новый алаймент" },
-    { key: "AS-25596", title: "Создание SafeDeal" },
-    { key: "ACQSP-3357", title: "Редактирование параметров sharelinkDirect" },
-    { key: "AS-26308", title: "[T-KAT] Доработать процки для проекта по объединению гардов (убрать старый тег)" },
-    { key: "ACQSP-2503", title: "Услуги в FineDog" },
-    { key: "AS-25674", title: "SafeDeal: отображение общих данных по магазину" },
-    { key: "AS-26532", title: "[T-KAT] Отключить установку ставок С2А" },
-    { key: "AS-26352", title: "Доступ к админке ИЭ для диспутов" },
-    { key: "AS-26585", title: "[T-KAT] Выгрузка по компании в синей с логинами" },
-    { key: "AS-21634", title: "Аналитика в Twork" },
-    { key: "ACQSP-1401", title: "Переход на Angular 21 и Taiga UI 4" },
-    { key: "ACQSP-1805", title: "Магазин safeDeal. Просмотр списка магазинов" }
-];
-
 // Текущий пользователь
-const storedName = localStorage.getItem('scientistName');
-let currentUserName = storedName || 'Аноним';
-
-if (!storedName) {
-    console.warn('⚠️ Имя не найдено в localStorage. Перенаправление на титульную страницу...');
-}
-
-console.log(`👨‍🔬 Учёный в хранилище: ${currentUserName}`);
-let currentTaskKey = null;
+let currentUserName = null;
+let currentSessionId = null;
 
 // ============================================
-// 🎯 Инициализация
+// ПРИ ЗАГРУЗКЕ СТРАНИЦЫ
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🧫 Хранилище образцов загружено');
+    console.log('🧫 Хранилище Образцов загружено');
     
-    // Загрузка стандартных и кастомных задач
-    loadAllTasks();
-    setupModal();
+    // Получаем имя учёного
+    currentUserName = localStorage.getItem('scientistName') || 'Аноним';
+    currentSessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    console.log(`👨‍🔬 Учёный в хранилище: ${currentUserName} | Session: ${currentSessionId}`);
+    
+    // Рендерим стандартные задачи
+    renderDefaultTasks();
+    
+    // Загружаем кастомные задачи
+    loadCustomTasks();
+    
+    // Модальное окно для комментария
+    setupCommentModal();
+    
+    // Модальное окно для добавления задачи
     setupAddTaskModal();
 });
 
 // ============================================
-// 📋 Загрузка всех задач
+// СТАНДАРТНЫЕ ЗАДАЧИ
 // ============================================
 
-function loadAllTasks() {
-    // Подписка на кастомные задачи
+function renderDefaultTasks() {
+    const grid = document.getElementById('samplesGrid');
+    grid.innerHTML = '';
+    
+    DEFAULT_TASKS.forEach(task => {
+        const card = createTaskCard(task.key, task.title, task.url, false);
+        grid.appendChild(card);
+        
+        // Загружаем образцы для задачи
+        loadSamples(task.key);
+    });
+}
+
+// ============================================
+// КАСТОМНЫЕ ЗАДАЧИ
+// ============================================
+
+function loadCustomTasks() {
     const customTasksRef = db.ref('customTasks');
     
     customTasksRef.on('value', (snapshot) => {
-        const customTasks = snapshot.val() || {};
+        console.log('📦 Получены кастомные задачи:', snapshot.val());
         
-        // Преобразуем кастомные задачи в массив
-        const customArray = Object.entries(customTasks).map(([id, data]) => ({
-            key: data.key,
-            title: data.title,
-            url: data.url,
-            isCustom: true,
-            customId: id
-        }));
+        // Удаляем старые кастомные задачи из DOM
+        document.querySelectorAll('.task-card.custom-task').forEach(el => el.remove());
         
-        // Объединяем стандартные и кастомные
-        const allTasks = [
-            ...defaultTasks.map(t => ({ ...t, isCustom: false })),
-            ...customArray
-        ];
+        const data = snapshot.val();
+        if (!data) return;
         
-        renderTasks(allTasks);
-    });
-}
-
-// ============================================
-// 📋 Рендеринг задач
-// ============================================
-
-function renderTasks(allTasks) {
-    const grid = document.getElementById('samplesGrid');
-    grid.innerHTML = '';
-
-    allTasks.forEach(task => {
-        const taskCard = document.createElement('div');
-        taskCard.className = 'task-card';
-        
-        // Определяем ссылку
-        const taskUrl = task.url || `https://jira.tcsbank.ru/browse/${task.key}`;
-        
-        taskCard.innerHTML = `
-            <div class="task-header">
-                <a href="${taskUrl}" target="_blank" class="task-key">
-                    ${task.key}
-                </a>
-                <button class="btn-add-sample" data-task="${task.key}" title="Добавить образец">
-                    + Образец
-                </button>
-                ${task.isCustom ? `<button class="btn-delete-task" data-task-id="${task.customId}" title="Удалить задачу">🗑️</button>` : ''}
-            </div>
-            <p class="task-title">${task.title}</p>
-            <div class="samples-list" id="samples-${task.key}">
-                <div class="loading-samples">Загрузка образцов...</div>
-            </div>
-        `;
-        grid.appendChild(taskCard);
-
-        // Подписка на комментарии задачи
-        subscribeToSamples(task.key);
-    });
-
-    // Обработчики кнопок "Добавить образец"
-    document.querySelectorAll('.btn-add-sample').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            currentTaskKey = e.target.dataset.task;
-            openModal();
+        // Добавляем кастомные задачи в сетку
+        Object.entries(data).forEach(([taskId, task]) => {
+            const grid = document.getElementById('samplesGrid');
+            const card = createTaskCard(task.key, task.title, task.url, true, taskId, task.addedBy);
+            grid.appendChild(card);
+            
+            // Загружаем образцы для кастомной задачи
+            loadSamples(task.key);
         });
-    });
-    
-    // Обработчики кнопок удаления кастомных задач
-    document.querySelectorAll('.btn-delete-task').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const taskId = btn.dataset.taskId;
-            if (confirm('Удалить эту кастомную задачу? Все образцы также будут удалены.')) {
-                deleteCustomTask(taskId);
-            }
-        });
-    });
-}
-
-// ============================================
-// ➕ Добавление кастомной задачи
-// ============================================
-
-function setupAddTaskModal() {
-    const addTaskBtn = document.getElementById('addTaskBtn');
-    const modal = document.getElementById('addTaskModal');
-    const closeBtn = document.getElementById('closeAddTaskModal');
-    const cancelBtn = document.getElementById('cancelAddTaskBtn');
-    const submitBtn = document.getElementById('submitAddTaskBtn');
-    const taskKeyInput = document.getElementById('taskKey');
-    const taskTitleInput = document.getElementById('taskTitle');
-    const taskUrlInput = document.getElementById('taskUrl');
-
-    addTaskBtn.addEventListener('click', () => {
-        modal.classList.add('modal-active');
-        taskKeyInput.focus();
-    });
-
-    closeBtn.addEventListener('click', closeModalAddTask);
-    cancelBtn.addEventListener('click', closeModalAddTask);
-    
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModalAddTask();
-    });
-
-    submitBtn.addEventListener('click', () => {
-        const key = taskKeyInput.value.trim();
-        const title = taskTitleInput.value.trim();
-        const url = taskUrlInput.value.trim();
-        
-        if (key && title) {
-            addCustomTask(key, title, url);
-            closeModalAddTask();
-            taskKeyInput.value = '';
-            taskTitleInput.value = '';
-            taskUrlInput.value = '';
-        } else {
-            alert('Заполните ключ и название задачи');
-        }
-    });
-
-    // Enter для отправки
-    taskUrlInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            submitBtn.click();
-        }
     });
 }
 
 function addCustomTask(key, title, url) {
-    const customTasksRef = db.ref('customTasks');
-    const newTaskRef = customTasksRef.push();
-    
+    const newTaskRef = db.ref('customTasks').push();
     newTaskRef.set({
         key: key,
         title: title,
-        url: url || '',
+        url: url,
         addedBy: currentUserName,
         timestamp: Date.now()
     }).then(() => {
         console.log('✅ Кастомная задача добавлена');
-    }).catch((error) => {
+        closeModal('addTaskModal');
+    }).catch(error => {
         console.error('❌ Ошибка добавления задачи:', error);
+        alert('Ошибка добавления задачи: ' + error.message);
     });
 }
 
 function deleteCustomTask(taskId) {
-    // Удаляем задачу
-    const taskRef = db.ref(`customTasks/${taskId}`);
+    if (!confirm('Удалить эту задачу и все образцы?')) return;
     
-    taskRef.remove().then(() => {
-        console.log('✅ Кастомная задача удалена');
-        
-        // Удаляем все образцы этой задачи
-        const taskKey = defaultTasks.find(t => t.key === taskId)?.key || taskId;
-        const samplesRef = db.ref(`samples/${taskKey}`);
-        samplesRef.remove().catch(err => console.error('Ошибка удаления образцов:', err));
-    }).catch((error) => {
-        console.error('❌ Ошибка удаления задачи:', error);
-    });
+    db.ref('customTasks/' + taskId).remove()
+      .then(() => {
+          console.log('✅ Задача удалена');
+          // Образцы удалятся автоматически при очистке в loadSamples
+      })
+      .catch(error => {
+          console.error('❌ Ошибка удаления задачи:', error);
+      });
 }
 
 // ============================================
-// 💬 Работа с комментариями (образцами)
+// СОЗДАНИЕ КАРТОЧКИ ЗАДАЧИ
 // ============================================
 
-function subscribeToSamples(taskKey) {
-    const samplesRef = db.ref(`samples/${taskKey}`);
+function createTaskCard(key, title, url, isCustom, taskId = null, addedBy = null) {
+    const card = document.createElement('div');
+    card.className = 'task-card' + (isCustom ? ' custom-task' : '');
+    card.dataset.taskKey = key;
+    
+    const header = document.createElement('div');
+    header.className = 'task-header';
+    
+    const keyLink = document.createElement('a');
+    keyLink.href = url;
+    keyLink.target = '_blank';
+    keyLink.className = 'task-key';
+    keyLink.textContent = key;
+    
+    const actions = document.createElement('div');
+    actions.style.display = 'flex';
+    actions.style.gap = '8px';
+    
+    const addSampleBtn = document.createElement('button');
+    addSampleBtn.className = 'btn-add-sample';
+    addSampleBtn.textContent = '+ Образец';
+    addSampleBtn.onclick = () => openCommentModal(key, title);
+    
+    actions.appendChild(addSampleBtn);
+    
+    if (isCustom && taskId) {
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn-delete-task';
+        deleteBtn.textContent = '🗑️';
+        deleteBtn.title = 'Удалить задачу';
+        deleteBtn.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            deleteCustomTask(taskId);
+        };
+        actions.appendChild(deleteBtn);
+    }
+    
+    header.appendChild(keyLink);
+    header.appendChild(actions);
+    
+    const taskTitle = document.createElement('div');
+    taskTitle.className = 'task-title';
+    taskTitle.textContent = title;
+    
+    const samplesList = document.createElement('div');
+    samplesList.className = 'samples-list';
+    samplesList.id = 'samples-' + key;
+    samplesList.innerHTML = '<div class="loading-samples">Загрузка образцов...</div>';
+    
+    card.appendChild(header);
+    card.appendChild(taskTitle);
+    card.appendChild(samplesList);
+    
+    return card;
+}
+
+// ============================================
+// ОБРАЗЦЫ (КОММЕНТАРИИ)
+// ============================================
+
+function loadSamples(taskKey) {
+    const samplesRef = db.ref('samples/' + taskKey);
+    const container = document.getElementById('samples-' + taskKey);
+    
+    if (!container) return;
     
     samplesRef.on('value', (snapshot) => {
-        const container = document.getElementById(`samples-${taskKey}`);
-        if (!container) return;
-
-        const samples = snapshot.val() || {};
+        const data = snapshot.val();
         
-        if (Object.keys(samples).length === 0) {
+        if (!data || Object.keys(data).length === 0) {
             container.innerHTML = '<div class="no-samples">Нет образцов</div>';
             return;
         }
-
+        
         container.innerHTML = '';
         
-        // Преобразуем объект в массив и сортируем по дате
-        const samplesArray = Object.entries(samples)
-            .map(([id, data]) => ({ id, ...data }))
-            .sort((a, b) => b.timestamp - a.timestamp);
-
-        samplesArray.forEach(sample => {
-            const sampleEl = document.createElement('div');
-            sampleEl.className = 'sample-item';
-            
-            // Проверка: может ли текущий пользователь удалить этот образец
-            const canDelete = (sample.author === currentUserName) && 
-                              (Date.now() - sample.timestamp < 24 * 60 * 60 * 1000); // 24 часа
-            
-            sampleEl.innerHTML = `
-                <div class="sample-author">
-                    <span class="sample-icon">🧪</span>
-                    <span class="sample-name">${escapeHtml(sample.author)}</span>
-                    <span class="sample-date">${formatDate(sample.timestamp)}</span>
-                    ${canDelete ? `<button class="btn-delete-sample" data-task="${taskKey}" data-sample-id="${sample.id}" title="Удалить образец">🗑️</button>` : ''}
-                </div>
-                <div class="sample-text">${escapeHtml(sample.text)}</div>
-            `;
+        // Сортируем по времени (новые сверху)
+        const samples = Object.entries(data).sort((a, b) => b[1].timestamp - a[1].timestamp);
+        
+        samples.forEach(([sampleId, sample]) => {
+            const sampleEl = createSampleElement(sampleId, sample);
             container.appendChild(sampleEl);
-        });
-
-        // Обработчики кнопок удаления
-        container.querySelectorAll('.btn-delete-sample').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const taskKey = btn.dataset.task;
-                const sampleId = btn.dataset.sampleId;
-                if (confirm('Удалить этот образец?')) {
-                    deleteSample(taskKey, sampleId);
-                }
-            });
         });
     });
 }
 
-function addSample(taskKey, text) {
-    const samplesRef = db.ref(`samples/${taskKey}`);
-    const newSampleRef = samplesRef.push();
+function createSampleElement(sampleId, sample) {
+    const div = document.createElement('div');
+    div.className = 'sample-item';
     
+    const author = document.createElement('div');
+    author.className = 'sample-author';
+    
+    const icon = document.createElement('span');
+    icon.className = 'sample-icon';
+    icon.textContent = '🧪';
+    
+    const name = document.createElement('span');
+    name.className = 'sample-name';
+    name.textContent = sample.author;
+    
+    const date = document.createElement('span');
+    date.className = 'sample-date';
+    date.textContent = formatTime(sample.timestamp);
+    
+    author.appendChild(icon);
+    author.appendChild(name);
+    author.appendChild(date);
+    
+    // Кнопка удаления (только для автора и в течение 24 часов)
+    const canDelete = sample.author === currentUserName && 
+                      (Date.now() - sample.timestamp < 24 * 60 * 60 * 1000);
+    
+    if (canDelete) {
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn-delete-sample';
+        deleteBtn.textContent = '🗑️';
+        deleteBtn.title = 'Удалить образец';
+        deleteBtn.onclick = () => deleteSample(sampleId, sample.author);
+        author.appendChild(deleteBtn);
+    }
+    
+    const text = document.createElement('div');
+    text.className = 'sample-text';
+    text.textContent = sample.text;
+    
+    div.appendChild(author);
+    div.appendChild(text);
+    
+    return div;
+}
+
+function addSample(taskKey, taskTitle, text) {
+    const newSampleRef = db.ref('samples/' + taskKey).push();
     newSampleRef.set({
         author: currentUserName,
         text: text,
         timestamp: Date.now()
     }).then(() => {
         console.log('✅ Образец добавлен');
-    }).catch((error) => {
+        closeModal('commentModal');
+    }).catch(error => {
         console.error('❌ Ошибка добавления образца:', error);
+        alert('Ошибка добавления образца: ' + error.message);
     });
 }
 
-function deleteSample(taskKey, sampleId) {
-    const sampleRef = db.ref(`samples/${taskKey}/${sampleId}`);
+function deleteSample(sampleId, author) {
+    if (author !== currentUserName) {
+        alert('Можно удалить только свои образцы!');
+        return;
+    }
     
-    sampleRef.remove().then(() => {
-        console.log('✅ Образец удалён');
-    }).catch((error) => {
-        console.error('❌ Ошибка удаления образца:', error);
-    });
+    db.ref('samples').child(sampleId).remove()
+      .then(() => {
+          console.log('✅ Образец удалён');
+      })
+      .catch(error => {
+          console.error('❌ Ошибка удаления образца:', error);
+      });
 }
 
 // ============================================
-// 🪟 Модальное окно для образца
+// МОДАЛЬНОЕ ОКНО (КОММЕНТАРИЙ)
 // ============================================
 
-function setupModal() {
+let currentTaskKey = null;
+let currentTaskTitle = null;
+
+function setupCommentModal() {
     const modal = document.getElementById('commentModal');
     const closeBtn = document.getElementById('modalClose');
     const cancelBtn = document.getElementById('cancelBtn');
     const submitBtn = document.getElementById('submitBtn');
-    const commentText = document.getElementById('commentText');
+    const textarea = document.getElementById('commentText');
     const charCount = document.getElementById('charCount');
-    const taskInfo = document.getElementById('modalTaskInfo');
-
-    // Закрытие
-    closeBtn.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
     
-    // Закрытие по клику вне окна
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-    });
-
-    // Счётчик символов
-    commentText.addEventListener('input', () => {
-        charCount.textContent = commentText.value.length;
-    });
-
-    // Отправка
-    submitBtn.addEventListener('click', () => {
-        const text = commentText.value.trim();
-        if (text && currentTaskKey) {
-            addSample(currentTaskKey, text);
-            closeModal();
-            commentText.value = '';
-            charCount.textContent = '0';
+    closeBtn.onclick = () => closeModal('commentModal');
+    cancelBtn.onclick = () => closeModal('commentModal');
+    
+    submitBtn.onclick = () => {
+        const text = textarea.value.trim();
+        if (!text) {
+            alert('Введите текст образца');
+            return;
         }
-    });
-
-    // Enter для отправки (Ctrl+Enter)
-    commentText.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && e.ctrlKey) {
+        addSample(currentTaskKey, currentTaskTitle, text);
+    };
+    
+    textarea.oninput = () => {
+        charCount.textContent = textarea.value.length;
+    };
+    
+    // Ctrl+Enter для отправки
+    textarea.onkeydown = (e) => {
+        if (e.ctrlKey && e.key === 'Enter') {
             submitBtn.click();
         }
-    });
+    };
 }
 
-function openModal() {
+function openCommentModal(taskKey, taskTitle) {
+    currentTaskKey = taskKey;
+    currentTaskTitle = taskTitle;
+    
     const modal = document.getElementById('commentModal');
     const taskInfo = document.getElementById('modalTaskInfo');
+    const textarea = document.getElementById('commentText');
+    const charCount = document.getElementById('charCount');
     
-    // Ищем задачу во всех задачах
-    const task = [...defaultTasks].find(t => t.key === currentTaskKey) || 
-                 (window.currentCustomTasks || []).find(t => t.key === currentTaskKey);
-    
-    if (task) {
-        taskInfo.innerHTML = `
-            <strong>Задача:</strong> ${task.key} — ${task.title}
-        `;
-    }
+    taskInfo.textContent = `${taskKey} — ${taskTitle}`;
+    textarea.value = '';
+    charCount.textContent = '0';
     
     modal.classList.add('modal-active');
-    document.getElementById('commentText').focus();
-}
-
-function closeModal() {
-    const modal = document.getElementById('commentModal');
-    modal.classList.remove('modal-active');
+    textarea.focus();
 }
 
 // ============================================
-// 🪟 Модальное окно для добавления задачи
+// МОДАЛЬНОЕ ОКНО (ДОБАВИТЬ ЗАДАЧУ)
 // ============================================
 
-function closeModalAddTask() {
+function setupAddTaskModal() {
     const modal = document.getElementById('addTaskModal');
+    const closeBtn = document.getElementById('closeAddTaskModal');
+    const cancelBtn = document.getElementById('cancelAddTaskBtn');
+    const submitBtn = document.getElementById('submitAddTaskBtn');
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    
+    const keyInput = document.getElementById('taskKey');
+    const titleInput = document.getElementById('taskTitle');
+    const urlInput = document.getElementById('taskUrl');
+    
+    addTaskBtn.onclick = () => {
+        keyInput.value = '';
+        titleInput.value = '';
+        urlInput.value = '';
+        modal.classList.add('modal-active');
+        keyInput.focus();
+    };
+    
+    closeBtn.onclick = () => closeModal('addTaskModal');
+    cancelBtn.onclick = () => closeModal('addTaskModal');
+    
+    submitBtn.onclick = () => {
+        const key = keyInput.value.trim();
+        const title = titleInput.value.trim();
+        let url = urlInput.value.trim();
+        
+        if (!key || !title) {
+            alert('Заполните ключ и название задачи');
+            return;
+        }
+        
+        // Если URL не указан, используем jira.tcsbank.ru
+        if (!url) {
+            url = 'https://jira.tcsbank.ru/browse/' + key;
+        }
+        
+        addCustomTask(key, title, url);
+    };
+}
+
+// ============================================
+// УТИЛИТЫ
+// ============================================
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
     modal.classList.remove('modal-active');
 }
 
-// ============================================
-// 🛠️ Утилиты
-// ============================================
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML.replace(/\n/g, '<br>');
-}
-
-function formatDate(timestamp) {
-    const date = new Date(timestamp);
-    const now = new Date();
-    const diff = now - date;
+function formatTime(timestamp) {
+    const now = Date.now();
+    const diff = now - timestamp;
     
-    // Менее минуты
     if (diff < 60000) return 'только что';
-    
-    // Менее часа
-    if (diff < 3600000) {
-        const mins = Math.floor(diff / 60000);
-        return `${mins} мин. назад`;
-    }
-    
-    // Менее дня
-    if (diff < 86400000) {
-        const hours = Math.floor(diff / 3600000);
-        return `${hours} ч. назад`;
-    }
-    
-    // Больше дня
-    return date.toLocaleDateString('ru-RU', {
-        day: 'numeric',
-        month: 'short',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
+    if (diff < 3600000) return Math.floor(diff / 60000) + ' мин. назад';
+    if (diff < 86400000) return Math.floor(diff / 3600000) + ' ч. назад';
+    return Math.floor(diff / 86400000) + ' дн. назад';
 }
+
+// Закрытие по клику вне модального окна
+window.onclick = (e) => {
+    if (e.target.classList.contains('modal-overlay')) {
+        e.target.classList.remove('modal-active');
+    }
+};
