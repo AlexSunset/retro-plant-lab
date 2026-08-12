@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛡️ Отделение Резистентности | T-KAT Retro</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="lab-container">
+        <!-- Шапка -->
+        <header class="lab-header">
+            <div class="header-left">
+                <a href="garden.html" class="btn-back">← На базу</a>
+                <h1>🛡️ Отделение Резистентности</h1>
+            </div>
+            <div class="header-right">
+                <span class="user-badge" id="userBadge">👤 Загрузка...</span>
+            </div>
+        </header>
+
+        <!-- Кнопка добавления -->
+        <div class="add-section">
+            <button class="btn-add-protocol" id="addReviewBtn">
+                <span class="btn-icon">💫</span>
+                + Стимуляция жизненных сил
+            </button>
+        </div>
+
+        <!-- Сетка отзывов -->
+        <div class="resistance-grid" id="resistanceGrid">
+            <div class="loading">Загрузка отзывов...</div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для отзыва -->
+    <div class="modal-overlay" id="reviewModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>💫 Стимуляция жизненных сил</h2>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-info">Поделитесь вдохновляющим отзывом о коллеге</p>
+                <textarea 
+                    id="reviewText" 
+                    placeholder="Хочу поблагодарить коллегу за... (макс. 1000 символов)"
+                    maxlength="1000"
+                    rows="5"
+                ></textarea>
+                <div class="char-counter">
+                    <span id="charCount">0</span> / 1000
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" id="cancelBtn">Отмена</button>
+                <button class="btn-submit" id="submitBtn">Отправить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для комментария -->
+    <div class="modal-overlay" id="commentModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2>💬 Добавить комментарий</h2>
+                <button class="modal-close" id="commentModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-info" id="modalReviewInfo">Отзыв: ...</p>
+                <textarea 
+                    id="commentText" 
+                    placeholder="Ваш комментарий поддержки... (макс. 500 символов)"
+                    maxlength="500"
+                    rows="4"
+                ></textarea>
+                <div class="char-counter">
+                    <span id="commentCharCount">0</span> / 500
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" id="commentCancelBtn">Отмена</button>
+                <button class="btn-submit" id="commentSubmitBtn">Отправить</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="resistance.js"></script>
+</body>
+</html>

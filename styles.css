@@ -1940,6 +1940,326 @@ body {
 
 /* Стили наследуются от clean-page (defect-card, strategies-section, и т.д.) */
 
+/* ============================================
+   СТРАНИЦА ОТДЕЛЕНИЯ РЕЗИСТЕНТНОСТИ
+   ============================================ */
+.resistance-page {
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+.resistance-header {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(102, 126, 234, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.resistance-header .header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.resistance-header .header-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    color: #e0e0e0;
+}
+
+.resistance-header .header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.resistance-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.resistance-intro {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    border-radius: 20px;
+}
+
+.resistance-intro h1 {
+    color: #667eea;
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.resistance-intro p {
+    color: #98fb98;
+    font-size: 1.1rem;
+}
+
+.resistance-hint {
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+/* Карточка отзыва */
+.review-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-left: 4px solid #98fb98;
+    border-radius: 20px;
+    padding: 25px;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.review-card:hover {
+    background: rgba(102, 126, 234, 0.1);
+    border-color: rgba(102, 126, 234, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.15);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.review-author-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.author-icon {
+    font-size: 2rem;
+}
+
+.author-name {
+    color: #98fb98;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.time-ago {
+    color: #666;
+    font-size: 0.8rem;
+}
+
+.btn-delete-review {
+    background: none;
+    border: none;
+    color: #ff5757;
+    cursor: pointer;
+    font-size: 1.3rem;
+    padding: 5px 10px;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.btn-delete-review:hover {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+.review-text {
+    color: #e0e0e0;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    word-wrap: break-word;
+    margin-bottom: 20px;
+}
+
+/* Комментарии к отзывам */
+.comments-section {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.comments-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.comments-title {
+    color: #98fb98;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.btn-add-comment {
+    background: rgba(152, 251, 152, 0.1);
+    color: #98fb98;
+    border: 1px solid rgba(152, 251, 152, 0.3);
+    padding: 6px 14px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-add-comment:hover {
+    background: rgba(152, 251, 152, 0.2);
+    border-color: #98fb98;
+    transform: translateY(-1px);
+}
+
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.no-comments {
+    color: #666;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 15px;
+}
+
+.comment-item {
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 3px solid #4caf50;
+    border-radius: 10px;
+    padding: 15px;
+    transition: all 0.3s ease;
+}
+
+.comment-item:hover {
+    background: rgba(76, 175, 80, 0.1);
+    border-color: #4caf50;
+}
+
+.comment-author {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.comment-icon {
+    font-size: 1rem;
+}
+
+.comment-name {
+    color: #98fb98;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.comment-date {
+    color: #666;
+    font-size: 0.75rem;
+    margin-left: auto;
+}
+
+.btn-delete-comment {
+    background: none;
+    border: none;
+    color: #ff5757;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 2px 6px;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.btn-delete-comment:hover {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+.comment-text {
+    color: #e0e0e0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    word-wrap: break-word;
+}
+
+.loading-comments {
+    color: #666;
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 15px;
+}
+
+.no-data {
+    color: #666;
+    font-size: 1rem;
+    text-align: center;
+    padding: 40px;
+}
+
+/* Кнопка добавления отзыва */
+.btn-add-protocol {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.btn-add-protocol:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-icon {
+    font-size: 1.3rem;
+}
+
+/* Адаптивность для резистентности */
+@media (max-width: 768px) {
+    .resistance-header {
+        padding: 15px;
+    }
+    
+    .resistance-header .header-title span {
+        display: none;
+    }
+    
+    .resistance-intro h1 {
+        font-size: 1.5rem;
+    }
+    
+    .review-header {
+        flex-direction: column;
+    }
+    
+    .btn-delete-review {
+        align-self: flex-end;
+    }
+}
+
 /* Адаптивность для модуляции */
 @media (max-width: 768px) {
     .growth-header {
