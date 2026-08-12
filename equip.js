@@ -28,25 +28,25 @@ const scientistName = localStorage.getItem('scientistName');
 if (!scientistName || scientistName === 'undefined' || scientistName === 'null') {
     console.error('❌ Нет имени учёного, возврат на титульную');
     window.location.href = 'index.html';
-    return; // Останавливаем выполнение
+} else {
+    // Весь код внутри else
+    console.log('👔 Зона экипировки загружена');
+    console.log('👨‍🔬 Учёный в зоне экипировки:', scientistName);
+
+    // Элементы DOM
+    const equipContent = document.getElementById('equipContent');
+
+    // Инициализация страницы
+    function initEquip() {
+        // Пока просто заглушка - концепция в разработке
+        equipContent.innerHTML = `
+            <div class="empty-state">
+                <p>🚧 Раздел в разработке</p>
+                <p class="hint">Скоро здесь появится функционал для подготовки к ретро</p>
+            </div>
+        `;
+    }
+
+    // Запуск при загрузке
+    document.addEventListener('DOMContentLoaded', initEquip);
 }
-
-console.log('👔 Зона экипировки загружена');
-console.log('👨‍🔬 Учёный в зоне экипировки:', scientistName);
-
-// Элементы DOM
-const equipContent = document.getElementById('equipContent');
-
-// Инициализация страницы
-function initEquip() {
-    // Пока просто заглушка - концепция в разработке
-    equipContent.innerHTML = `
-        <div class="empty-state">
-            <p>🚧 Раздел в разработке</p>
-            <p class="hint">Скоро здесь появится функционал для подготовки к ретро</p>
-        </div>
-    `;
-}
-
-// Запуск при загрузке
-document.addEventListener('DOMContentLoaded', initEquip);
