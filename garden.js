@@ -53,15 +53,23 @@ const plantStages = [
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🔬 Лаборатория Адаптации загружена');
     
-    // Получаем имя учёного из localStorage
+    // Получаем имя учёного и аватарку из localStorage
     scientistName = localStorage.getItem('scientistName');
-    sessionId = localStorage.getItem('scientistSessionId');
+    let savedAvatar = localStorage.getItem('scientistAvatar');
     
     if (!scientistName) {
         console.warn('⚠️ Имя не найдено, возврат на титульную');
         window.location.href = 'index.html';
         return;
     }
+    
+    // Если аватарка не сохранена, используем стандартную
+    if (!savedAvatar) {
+        savedAvatar = '👨‍🔬';
+    }
+    
+    // Получаем или генерируем sessionId
+    sessionId = localStorage.getItem('scientistSessionId');
     
     // Если sessionId есть — удаляем старую сессию из Firebase (на случай краша)
     if (sessionId) {
@@ -161,6 +169,7 @@ function trackScientists() {
     
     const myData = {
         name: scientistName,
+        avatar: savedAvatar,
         joinedAt: Date.now(),
         lastSeen: Date.now()
     };
@@ -187,7 +196,7 @@ function trackScientists() {
     myRef.onDisconnect().remove();
     
     // Heartbeat - обновляем lastSeen каждые 5 секунд
-    console.log('⏰ Запуск heartbeat для sessionId:', sessionId, 'name:', scientistName);
+    console.log('⏰ Запуск heartbeat для sessionId:', sessionId, 'name:', scientistName, 'avatar:', savedAvatar);
     
     // Функция обновления heartbeat
     function sendHeartbeat() {
@@ -198,10 +207,11 @@ function trackScientists() {
             heartbeatTimer = null;
             return;
         }
-        console.log('💓 Heartbeat tick, sessionId:', sessionId, 'name:', scientistName);
+        console.log('💓 Heartbeat tick, sessionId:', sessionId, 'name:', scientistName, 'avatar:', savedAvatar);
         myRef.update({ 
             lastSeen: Date.now(),
-            name: scientistName  // Явно обновляем имя
+            name: scientistName,  // Явно обновляем имя
+            avatar: savedAvatar   // Явно обновляем аватарку
         }).catch((error) => {
             console.error('❌ Ошибка heartbeat:', error);
         });
@@ -462,46 +472,26 @@ function updateScientistsList(scientists) {
         return;
     }
     
-    // Загружаем аватарки для всех учёных
-    const equipRef = database.ref('equip');
-    console.log('🔍 Загрузка аватарок, sessionId:', sessionId);
-    equipRef.once('value', (snapshot) => {
-        const allAvatars = snapshot.val() || {};
-        
-        console.log('🔍 equip данные:', allAvatars);
-        console.log('🔍 Мой sessionId:', sessionId);
-        console.log('🔍 scientists:', scientists);
-        
-        // Сопоставляем sessionId с аватаркой
-        const avatarMap = {};
-        Object.keys(allAvatars).forEach(sessionIdKey => {
-            const equipData = allAvatars[sessionIdKey];
-            if (equipData && equipData.avatar) {
-                avatarMap[sessionIdKey] = equipData.avatar.emoji;
-                console.log('🎭 Аватарка для', sessionIdKey, ':', equipData.avatar.emoji);
-            }
-        });
-        
-        const icons = ['👨‍🔬', '👩‍🔬', '🧑‍🔬', '👨‍⚕️', '👩‍⚕️', '🧑‍🔬'];
-        
-        grid.innerHTML = scientists.map((s, i) => {
-            const isMe = s.id === sessionId;
-            const avatar = avatarMap[s.id] || icons[i % icons.length];
-            console.log('👤 Учёный', s.name, '| sessionId:', s.id, '| avatar:', avatar, '| isMe:', isMe);
-            return `
-                <div class="scientist-card ${isMe ? 'is-me' : ''}">
-                    <div class="scientist-icon">${avatar}</div>
-                    <div class="scientist-info">
-                        <div class="scientist-name">${escapeHtml(s.name)} ${isMe ? '<span class="badge-me">Вы</span>' : ''}</div>
-                        <div class="scientist-status">
-                            <span class="status-indicator online"></span>
-                            <span>В сети</span>
-                        </div>
+    const icons = ['👨‍🔬', '👩‍🔬', '🧑‍🔬', '👨‍⚕️', '👩‍⚕️', '🧑‍🔬'];
+    
+    grid.innerHTML = scientists.map((s, i) => {
+        const isMe = s.id === sessionId;
+        // Берём аватарку из данных учёного (теперь она хранится прямо в scientists)
+        const avatar = s.avatar || savedAvatar || icons[i % icons.length];
+        console.log('👤 Учёный', s.name, '| sessionId:', s.id, '| avatar:', avatar, '| isMe:', isMe);
+        return `
+            <div class="scientist-card ${isMe ? 'is-me' : ''}">
+                <div class="scientist-icon">${avatar}</div>
+                <div class="scientist-info">
+                    <div class="scientist-name">${escapeHtml(s.name)} ${isMe ? '<span class="badge-me">Вы</span>' : ''}</div>
+                    <div class="scientist-status">
+                        <span class="status-indicator online"></span>
+                        <span>В сети</span>
                     </div>
                 </div>
-            `;
-        }).join('');
-    });
+            </div>
+        `;
+    }).join('');
 }
 
 function escapeHtml(text) {

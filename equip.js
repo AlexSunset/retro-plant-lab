@@ -156,6 +156,10 @@ function equipAvatar() {
     }).then(() => {
         console.log('✅ Экипировка надета:', selectedAvatar);
         
+        // Сохраняем аватарку в localStorage для использования на других страницах
+        localStorage.setItem('scientistAvatar', selectedAvatar.emoji);
+        console.log('💾 Аватарка сохранена в localStorage:', selectedAvatar.emoji);
+        
         // Показать текущую экипировку
         document.getElementById('currentEquip').style.display = 'block';
         document.getElementById('currentAvatarDisplay').textContent = selectedAvatar.emoji;

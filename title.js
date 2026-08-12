@@ -124,6 +124,12 @@ function enterLaboratory() {
     const sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     localStorage.setItem('scientistSessionId', sessionId);
     
+    // Сохраняем аватарку по умолчанию (если ещё не выбрана)
+    const savedAvatar = localStorage.getItem('scientistAvatar');
+    if (!savedAvatar) {
+        localStorage.setItem('scientistAvatar', '👨‍🔬');
+    }
+    
     console.log(`👨‍🔬 Учёный "${name}" входит в лабораторию (сессия: ${sessionId})`);
     
     // Переход на страницу сада
