@@ -103,16 +103,8 @@ function connectToLab() {
     
     const roomRef = database.ref(`rooms/${ROOM_ID}`);
     
-    // Инициализируем комнату
+    // Инициализируем комнату — только обновляем timestamp, не сбрасываем стадии
     roomRef.update({
-        stages: {
-            stage1_equipment: false,
-            stage2_soil: false,
-            stage3_samples: false,
-            stage4_clean: false,
-            stage5_growth: false,
-            stage6_resistance: false
-        },
         updatedAt: firebase.database.ServerValue.TIMESTAMP
     }).then(() => {
         console.log('✅ Комната инициализирована');
