@@ -1169,6 +1169,63 @@ body {
     background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
 }
 
+.soil-header {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(102, 126, 234, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.soil-header .header-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1rem;
+    color: #e0e0e0;
+}
+
+.soil-header .header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.soil-header .header-right {
+    display: flex;
+    align-items: center;
+}
+
+.soil-header .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #888;
+    font-size: 0.85rem;
+}
+
+.soil-header .status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ffc107;
+    animation: pulse-dot 1.5s infinite;
+}
+
+.soil-header .status-dot.connected {
+    background: #4caf50;
+    box-shadow: 0 0 10px #4caf50;
+}
+
+.soil-header .status-dot.disconnected {
+    background: #f44336;
+}
+
 .soil-container {
     max-width: 1200px;
     margin: 0 auto;
