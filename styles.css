@@ -1262,35 +1262,37 @@ body {
 }
 
 .agreement-header {
-    display: grid;
-    grid-template-columns: 40px 1fr auto;
-    gap: 12px;
+    display: flex;
+    justify-content: space-between;
     align-items: flex-start;
+    gap: 12px;
     margin-bottom: 10px;
 }
 
 .agreement-icon {
     font-size: 36px;
-    text-align: center;
+    flex-shrink: 0;
 }
 
 .agreement-content {
+    flex-grow: 1;
     min-width: 0;
 }
 
 .agreement-content h3 {
     color: #667eea;
     font-size: 0.85rem;
-    margin: 0 0 6px 0;
+    margin: 0 0 8px 0;
     font-weight: 600;
 }
 
 .agreement-content p {
     color: #e0e0e0;
-    font-size: 0.85rem;
-    line-height: 1.35;
+    font-size: 0.9rem;
+    line-height: 1.4;
     word-wrap: break-word;
     margin: 0;
+    text-align: left;
 }
 
 .agreement-actions {
