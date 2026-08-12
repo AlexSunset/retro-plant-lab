@@ -324,29 +324,31 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('addDefectBtn')?.addEventListener('click', () => {
         document.getElementById('defectModal').classList.add('modal-active');
     });
-        
-        // Кнопки отмены
-        document.querySelectorAll('.btn-cancel').forEach(btn => {
-            btn.addEventListener('click', function() {
-                this.closest('.modal-overlay').classList.remove('modal-active');
-            });
-        });
-        
-        // Кнопки отправки
-        document.querySelector('#defectModal .btn-submit')?.addEventListener('click', addDefect);
-        document.querySelector('#strategyModal .btn-submit')?.addEventListener('click', addStrategy);
-        
-        // Счётчики символов
-        document.getElementById('defectText')?.addEventListener('input', updateCharCount);
-        document.getElementById('strategyText')?.addEventListener('input', updateStrategyCharCount);
-        
-        // Закрытие по клику вне модального окна
-        document.querySelectorAll('.modal-overlay').forEach(modal => {
-            modal.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    this.classList.remove('modal-active');
-                }
-            });
+    
+    // Кнопки отмены
+    document.querySelectorAll('.btn-cancel').forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.closest('.modal-overlay').classList.remove('modal-active');
         });
     });
+    
+    // Кнопки отправки
+    document.querySelector('#defectModal .btn-submit')?.addEventListener('click', addDefect);
+    document.querySelector('#strategyModal .btn-submit')?.addEventListener('click', addStrategy);
+    
+    // Счётчики символов
+    document.getElementById('defectText')?.addEventListener('input', updateCharCount);
+    document.getElementById('strategyText')?.addEventListener('input', updateStrategyCharCount);
+    
+    // Закрытие по клику вне модального окна
+    document.querySelectorAll('.modal-overlay').forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('modal-active');
+            }
+        });
+    });
+    
+    // Подключение
+    connectToClean();
 });
