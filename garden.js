@@ -188,7 +188,9 @@ function trackScientists() {
     
     // Heartbeat - обновляем lastSeen каждые 5 секунд
     console.log('⏰ Запуск heartbeat для sessionId:', sessionId, 'name:', scientistName);
-    heartbeatTimer = setInterval(() => {
+    
+    // Функция обновления heartbeat
+    function sendHeartbeat() {
         // Проверка имени перед отправкой
         if (!scientistName || scientistName === 'undefined' || scientistName === 'null' || scientistName === '') {
             console.error('❌ Heartbeat: имя потеряно, остановка таймера');
@@ -203,7 +205,13 @@ function trackScientists() {
         }).catch((error) => {
             console.error('❌ Ошибка heartbeat:', error);
         });
-    }, HEARTBEAT_INTERVAL);
+    }
+    
+    // Первая отправка сразу
+    sendHeartbeat();
+    
+    // Затем каждые 5 секунд
+    heartbeatTimer = setInterval(sendHeartbeat, HEARTBEAT_INTERVAL);
 
     // Очистка при уходе со страницы
     window.addEventListener('beforeunload', () => {
@@ -236,6 +244,13 @@ function trackScientists() {
             const data = child.val();
             const lastSeen = data.lastSeen || 0;
             const timeSinceLastSeen = now - lastSeen;
+            
+            // Удаляем сессии с undefined или пустым именем
+            if (!data.name || data.name === 'undefined' || data.name === 'null' || data.name === '') {
+                console.log('🗑️ Удаляем сессию с некорректным именем:', child.key, 'data:', data);
+                child.ref.remove();
+                return;
+            }
             
             // Если учёный не обновлялся больше PRESENCE_TIMEOUT - удаляем
             if (timeSinceLastSeen > PRESENCE_TIMEOUT) {
