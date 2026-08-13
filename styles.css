@@ -2246,6 +2246,8 @@ body {
     background: rgba(100, 100, 100, 0.3);
     cursor: not-allowed;
     pointer-events: none;
+    padding: 6px 10px;
+    font-size: 12px;
 }
 
 .protocol-card .btn-add-comment:disabled {
