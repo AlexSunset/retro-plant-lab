@@ -719,6 +719,14 @@ window.applyProtocol = function(stageNumber) {
         return database.ref(`rooms/${ROOM_ID}/currentStage`).set(stageNumber);
     }).then(() => {
         console.log(`✅ Стадия ${stageNumber} активирована`);
+        // Принудительно обновляем UI для разблокировки кнопок следующей стадии
+        const roomRef = database.ref(`rooms/${ROOM_ID}`);
+        roomRef.once('value').then((snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                updateStagesUI(data.stages || {}, data.currentStage || 1);
+            }
+        });
     }).catch((error) => {
         console.error('❌ Ошибка применения протокола:', error);
         alert('Ошибка: ' + error.message);
