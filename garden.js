@@ -427,6 +427,17 @@ function resetAll() {
         // Сброс учёных
         database.ref(`rooms/${ROOM_ID}/scientists`).remove();
         
+        // Сброс комментариев протоколов
+        database.ref(`rooms/${ROOM_ID}/protocols`).remove();
+        
+        // Очищаем UI комментариев протоколов
+        for (let i = 2; i <= 6; i++) {
+            const commentsEl = document.getElementById(`stage${i}Comments`);
+            if (commentsEl) {
+                commentsEl.innerHTML = '';
+            }
+        }
+        
         console.log('✅ Все данные сброшены');
     }
 }
