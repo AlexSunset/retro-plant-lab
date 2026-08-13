@@ -2109,6 +2109,179 @@ body {
     }
 }
 
+/* ============================================
+   СТИЛИ ДЛЯ КОММЕНТАРИЕВ ПРОТОКОЛОВ (garden.html)
+   ============================================ */
+
+.card-comments {
+    min-height: 60px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.protocol-comment {
+    background: rgba(102, 126, 234, 0.1);
+    border-left: 3px solid #667eea;
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 8px;
+}
+
+.protocol-comment:last-child {
+    margin-bottom: 0;
+}
+
+.protocol-comment p {
+    color: #e0e0e0;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin: 0;
+    word-wrap: break-word;
+}
+
+.btn-add-comment {
+    background: rgba(152, 251, 152, 0.1);
+    color: #98fb98;
+    border: 1px solid rgba(152, 251, 152, 0.3);
+    padding: 8px 16px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 15px;
+    width: 100%;
+    justify-content: center;
+}
+
+.btn-add-comment:hover {
+    background: rgba(152, 251, 152, 0.2);
+    border-color: #98fb98;
+    transform: translateY(-1px);
+}
+
+/* Модальное окно для комментариев */
+#commentModal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    align-items: center;
+    justify-content: center;
+}
+
+#commentModal .modal-content {
+    background: #1a1a2e;
+    border: 1px solid rgba(102, 126, 234, 0.4);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+#commentModal .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 25px;
+    border-bottom: 1px solid rgba(102, 126, 234, 0.3);
+}
+
+#commentModal .modal-header h3 {
+    color: #667eea;
+    font-size: 1.3rem;
+    margin: 0;
+}
+
+#commentModal .modal-close {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    line-height: 1;
+}
+
+#commentModal .modal-close:hover {
+    color: #e0e0e0;
+}
+
+#commentModal .modal-body {
+    padding: 25px;
+}
+
+#commentModal textarea {
+    width: 100%;
+    min-height: 120px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    border-radius: 10px;
+    padding: 15px;
+    color: #e0e0e0;
+    font-size: 1rem;
+    font-family: 'Roboto Mono', monospace;
+    resize: vertical;
+    transition: all 0.3s ease;
+    outline: none;
+    box-sizing: border-box;
+}
+
+#commentModal textarea:focus {
+    border-color: #667eea;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 15px rgba(102, 126, 234, 0.2);
+}
+
+#commentModal .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    padding: 20px 25px;
+    border-top: 1px solid rgba(102, 126, 234, 0.3);
+}
+
+#commentModal .btn-cancel,
+#commentModal .btn-save {
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+#commentModal .btn-cancel {
+    background: rgba(255, 255, 255, 0.1);
+    color: #e0e0e0;
+}
+
+#commentModal .btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+#commentModal .btn-save {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+#commentModal .btn-save:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+}
+
 /* Адаптивность для очистки */
 @media (max-width: 768px) {
     .clean-header {

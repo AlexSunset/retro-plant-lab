@@ -431,6 +431,113 @@ function resetAll() {
     }
 }
 
+// ============================================
+// ФУНКЦИИ ДЛЯ КОММЕНТАРИЕВ (ПРОТОКОЛОВ)
+// ============================================
+
+// Открыть модальное окно для добавления комментария
+window.openCommentModal = function(stageNumber) {
+    const modal = document.getElementById('commentModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const currentStageId = document.getElementById('currentStageId');
+    
+    if (!modal || !modalTitle || !currentStageId) return;
+    
+    const protocolName = stageProtocols[stageNumber]?.name || 'Протокол';
+    modalTitle.textContent = `Добавить протокол: ${protocolName}`;
+    currentStageId.value = stageNumber;
+    document.getElementById('commentText').value = '';
+    
+    modal.style.display = 'flex';
+};
+
+// Закрыть модальное окно
+window.closeCommentModal = function() {
+    const modal = document.getElementById('commentModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+};
+
+// Сохранить комментарий протокола
+window.saveProtocolComment = function() {
+    const stageNumber = parseInt(document.getElementById('currentStageId').value);
+    const commentText = document.getElementById('commentText').value.trim();
+    
+    if (!commentText) {
+        alert('Введите текст протокола');
+        return;
+    }
+    
+    const protocolKey = stageProtocols[stageNumber]?.key;
+    if (!protocolKey) {
+        console.error('❌ Неверный ключ протокола:', stageNumber);
+        return;
+    }
+    
+    // Отмечаем протокол как выполненный
+    const updates = {};
+    updates[`rooms/${ROOM_ID}/stages/${protocolKey}`] = true;
+    updates[`rooms/${ROOM_ID}/currentStage`] = stageNumber;
+    updates[`rooms/${ROOM_ID}/protocols/${protocolKey}/text`] = commentText;
+    updates[`rooms/${ROOM_ID}/protocols/${protocolKey}/timestamp`] = firebase.database.ServerValue.TIMESTAMP;
+    
+    database.ref().update(updates)
+        .then(() => {
+            console.log(`✅ Протокол ${stageNumber} сохранён`);
+            closeCommentModal();
+        })
+        .catch((error) => {
+            console.error('❌ Ошибка сохранения:', error);
+            alert('Ошибка сохранения: ' + error.message);
+        });
+};
+
+// Загрузка комментариев для протоколов
+function loadProtocolComments(stages) {
+    const protocolsRef = database.ref(`rooms/${ROOM_ID}/protocols`);
+    
+    protocolsRef.once('value').then((snapshot) => {
+        const data = snapshot.val();
+        
+        // Очищаем все комментарии
+        for (let i = 2; i <= 6; i++) {
+            const commentsEl = document.getElementById(`stage${i}Comments`);
+            if (commentsEl) {
+                commentsEl.innerHTML = '';
+            }
+        }
+        
+        if (!data) return;
+        
+        // Отображаем комментарии
+        Object.keys(data).forEach((key) => {
+            const protocol = data[key];
+            const stageNum = parseInt(key.replace('stage', '').split('_')[0]);
+            
+            if (stageNum >= 2 && stageNum <= 6 && protocol && protocol.text) {
+                const commentsEl = document.getElementById(`stage${stageNum}Comments`);
+                if (commentsEl) {
+                    commentsEl.innerHTML = `
+                        <div class="protocol-comment">
+                            <p>${escapeHtml(protocol.text)}</p>
+                        </div>
+                    `;
+                }
+            }
+        });
+    }).catch((error) => {
+        console.error('❌ Ошибка загрузки комментариев:', error);
+    });
+}
+
+// Обновить функцию updateStagesUI для загрузки комментариев
+const originalUpdateStagesUI = updateStagesUI;
+updateStagesUI = function(stages, currentStage) {
+    originalUpdateStagesUI(stages, currentStage);
+    loadProtocolComments(stages);
+};
+
 // Экспорт функции для использования на других страницах
 window.markStageComplete = function(stageNumber) {
     if (!isConnected) {

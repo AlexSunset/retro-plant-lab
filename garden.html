@@ -92,6 +92,11 @@
                     <div class="card-name">Подготовленная почва</div>
                     <div class="card-desc">Зафиксируйте договорённости</div>
                     <div class="card-status" id="stage2Status">Не выполнено</div>
+                    <div class="card-comments" id="stage2Comments"></div>
+                    <button class="btn-add-comment" onclick="openCommentModal(2)">
+                        <span>+</span>
+                        <span>Добавить протокол</span>
+                    </button>
                     <a href="soil.html" class="btn-protocol">
                         <span>Перейти</span>
                         <span class="btn-arrow">→</span>
@@ -105,6 +110,11 @@
                     <div class="card-name">Набор генома</div>
                     <div class="card-desc">Добавьте задачи из хранилища</div>
                     <div class="card-status" id="stage3Status">Не выполнено</div>
+                    <div class="card-comments" id="stage3Comments"></div>
+                    <button class="btn-add-comment" onclick="openCommentModal(3)">
+                        <span>+</span>
+                        <span>Добавить протокол</span>
+                    </button>
                     <a href="samples.html" class="btn-protocol">
                         <span>Перейти</span>
                         <span class="btn-arrow">→</span>
@@ -118,6 +128,11 @@
                     <div class="card-name">Очищенный геном</div>
                     <div class="card-desc">Выявите дефекты и стратегии</div>
                     <div class="card-status" id="stage4Status">Не выполнено</div>
+                    <div class="card-comments" id="stage4Comments"></div>
+                    <button class="btn-add-comment" onclick="openCommentModal(4)">
+                        <span>+</span>
+                        <span>Добавить протокол</span>
+                    </button>
                     <a href="clean.html" class="btn-protocol">
                         <span>Перейти</span>
                         <span class="btn-arrow">→</span>
@@ -131,6 +146,11 @@
                     <div class="card-name">Модуляция роста</div>
                     <div class="card-desc">Предложите улучшения процессов</div>
                     <div class="card-status" id="stage5Status">Не выполнено</div>
+                    <div class="card-comments" id="stage5Comments"></div>
+                    <button class="btn-add-comment" onclick="openCommentModal(5)">
+                        <span>+</span>
+                        <span>Добавить протокол</span>
+                    </button>
                     <a href="growth.html" class="btn-protocol">
                         <span>Перейти</span>
                         <span class="btn-arrow">→</span>
@@ -144,6 +164,11 @@
                     <div class="card-name">Сильный иммунитет</div>
                     <div class="card-desc">Поделитесь вдохновляющими отзывами</div>
                     <div class="card-status" id="stage6Status">Не выполнено</div>
+                    <div class="card-comments" id="stage6Comments"></div>
+                    <button class="btn-add-comment" onclick="openCommentModal(6)">
+                        <span>+</span>
+                        <span>Добавить протокол</span>
+                    </button>
                     <a href="resistance.html" class="btn-protocol">
                         <span>Перейти</span>
                         <span class="btn-arrow">→</span>
@@ -160,8 +185,26 @@
                 </div>
                 <button class="btn-reset" onclick="resetAll()">
                     <span>🔄</span>
-                    <span>Сбросить протокол</span>
+                    <span>Сбросить протоколы</span>
                 </button>
+            </div>
+        </div>
+
+        <!-- Модальное окно для комментария -->
+        <div id="commentModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalTitle">Добавить протокол</h3>
+                    <button class="modal-close" onclick="closeCommentModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <textarea id="commentText" placeholder="Введите текст протокола..." rows="4"></textarea>
+                    <input type="hidden" id="currentStageId">
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-cancel" onclick="closeCommentModal()">Отмена</button>
+                    <button class="btn-save" onclick="saveProtocolComment()">Сохранить</button>
+                </div>
             </div>
         </div>
     </div>
