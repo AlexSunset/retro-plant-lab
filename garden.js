@@ -28,12 +28,12 @@ let savedAvatar = '👨\u200d🔬';
 
 // Стадии роста растения (6 стадий)
 const plantStages = {
-    1: { emoji: '🌰', name: 'Семя', desc: 'Начало пути' },
-    2: { emoji: '🌱', name: 'Росток', desc: 'Первые шаги' },
-    3: { emoji: '🪴', name: 'В горшке', desc: 'Набирает силу' },
-    4: { emoji: '🌿', name: 'Молодое дерево', desc: 'Активный рост' },
-    5: { emoji: '🌳', name: 'Дерево', desc: 'Расцвет' },
-    6: { emoji: '🌺', name: 'Цветущее дерево', desc: 'Полный успех' }
+    1: { image: 'stages/stage1.png', name: 'Семя', desc: 'Начало пути' },
+    2: { image: 'stages/stage2.png', name: 'Росток', desc: 'Первые шаги' },
+    3: { image: 'stages/stage3.png', name: 'В горшке', desc: 'Набирает силу' },
+    4: { image: 'stages/stage4.png', name: 'Молодое дерево', desc: 'Активный рост' },
+    5: { image: 'stages/stage5.png', name: 'Дерево', desc: 'Расцвет' },
+    6: { image: 'stages/stage6.png', name: 'Цветущее дерево', desc: 'Полный успех' }
 };
 
 // Протоколы по стадиям (5 протоколов для перехода на стадии 2-6)
@@ -326,7 +326,7 @@ function updatePlant(currentStage) {
     const plantData = plantStages[currentStage] || plantStages[1];
     
     const plantDisplay = document.getElementById('plantDisplay');
-    plantDisplay.textContent = plantData.emoji;
+    plantDisplay.innerHTML = `<img src="${plantData.image}" alt="${plantData.name}" class="plant-image">`;
     
     document.getElementById('plantStageInfo').textContent = `Стадия: ${plantData.name}`;
     document.getElementById('stageProgress').textContent = `${currentStage}/6`;
