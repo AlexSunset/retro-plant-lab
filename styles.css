@@ -2222,6 +2222,26 @@ body {
     box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
 }
 
+/* Строка статуса с кнопкой "Перейти" */
+.status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.stage-status {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #e0e0e0;
+}
+
+.stage-status.completed {
+    color: #98fb98;
+}
+
 /* Модальное окно для комментариев */
 #commentModal {
     display: none;
