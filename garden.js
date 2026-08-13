@@ -27,18 +27,17 @@ let sessionId = '';
 let savedAvatar = '👨‍🔬';
 
 // Стадии роста растения (6 стадий)
-const plantStages = [
-    { stage: 0, emoji: '🌰', name: 'Семя', desc: 'Начало пути' },
-    { stage: 1, emoji: '🌱', name: 'Росток', desc: 'Первые шаги' },
-    { stage: 2, emoji: '🪴', name: 'В горшке', desc: 'Набирает силу' },
-    { stage: 3, emoji: '🌿', name: 'Молодое дерево', desc: 'Активный рост' },
-    { stage: 4, emoji: '🌳', name: 'Дерево', desc: 'Расцвет' },
-    { stage: 5, emoji: '🌺', name: 'Цветущее дерево', desc: 'Полный успех' }
-];
+const plantStages = {
+    1: { emoji: '🌰', name: 'Семя', desc: 'Начало пути' },
+    2: { emoji: '🌱', name: 'Росток', desc: 'Первые шаги' },
+    3: { emoji: '🪴', name: 'В горшке', desc: 'Набирает силу' },
+    4: { emoji: '🌿', name: 'Молодое дерево', desc: 'Активный рост' },
+    5: { emoji: '🌳', name: 'Дерево', desc: 'Расцвет' },
+    6: { emoji: '🌺', name: 'Цветущее дерево', desc: 'Полный успех' }
+};
 
-// Протоколы по стадиям
+// Протоколы по стадиям (5 протоколов для перехода на стадии 2-6)
 const stageProtocols = {
-    1: { key: 'stage1_equipment', page: 'equip.html', name: 'Экипировка' },
     2: { key: 'stage2_soil', page: 'soil.html', name: 'Подготовленная почва' },
     3: { key: 'stage3_samples', page: 'samples.html', name: 'Набор генома' },
     4: { key: 'stage4_clean', page: 'clean.html', name: 'Очищенный геном' },
@@ -103,17 +102,38 @@ function connectToLab() {
     
     const roomRef = database.ref(`rooms/${ROOM_ID}`);
     
-    // Инициализируем комнату — только обновляем timestamp, не сбрасываем стадии
-    roomRef.update({
-        updatedAt: firebase.database.ServerValue.TIMESTAMP
+    // Инициализируем комнату — создаём структуру стадий, если её нет
+    roomRef.once('value').then((snapshot) => {
+        const data = snapshot.val();
+        const needsInit = !data || !data.stages;
+        
+        if (needsInit) {
+            // Первая инициализация — начинаем с стадии 1 (семя)
+            return roomRef.update({
+                stages: {
+                    stage1_soil: false,
+                    stage2_samples: false,
+                    stage3_clean: false,
+                    stage4_growth: false,
+                    stage5_resistance: false
+                },
+                currentStage: 1,
+                updatedAt: firebase.database.ServerValue.TIMESTAMP
+            });
+        } else {
+            return roomRef.update({
+                updatedAt: firebase.database.ServerValue.TIMESTAMP
+            });
+        }
     }).then(() => {
         console.log('✅ Комната инициализирована');
         
         // Подписываемся на изменения
         roomRef.on('value', (snapshot) => {
             const data = snapshot.val();
-            if (data && data.stages) {
-                updateStagesUI(data.stages);
+            if (data) {
+                const currentStage = data.currentStage || 1;
+                updateStagesUI(data.stages || {}, currentStage);
             }
             
             if (!isConnected) {
@@ -279,7 +299,7 @@ function updateConnectionStatus(connected) {
 }
 
 function updatePlant(currentStage) {
-    const plantData = plantStages[currentStage] || plantStages[0];
+    const plantData = plantStages[currentStage] || plantStages[1];
     
     const plantDisplay = document.getElementById('plantDisplay');
     plantDisplay.textContent = plantData.emoji;
@@ -294,14 +314,16 @@ function updatePlant(currentStage) {
     }, 200);
 }
 
-function updateStagesUI(stages) {
-    let completedCount = 0;
+function updateStagesUI(stages, currentStage) {
+    // currentStage: 1-6 (1=семя, 6=цветущее дерево)
+    currentStage = currentStage || 1;
     
-    // Проверяем каждую стадию
-    for (let i = 1; i <= 6; i++) {
-        const protocolKey = stageProtocols[i].key;
-        const isCompleted = stages[protocolKey] === true;
+    // Проверяем каждую стадию (2-6)
+    for (let i = 2; i <= 6; i++) {
+        const protocolKey = stageProtocols[i]?.key;
+        if (!protocolKey) continue;
         
+        const isCompleted = stages[protocolKey] === true;
         const card = document.querySelector(`.protocol-card[data-stage="${i}"]`);
         const statusEl = document.getElementById(`stage${i}Status`);
         
@@ -309,7 +331,6 @@ function updateStagesUI(stages) {
             card.setAttribute('data-completed', isCompleted);
             if (isCompleted) {
                 card.classList.add('completed');
-                completedCount++;
             } else {
                 card.classList.remove('completed');
             }
@@ -320,11 +341,19 @@ function updateStagesUI(stages) {
         }
     }
     
-    // Обновляем общий счёт
-    document.getElementById('totalScore').textContent = `${completedCount}/6`;
+    // Обновляем общий счёт (сколько протоколов выполнено из 5)
+    let completedCount = 0;
+    for (let i = 2; i <= 6; i++) {
+        const protocolKey = stageProtocols[i]?.key;
+        if (protocolKey && stages[protocolKey] === true) {
+            completedCount++;
+        }
+    }
+    
+    document.getElementById('totalScore').textContent = `${completedCount}/5`;
     
     // Обновляем растение
-    updatePlant(completedCount);
+    updatePlant(currentStage);
 }
 
 function updateScientistsList(scientists) {
@@ -367,13 +396,15 @@ function resetAll() {
     if (confirm('⚠️ Сбросить ВСЕ протоколы и данные? Это действие необратимо!')) {
         // Сброс стадий
         database.ref(`rooms/${ROOM_ID}/stages`).set({
-            stage1_equipment: false,
             stage2_soil: false,
             stage3_samples: false,
             stage4_clean: false,
             stage5_growth: false,
             stage6_resistance: false
         });
+        
+        // Сброс текущей стадии растения
+        database.ref(`rooms/${ROOM_ID}/currentStage`).set(1);
         
         // Сброс всех образцов
         database.ref('samples').remove();
@@ -407,18 +438,32 @@ window.markStageComplete = function(stageNumber) {
         return false;
     }
     
-    const protocolKey = stageProtocols[stageNumber]?.key;
-    if (!protocolKey) {
+    // stageNumber: 2-6 (переход на следующую стадию)
+    if (stageNumber < 2 || stageNumber > 6) {
         console.error('❌ Неверный номер стадии:', stageNumber);
         return false;
     }
     
+    const protocolKey = stageProtocols[stageNumber]?.key;
+    if (!protocolKey) {
+        console.error('❌ Неверный ключ протокола для стадии:', stageNumber);
+        return false;
+    }
+    
+    // Отмечаем протокол как выполненный
     database.ref(`rooms/${ROOM_ID}/stages/${protocolKey}`).set(true)
         .then(() => {
-            console.log(`✅ Стадия ${stageNumber} (${stageProtocols[stageNumber].name}) отмечена как завершённая`);
+            // Обновляем текущую стадию растения
+            database.ref(`rooms/${ROOM_ID}/currentStage`).set(stageNumber)
+                .then(() => {
+                    console.log(`✅ Стадия ${stageNumber} активирована`);
+                })
+                .catch((error) => {
+                    console.error('❌ Ошибка обновления стадии:', error);
+                });
         })
         .catch((error) => {
-            console.error('❌ Ошибка обновления стадии:', error);
+            console.error('❌ Ошибка обновления протокола:', error);
         });
     
     return true;

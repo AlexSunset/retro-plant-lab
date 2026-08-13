@@ -85,22 +85,9 @@
             <p class="panel-subtitle">Примените протоколы для роста растения</p>
             
             <div class="protocols-grid">
-                <!-- Этап 1: Экипировка -->
-                <div class="protocol-card" data-stage="1" data-completed="false">
-                    <div class="card-stage">Этап 1</div>
-                    <div class="card-icon">👔</div>
-                    <div class="card-name">Экипировка</div>
-                    <div class="card-desc">Выберите аватарку учёного</div>
-                    <div class="card-status" id="stage1Status">Не выполнено</div>
-                    <a href="equip.html" class="btn-protocol">
-                        <span>Перейти</span>
-                        <span class="btn-arrow">→</span>
-                    </a>
-                </div>
-
-                <!-- Этап 2: Почва -->
+                <!-- Этап 1: Почва (переход на стадию 2 - Росток) -->
                 <div class="protocol-card" data-stage="2" data-completed="false">
-                    <div class="card-stage">Этап 2</div>
+                    <div class="card-stage">Протокол 1</div>
                     <div class="card-icon">🌱</div>
                     <div class="card-name">Подготовленная почва</div>
                     <div class="card-desc">Зафиксируйте договорённости</div>
@@ -111,9 +98,9 @@
                     </a>
                 </div>
 
-                <!-- Этап 3: Хранилище -->
+                <!-- Этап 2: Хранилище (переход на стадию 3 - В горшке) -->
                 <div class="protocol-card" data-stage="3" data-completed="false">
-                    <div class="card-stage">Этап 3</div>
+                    <div class="card-stage">Протокол 2</div>
                     <div class="card-icon">🧫</div>
                     <div class="card-name">Набор генома</div>
                     <div class="card-desc">Добавьте задачи из хранилища</div>
@@ -124,9 +111,9 @@
                     </a>
                 </div>
 
-                <!-- Этап 4: Очистка -->
+                <!-- Этап 3: Очистка (переход на стадию 4 - Молодое дерево) -->
                 <div class="protocol-card" data-stage="4" data-completed="false">
-                    <div class="card-stage">Этап 4</div>
+                    <div class="card-stage">Протокол 3</div>
                     <div class="card-icon">🧬</div>
                     <div class="card-name">Очищенный геном</div>
                     <div class="card-desc">Выявите дефекты и стратегии</div>
@@ -137,9 +124,9 @@
                     </a>
                 </div>
 
-                <!-- Этап 5: Модуляция -->
+                <!-- Этап 4: Модуляция (переход на стадию 5 - Дерево) -->
                 <div class="protocol-card" data-stage="5" data-completed="false">
-                    <div class="card-stage">Этап 5</div>
+                    <div class="card-stage">Протокол 4</div>
                     <div class="card-icon">📈</div>
                     <div class="card-name">Модуляция роста</div>
                     <div class="card-desc">Предложите улучшения процессов</div>
@@ -150,9 +137,9 @@
                     </a>
                 </div>
 
-                <!-- Этап 6: Резистентность -->
+                <!-- Этап 5: Резистентность (переход на стадию 6 - Цветущее дерево) -->
                 <div class="protocol-card" data-stage="6" data-completed="false">
-                    <div class="card-stage">Этап 6</div>
+                    <div class="card-stage">Протокол 5</div>
                     <div class="card-icon">🛡️</div>
                     <div class="card-name">Сильный иммунитет</div>
                     <div class="card-desc">Поделитесь вдохновляющими отзывами</div>
@@ -168,8 +155,8 @@
             <div class="total-section">
                 <div class="total-info">
                     <h3>📊 Прогресс адаптации</h3>
-                    <div class="total-score" id="totalScore">0/6</div>
-                    <p>этапов завершено</p>
+                    <div class="total-score" id="totalScore">0/5</div>
+                    <p>протоколов завершено</p>
                 </div>
                 <button class="btn-reset" onclick="resetAll()">
                     <span>🔄</span>
