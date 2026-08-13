@@ -2235,8 +2235,8 @@ body {
 }
 
 /* Блокировка кнопок на карточках протоколов */
-.protocol-card .btn-protocol.disabled,
-.protocol-card .btn-add-comment.disabled {
+.protocol-card.locked .btn-protocol,
+.protocol-card.locked .btn-add-comment {
     opacity: 0.3;
     cursor: not-allowed;
     pointer-events: none;
@@ -2252,6 +2252,12 @@ body {
     opacity: 0.3;
     cursor: not-allowed;
     pointer-events: none;
+}
+
+/* Карточка активна */
+.protocol-card.active {
+    background: rgba(102, 126, 234, 0.1);
+    border-color: rgba(102, 126, 234, 0.5);
 }
 
 .stage-status {

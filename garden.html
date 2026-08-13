@@ -86,7 +86,7 @@
             
             <div class="protocols-grid">
                 <!-- Этап 1: Почва (переход на стадию 2 - Росток) -->
-                <div class="protocol-card" data-stage="2" data-completed="false">
+                <div class="protocol-card active" data-stage="2" data-completed="false">
                     <div class="card-stage">Протокол 1</div>
                     <div class="card-icon">🌱</div>
                     <div class="card-name">Подготовленная почва</div>
@@ -112,20 +112,19 @@
                 </div>
 
                 <!-- Этап 2: Хранилище (переход на стадию 3 - В горшке) -->
-                <div class="protocol-card" data-stage="3" data-completed="false">
+                <div class="protocol-card locked" data-stage="3" data-completed="false">
                     <div class="card-stage">Протокол 2</div>
                     <div class="card-icon">🧫</div>
                     <div class="card-name">Набор генома</div>
                     <div class="card-desc">Добавьте задачи из хранилища</div>
                     <div class="status-row">
                         <span class="stage-status" id="stage3Status">⏳ Не выполнено</span>
-                        <a href="samples.html" class="btn-protocol">
-                            <span>Перейти</span>
-                            <span class="btn-arrow">→</span>
+                        <a href="samples.html" class="btn-protocol locked">
+                            <span>🔒 Заблокировано</span>
                         </a>
                     </div>
                     <div class="card-comments" id="stage3Comments"></div>
-                    <button class="btn-add-comment" onclick="openCommentModal(3)">
+                    <button class="btn-add-comment" onclick="openCommentModal(3)" disabled>
                         <span>+</span>
                         <span>Добавить протокол</span>
                     </button>
@@ -138,20 +137,19 @@
                 </div>
 
                 <!-- Этап 3: Очистка (переход на стадию 4 - Молодое дерево) -->
-                <div class="protocol-card" data-stage="4" data-completed="false">
+                <div class="protocol-card locked" data-stage="4" data-completed="false">
                     <div class="card-stage">Протокол 3</div>
                     <div class="card-icon">🧬</div>
                     <div class="card-name">Очищенный геном</div>
                     <div class="card-desc">Выявите дефекты и стратегии</div>
                     <div class="status-row">
                         <span class="stage-status" id="stage4Status">⏳ Не выполнено</span>
-                        <a href="clean.html" class="btn-protocol">
-                            <span>Перейти</span>
-                            <span class="btn-arrow">→</span>
+                        <a href="clean.html" class="btn-protocol locked">
+                            <span>🔒 Заблокировано</span>
                         </a>
                     </div>
                     <div class="card-comments" id="stage4Comments"></div>
-                    <button class="btn-add-comment" onclick="openCommentModal(4)">
+                    <button class="btn-add-comment" onclick="openCommentModal(4)" disabled>
                         <span>+</span>
                         <span>Добавить протокол</span>
                     </button>
@@ -164,20 +162,19 @@
                 </div>
 
                 <!-- Этап 4: Модуляция (переход на стадию 5 - Дерево) -->
-                <div class="protocol-card" data-stage="5" data-completed="false">
+                <div class="protocol-card locked" data-stage="5" data-completed="false">
                     <div class="card-stage">Протокол 4</div>
                     <div class="card-icon">📈</div>
                     <div class="card-name">Модуляция роста</div>
                     <div class="card-desc">Предложите улучшения процессов</div>
                     <div class="status-row">
                         <span class="stage-status" id="stage5Status">⏳ Не выполнено</span>
-                        <a href="growth.html" class="btn-protocol">
-                            <span>Перейти</span>
-                            <span class="btn-arrow">→</span>
+                        <a href="growth.html" class="btn-protocol locked">
+                            <span>🔒 Заблокировано</span>
                         </a>
                     </div>
                     <div class="card-comments" id="stage5Comments"></div>
-                    <button class="btn-add-comment" onclick="openCommentModal(5)">
+                    <button class="btn-add-comment" onclick="openCommentModal(5)" disabled>
                         <span>+</span>
                         <span>Добавить протокол</span>
                     </button>
@@ -190,20 +187,19 @@
                 </div>
 
                 <!-- Этап 5: Резистентность (переход на стадию 6 - Цветущее дерево) -->
-                <div class="protocol-card" data-stage="6" data-completed="false">
+                <div class="protocol-card locked" data-stage="6" data-completed="false">
                     <div class="card-stage">Протокол 5</div>
                     <div class="card-icon">🛡️</div>
                     <div class="card-name">Сильный иммунитет</div>
                     <div class="card-desc">Поделитесь вдохновляющими отзывами</div>
                     <div class="status-row">
                         <span class="stage-status" id="stage6Status">⏳ Не выполнено</span>
-                        <a href="resistance.html" class="btn-protocol">
-                            <span>Перейти</span>
-                            <span class="btn-arrow">→</span>
+                        <a href="resistance.html" class="btn-protocol locked">
+                            <span>🔒 Заблокировано</span>
                         </a>
                     </div>
                     <div class="card-comments" id="stage6Comments"></div>
-                    <button class="btn-add-comment" onclick="openCommentModal(6)">
+                    <button class="btn-add-comment" onclick="openCommentModal(6)" disabled>
                         <span>+</span>
                         <span>Добавить протокол</span>
                     </button>
