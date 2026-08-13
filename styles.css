@@ -2165,6 +2165,63 @@ body {
     transform: translateY(-1px);
 }
 
+/* Контейнер действий для карточки протокола */
+.card-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Кнопка "Применить протоколы" */
+.btn-apply {
+    background: rgba(152, 251, 152, 0.1);
+    color: #98fb98;
+    border: 1px solid rgba(152, 251, 152, 0.3);
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-apply:hover:not(:disabled) {
+    background: rgba(152, 251, 152, 0.2);
+    border-color: #98fb98;
+    transform: translateY(-1px);
+}
+
+.btn-apply:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Кнопка "Перейти" - уменьшенная версия */
+.btn-protocol {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.btn-protocol:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
 /* Модальное окно для комментариев */
 #commentModal {
     display: none;

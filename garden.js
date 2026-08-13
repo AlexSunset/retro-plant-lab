@@ -527,13 +527,16 @@ function loadProtocolComments(stages) {
         
         if (!data) return;
         
-        // Отображаем комментарии
+        // Отображаем комментарии и обновляем состояние кнопок
         Object.keys(data).forEach((key) => {
             const protocol = data[key];
             const stageNum = parseInt(key.replace('stage', '').split('_')[0]);
             
             if (stageNum >= 2 && stageNum <= 6 && protocol) {
                 const commentsEl = document.getElementById(`stage${stageNum}Comments`);
+                const card = document.querySelector(`.protocol-card[data-stage="${stageNum}"]`);
+                const applyBtn = card ? card.querySelector('.btn-apply') : null;
+                
                 if (commentsEl && protocol.comments) {
                     // Сортируем комментарии по времени
                     const sortedComments = Object.values(protocol.comments).sort((a, b) => {
@@ -548,6 +551,11 @@ function loadProtocolComments(stages) {
                             <p>${escapeHtml(comment.text)}</p>
                         </div>
                     `).join('');
+                    
+                    // Активируем кнопку "Применить протоколы", если есть комментарии
+                    if (applyBtn && sortedComments.length > 0) {
+                        applyBtn.disabled = false;
+                    }
                 }
             }
         });
@@ -599,4 +607,47 @@ window.markStageComplete = function(stageNumber) {
         });
     
     return true;
+};
+
+// Применение протокола (кнопка "Применить протоколы")
+window.applyProtocol = function(stageNumber) {
+    if (!isConnected) {
+        console.error('❌ Нет подключения к Firebase');
+        alert('Нет подключения к Firebase');
+        return;
+    }
+    
+    // stageNumber: 2-6 (переход на следующую стадию)
+    if (stageNumber < 2 || stageNumber > 6) {
+        console.error('❌ Неверный номер стадии:', stageNumber);
+        return;
+    }
+    
+    const protocolKey = stageProtocols[stageNumber]?.key;
+    if (!protocolKey) {
+        console.error('❌ Неверный ключ протокола для стадии:', stageNumber);
+        return;
+    }
+    
+    // Проверяем, есть ли комментарии для этого протокола
+    const commentsRef = database.ref(`rooms/${ROOM_ID}/protocols/${protocolKey}/comments`);
+    commentsRef.once('value').then((snapshot) => {
+        const comments = snapshot.val();
+        
+        if (!comments || Object.keys(comments).length === 0) {
+            alert('⚠️ Сначала добавьте хотя бы один протокол в карточку!');
+            return;
+        }
+        
+        // Отмечаем протокол как выполненный
+        return database.ref(`rooms/${ROOM_ID}/stages/${protocolKey}`).set(true);
+    }).then(() => {
+        // Обновляем текущую стадию растения
+        return database.ref(`rooms/${ROOM_ID}/currentStage`).set(stageNumber);
+    }).then(() => {
+        console.log(`✅ Стадия ${stageNumber} активирована`);
+    }).catch((error) => {
+        console.error('❌ Ошибка применения протокола:', error);
+        alert('Ошибка: ' + error.message);
+    });
 };
