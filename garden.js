@@ -28,12 +28,12 @@ let savedAvatar = '👨\u200d🔬';
 
 // Стадии роста растения (6 стадий)
 const plantStages = {
-    1: { image: 'stages/1.png', name: 'Семя', desc: 'Начало пути' },
-    2: { image: 'stages/2.png', name: 'Росток', desc: 'Первые шаги' },
-    3: { image: 'stages/3.png', name: 'В горшке', desc: 'Набирает силу' },
-    4: { image: 'stages/4.png', name: 'Молодое дерево', desc: 'Активный рост' },
-    5: { image: 'stages/5.png', name: 'Дерево', desc: 'Расцвет' },
-    6: { image: 'stages/6.png', name: 'Цветущее дерево', desc: 'Полный успех' }
+    1: { image: 'stages/1.png', name: 'Семя', desc: 'Начало пути', environment: 'Агрессивная среда' },
+    2: { image: 'stages/2.png', name: 'Росток', desc: 'Первые шаги', environment: 'Агрессивная среда' },
+    3: { image: 'stages/3.png', name: 'В горшке', desc: 'Набирает силу', environment: 'Агрессивная среда' },
+    4: { image: 'stages/4.png', name: 'Молодое дерево', desc: 'Активный рост', environment: 'Нейтральная среда' },
+    5: { image: 'stages/5.png', name: 'Дерево', desc: 'Расцвет', environment: 'Нейтральная среда' },
+    6: { image: 'stages/6.png', name: 'Цветущее дерево', desc: 'Полный успех', environment: 'Благоприятная среда' }
 };
 
 // Протоколы по стадиям (5 протоколов для перехода на стадии 2-6)
@@ -330,6 +330,12 @@ function updatePlant(currentStage) {
     
     document.getElementById('plantStageInfo').textContent = `Стадия: ${plantData.name}`;
     document.getElementById('stageProgress').textContent = `${currentStage}/6`;
+    
+    // Обновляем текст среды
+    const environmentEl = document.getElementById('environmentStatus');
+    if (environmentEl) {
+        environmentEl.textContent = plantData.environment || 'Агрессивная среда';
+    }
     
     // Анимация
     plantDisplay.style.transform = 'scale(1.15)';
