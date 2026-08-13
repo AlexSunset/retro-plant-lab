@@ -475,12 +475,18 @@ window.saveProtocolComment = function() {
         return;
     }
     
-    // Отмечаем протокол как выполненный
+    // Создаём новый комментарий с уникальным ID
+    const newCommentRef = database.ref(`rooms/${ROOM_ID}/protocols/${protocolKey}/comments`).push();
+    const newComment = {
+        text: commentText,
+        timestamp: firebase.database.ServerValue.TIMESTAMP
+    };
+    
+    // Отмечаем протокол как выполненный и добавляем комментарий
     const updates = {};
     updates[`rooms/${ROOM_ID}/stages/${protocolKey}`] = true;
     updates[`rooms/${ROOM_ID}/currentStage`] = stageNumber;
-    updates[`rooms/${ROOM_ID}/protocols/${protocolKey}/text`] = commentText;
-    updates[`rooms/${ROOM_ID}/protocols/${protocolKey}/timestamp`] = firebase.database.ServerValue.TIMESTAMP;
+    updates[`rooms/${ROOM_ID}/protocols/${protocolKey}/comments/${newCommentRef.key}`] = newComment;
     
     database.ref().update(updates)
         .then(() => {
@@ -515,14 +521,22 @@ function loadProtocolComments(stages) {
             const protocol = data[key];
             const stageNum = parseInt(key.replace('stage', '').split('_')[0]);
             
-            if (stageNum >= 2 && stageNum <= 6 && protocol && protocol.text) {
+            if (stageNum >= 2 && stageNum <= 6 && protocol) {
                 const commentsEl = document.getElementById(`stage${stageNum}Comments`);
-                if (commentsEl) {
-                    commentsEl.innerHTML = `
+                if (commentsEl && protocol.comments) {
+                    // Сортируем комментарии по времени
+                    const sortedComments = Object.values(protocol.comments).sort((a, b) => {
+                        const timeA = a.timestamp || 0;
+                        const timeB = b.timestamp || 0;
+                        return timeA - timeB;
+                    });
+                    
+                    // Добавляем все комментарии
+                    commentsEl.innerHTML = sortedComments.map((comment) => `
                         <div class="protocol-comment">
-                            <p>${escapeHtml(protocol.text)}</p>
+                            <p>${escapeHtml(comment.text)}</p>
                         </div>
-                    `;
+                    `).join('');
                 }
             }
         });
