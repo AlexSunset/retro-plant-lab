@@ -322,6 +322,21 @@ function updateStagesUI(stages, currentStage) {
     let nextActiveStage = currentStage + 1;
     if (nextActiveStage > 6) nextActiveStage = 6;
     
+    // Сначала блокируем ВСЕ кнопки на всех карточках
+    for (let i = 2; i <= 6; i++) {
+        const card = document.querySelector(`.protocol-card[data-stage="${i}"]`);
+        if (card) {
+            const goToBtn = card.querySelector('.btn-go-to');
+            const addBtn = card.querySelector('.btn-add-protocol');
+            const applyBtn = card.querySelector('.btn-apply');
+            
+            // Блокируем все кнопки по умолчанию
+            if (goToBtn) goToBtn.disabled = true;
+            if (addBtn) addBtn.disabled = true;
+            if (applyBtn) applyBtn.disabled = true;
+        }
+    }
+    
     // Проверяем каждую стадию (2-6)
     for (let i = 2; i <= 6; i++) {
         const protocolKey = stageProtocols[i]?.key;
@@ -360,27 +375,29 @@ function updateStagesUI(stages, currentStage) {
             statusEl.textContent = isCompleted ? '✅ Выполнено' : '⏳ Не выполнено';
         }
         
-        // Блокируем/разблокируем кнопки
-        const isLocked = i > nextActiveStage;
+        // Разблокируем кнопки только для активной стадии
         const isActive = i === nextActiveStage && !isCompleted;
         
-        if (goToBtn) {
-            goToBtn.disabled = isLocked || isCompleted;
-            if (isCompleted) {
-                goToBtn.textContent = '↗️ Открыть';
-            } else if (isLocked) {
-                goToBtn.textContent = '🔒 Заблокировано';
-            } else {
+        if (isActive) {
+            // Разблокируем кнопку "Перейти" для активной стадии
+            if (goToBtn) {
+                goToBtn.disabled = false;
                 goToBtn.textContent = '↗️ Перейти';
             }
+            // Разблокируем кнопку "+ Добавить протокол" для активной стадии
+            if (addBtn) {
+                addBtn.disabled = false;
+            }
+            // Кнопка "Применить протоколы" будет разблокирована в loadProtocolComments
+            // если есть комментарии
         }
         
-        if (addBtn) {
-            addBtn.disabled = isLocked || isCompleted;
-        }
-        
-        if (applyBtn) {
-            applyBtn.disabled = isLocked || isCompleted;
+        // Для завершённой стадии разблокируем только "Перейти"
+        if (isCompleted) {
+            if (goToBtn) {
+                goToBtn.disabled = false;
+                goToBtn.textContent = '↗️ Открыть';
+            }
         }
     }
     
