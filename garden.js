@@ -28,12 +28,12 @@ let savedAvatar = '👨\u200d🔬';
 
 // Стадии роста растения (6 стадий)
 const plantStages = {
-    1: { image: 'stages/stage1.png', name: 'Семя', desc: 'Начало пути' },
-    2: { image: 'stages/stage2.png', name: 'Росток', desc: 'Первые шаги' },
-    3: { image: 'stages/stage3.png', name: 'В горшке', desc: 'Набирает силу' },
-    4: { image: 'stages/stage4.png', name: 'Молодое дерево', desc: 'Активный рост' },
-    5: { image: 'stages/stage5.png', name: 'Дерево', desc: 'Расцвет' },
-    6: { image: 'stages/stage6.png', name: 'Цветущее дерево', desc: 'Полный успех' }
+    1: { image: 'stages/1.png', name: 'Семя', desc: 'Начало пути' },
+    2: { image: 'stages/2.png', name: 'Росток', desc: 'Первые шаги' },
+    3: { image: 'stages/3.png', name: 'В горшке', desc: 'Набирает силу' },
+    4: { image: 'stages/4.png', name: 'Молодое дерево', desc: 'Активный рост' },
+    5: { image: 'stages/5.png', name: 'Дерево', desc: 'Расцвет' },
+    6: { image: 'stages/6.png', name: 'Цветущее дерево', desc: 'Полный успех' }
 };
 
 // Протоколы по стадиям (5 протоколов для перехода на стадии 2-6)
