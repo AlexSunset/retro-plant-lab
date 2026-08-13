@@ -964,6 +964,7 @@ body {
 .modal-overlay.modal-active {
     opacity: 1;
     visibility: visible;
+    display: flex !important;
 }
 
 .modal-container {
