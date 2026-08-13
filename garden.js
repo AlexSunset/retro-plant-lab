@@ -436,6 +436,12 @@ function resetAll() {
             if (commentsEl) {
                 commentsEl.innerHTML = '';
             }
+            
+            // Отключаем кнопку "Применить протоколы"
+            const applyBtn = document.getElementById(`applyBtn${i}`);
+            if (applyBtn) {
+                applyBtn.disabled = true;
+            }
         }
         
         console.log('✅ Все данные сброшены');
@@ -493,13 +499,8 @@ window.saveProtocolComment = function() {
         timestamp: firebase.database.ServerValue.TIMESTAMP
     };
     
-    // Отмечаем протокол как выполненный и добавляем комментарий
-    const updates = {};
-    updates[`rooms/${ROOM_ID}/stages/${protocolKey}`] = true;
-    updates[`rooms/${ROOM_ID}/currentStage`] = stageNumber;
-    updates[`rooms/${ROOM_ID}/protocols/${protocolKey}/comments/${newCommentRef.key}`] = newComment;
-    
-    database.ref().update(updates)
+    // Только добавляем комментарий, НЕ отмечаем стадию
+    database.ref(`rooms/${ROOM_ID}/protocols/${protocolKey}/comments/${newCommentRef.key}`).set(newComment)
         .then(() => {
             console.log(`✅ Протокол ${stageNumber} сохранён`);
             closeCommentModal();
