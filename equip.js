@@ -2,7 +2,7 @@
 // КОНФИГУРАЦИЯ FIREBASE
 // ============================================
 const firebaseConfig = {
-    apiKey: "AIzaSyA7Zpsng2b6I02RZ7r7VtwXzzN-gR_kNmk",
+    apiKey: "AIzaSyA7Zpsng2b6I02RZr7VtwXzzN-gR_kNmk",
     authDomain: "retro-tkat.firebaseapp.com",
     databaseURL: "https://retro-tkat-default-rtdb.europe-west1.firebasedatabase.app",
     projectId: "retro-tkat",
@@ -119,28 +119,6 @@ function selectAvatar(avatar, element) {
 }
 
 // ============================================
-// ПОДПИСКА НА ЭКИПИРОВКУ (ОБНОВЛЁНО)
-// ============================================
-function subscribeToEquip() {
-    const equipRef = database.ref(`equip/${sessionId}`);
-    
-    equipRef.on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data && data.avatar) {
-            document.getElementById('currentEquip').style.display = 'block';
-            // Проверяем, есть ли image (новая аватарка) или emoji (старая)
-            if (data.avatar.image) {
-                document.getElementById('currentAvatarDisplay').innerHTML = `<img src="${data.avatar.image}" alt="${data.avatar.name}" class="avatar-image-small">`;
-            } else {
-                document.getElementById('currentAvatarDisplay').textContent = data.avatar.emoji;
-            }
-            document.getElementById('currentAvatarName').textContent = data.avatar.name;
-            console.log('✅ Текущая экипировка:', data.avatar);
-        }
-    });
-}
-
-// ============================================
 // ПОДПИСКА НА ЭКИПИРОВКУ
 // ============================================
 function subscribeToEquip() {
@@ -150,8 +128,20 @@ function subscribeToEquip() {
         const data = snapshot.val();
         if (data && data.avatar) {
             document.getElementById('currentEquip').style.display = 'block';
-            document.getElementById('currentAvatarDisplay').textContent = data.avatar.emoji;
-            document.getElementById('currentAvatarName').textContent = data.avatar.name;
+            // Проверяем, есть ли image (новая аватарка) или emoji (старая)
+            if (typeof data.avatar === 'string') {
+                // Это путь к картинке
+                document.getElementById('currentAvatarDisplay').innerHTML = `<img src="${data.avatar}" alt="avatar" class="avatar-image-small">`;
+                document.getElementById('currentAvatarName').textContent = 'Выбрана аватарка';
+            } else if (data.avatar.image) {
+                // Это объект с image
+                document.getElementById('currentAvatarDisplay').innerHTML = `<img src="${data.avatar.image}" alt="${data.avatar.name}" class="avatar-image-small">`;
+                document.getElementById('currentAvatarName').textContent = data.avatar.name;
+            } else {
+                // Это старый формат с emoji
+                document.getElementById('currentAvatarDisplay').textContent = data.avatar.emoji;
+                document.getElementById('currentAvatarName').textContent = data.avatar.name;
+            }
             console.log('✅ Текущая экипировка:', data.avatar);
         }
     });
@@ -167,28 +157,21 @@ function equipAvatar() {
     }
     
     const equipRef = database.ref(`equip/${sessionId}`);
-    const stagesRef = database.ref(`rooms/retro-main/stages`);
     
-    // Сохраняем экипировку и отмечаем стадию 1
-    Promise.all([
-        equipRef.set({
-            name: scientistName,
-            avatar: selectedAvatar,
-            equippedAt: Date.now()
-        }),
-        stagesRef.update({
-            stage1_equipment: true
-        })
-    ]).then(() => {
-        console.log('✅ Экипировка надета:', selectedAvatar);
-        console.log('✅ Стадия 1 (Экипировка) завершена');
+    // Сохраняем экипировку (только путь к картинке)
+    equipRef.set({
+        name: scientistName,
+        avatar: selectedAvatar.image,
+        equippedAt: Date.now()
+    }).then(() => {
+        console.log('✅ Экипировка надета:', selectedAvatar.image);
         
         // Сохраняем аватарку в localStorage для использования на других страницах
-        localStorage.setItem('scientistAvatar', selectedAvatar.emoji);
-        console.log('💾 Аватарка сохранена в localStorage:', selectedAvatar.emoji);
+        localStorage.setItem('scientistAvatar', selectedAvatar.image);
+        console.log('💾 Аватарка сохранена в localStorage:', selectedAvatar.image);
         
         // Перенаправляем в лабораторию через небольшую задержку
-        alert(`✅ Экипировка надета: ${selectedAvatar.emoji} ${selectedAvatar.name}\n\n🎉 Стадия 1/6 завершена!\n\nПереход в лабораторию...`);
+        alert(`✅ Экипировка надета!\n\nПереход в лабораторию...`);
         
         setTimeout(() => {
             window.location.href = 'garden.html';

@@ -2499,6 +2499,24 @@ body {
     height: 40px;
     object-fit: cover;
     border-radius: 8px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Для аватарки в списке учёных */
+.scientist-icon .avatar-image-small {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Для аватарки в шапке */
+.header-user .avatar-image-small {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .avatar-name {

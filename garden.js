@@ -82,7 +82,12 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('👨\u200d🔬 Учёный:', scientistName, 'Session:', sessionId, 'Avatar:', savedAvatar);
     
     document.getElementById('currentUserName').textContent = scientistName;
-    document.getElementById('headerUserAvatar').textContent = savedAvatar;
+    
+    // Отображаем аватарку (картинка или эмодзи)
+    const headerAvatarEl = document.getElementById('headerUserAvatar');
+    if (headerAvatarEl) {
+        headerAvatarEl.innerHTML = getAvatarDisplay(savedAvatar);
+    }
     
     if (typeof firebase === 'undefined') {
         console.error('❌ Firebase не загружен');
@@ -180,17 +185,27 @@ function trackScientists() {
     // Сначала читаем аватарку из Firebase (equip), потом из localStorage
     equipRef.once('value').then((snapshot) => {
         const equipData = snapshot.val();
-        if (equipData && equipData.avatar && equipData.avatar.emoji) {
-            savedAvatar = equipData.avatar.emoji;
+        if (equipData && equipData.avatar) {
+            // Проверяем, это путь к картинке или эмодзи
+            if (typeof equipData.avatar === 'string' && equipData.avatar.startsWith('avatars/')) {
+                savedAvatar = equipData.avatar;
+            } else if (equipData.avatar.emoji) {
+                savedAvatar = equipData.avatar.emoji;
+            } else {
+                savedAvatar = 'avatars/avatar1.png';
+            }
             localStorage.setItem('scientistAvatar', savedAvatar);
             console.log('🎭 Аватарка загружена из Firebase:', savedAvatar);
         } else {
-            savedAvatar = localStorage.getItem('scientistAvatar') || '👨\u200d🔬';
+            savedAvatar = localStorage.getItem('scientistAvatar') || 'avatars/avatar1.png';
             console.log('🎭 Аватарка из localStorage:', savedAvatar);
         }
         
         // Обновляем отображение аватарки в шапке
-        document.getElementById('headerUserAvatar').textContent = savedAvatar;
+        const headerAvatarEl = document.getElementById('headerUserAvatar');
+        if (headerAvatarEl) {
+            headerAvatarEl.innerHTML = getAvatarDisplay(savedAvatar);
+        }
         
         // Записываем учёного с аватаркой
         const myData = {
@@ -296,6 +311,15 @@ function updateConnectionStatus(connected) {
         statusDot.classList.remove('connected');
         statusText.textContent = 'Подключение...';
     }
+}
+
+function getAvatarDisplay(avatar) {
+    // Если аватарка - это путь к картинке (начинается с 'avatars/')
+    if (avatar && typeof avatar === 'string' && avatar.startsWith('avatars/')) {
+        return `<img src="${avatar}" alt="avatar" class="avatar-image-small">`;
+    }
+    // Иначе это эмодзи
+    return avatar || '👨\u200d🔬';
 }
 
 function updatePlant(currentStage) {
@@ -426,10 +450,10 @@ function updateScientistsList(scientists) {
     
     grid.innerHTML = scientists.map((s) => {
         const isMe = s.id === sessionId;
-        const avatar = s.avatar || '👨\u200d🔬';
+        const avatarDisplay = getAvatarDisplay(s.avatar);
         return `
             <div class="scientist-card ${isMe ? 'is-me' : ''}">
-                <div class="scientist-icon">${avatar}</div>
+                <div class="scientist-icon">${avatarDisplay}</div>
                 <div class="scientist-info">
                     <div class="scientist-name">${escapeHtml(s.name)} ${isMe ? '<span class="badge-me">Вы</span>' : ''}</div>
                     <div class="scientist-status">
