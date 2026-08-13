@@ -23,28 +23,25 @@ let scientistName = '';
 let sessionId = '';
 let selectedAvatar = null;
 
-// Список аватарок
+// Список аватарок (картинки из папки avatars/)
 const avatars = [
-    { emoji: '🧑‍🔬', name: 'Учёный' },
-    { emoji: '👨‍🔬', name: 'Учёный М' },
-    { emoji: '👩‍🔬', name: 'Учёный Ж' },
-    { emoji: '🧙‍♂️', name: 'Алхимик' },
-    { emoji: '🧙‍♀️', name: 'Алхимик Ж' },
-    { emoji: '🦸‍♂️', name: 'Герой' },
-    { emoji: '🦸‍♀️', name: 'Героиня' },
-    { emoji: '🤖', name: 'Робот' },
-    { emoji: '👽', name: 'Пришелец' },
-    { emoji: '🦖', name: 'Динозавр' },
-    { emoji: '🦄', name: 'Единорог' },
-    { emoji: '🐱‍🚀', name: 'Котокосмонавт' },
-    { emoji: '🧟‍♂️', name: 'Зомби' },
-    { emoji: '🧞‍♂️', name: 'Джинн' },
-    { emoji: '👻', name: 'Призрак' },
-    { emoji: '🦹‍♂️', name: 'Злодей' },
-    { emoji: '🦹‍♀️', name: 'Злодейка' },
-    { emoji: '🕵️‍♂️', name: 'Детектив' },
-    { emoji: '🕵️‍♀️', name: 'Детектив Ж' },
-    { emoji: '🧑‍💼', name: 'Менеджер' }
+    { image: 'avatars/avatar1.png', name: 'Учёный 1' },
+    { image: 'avatars/avatar2.png', name: 'Учёный 2' },
+    { image: 'avatars/avatar3.png', name: 'Учёный 3' },
+    { image: 'avatars/avatar4.png', name: 'Учёный 4' },
+    { image: 'avatars/avatar5.png', name: 'Учёный 5' },
+    { image: 'avatars/avatar6.png', name: 'Учёный 6' },
+    { image: 'avatars/avatar7.png', name: 'Учёный 7' },
+    { image: 'avatars/avatar8.png', name: 'Учёный 8' },
+    { image: 'avatars/avatar9.png', name: 'Учёный 9' },
+    { image: 'avatars/avatar10.png', name: 'Учёный 10' },
+    { image: 'avatars/avatar11.png', name: 'Учёный 11' },
+    { image: 'avatars/avatar12.png', name: 'Учёный 12' },
+    { image: 'avatars/avatar13.png', name: 'Учёный 13' },
+    { image: 'avatars/avatar14.png', name: 'Учёный 14' },
+    { image: 'avatars/avatar15.png', name: 'Учёный 15' },
+    { image: 'avatars/avatar16.png', name: 'Учёный 16' },
+    { image: 'avatars/avatar17.png', name: 'Учёный 17' }
 ];
 
 // ============================================
@@ -92,7 +89,7 @@ function renderAvatars() {
         const avatarEl = document.createElement('div');
         avatarEl.className = 'avatar-card';
         avatarEl.innerHTML = `
-            <span class="avatar-emoji">${avatar.emoji}</span>
+            <img src="${avatar.image}" alt="${avatar.name}" class="avatar-image">
             <span class="avatar-name">${avatar.name}</span>
         `;
         avatarEl.addEventListener('click', () => {
@@ -119,6 +116,28 @@ function selectAvatar(avatar, element) {
     document.getElementById('equipBtn').disabled = false;
     
     console.log('🎨 Выбрана аватарка:', avatar);
+}
+
+// ============================================
+// ПОДПИСКА НА ЭКИПИРОВКУ (ОБНОВЛЁНО)
+// ============================================
+function subscribeToEquip() {
+    const equipRef = database.ref(`equip/${sessionId}`);
+    
+    equipRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data && data.avatar) {
+            document.getElementById('currentEquip').style.display = 'block';
+            // Проверяем, есть ли image (новая аватарка) или emoji (старая)
+            if (data.avatar.image) {
+                document.getElementById('currentAvatarDisplay').innerHTML = `<img src="${data.avatar.image}" alt="${data.avatar.name}" class="avatar-image-small">`;
+            } else {
+                document.getElementById('currentAvatarDisplay').textContent = data.avatar.emoji;
+            }
+            document.getElementById('currentAvatarName').textContent = data.avatar.name;
+            console.log('✅ Текущая экипировка:', data.avatar);
+        }
+    });
 }
 
 // ============================================
