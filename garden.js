@@ -648,13 +648,27 @@ function loadProtocolComments(stages, nextActiveStage) {
 
 // Разблокировка кнопок для активной стадии
 function unblockActiveStageButtons(nextActiveStage) {
-    const goToBtn = document.querySelector(`.protocol-card[data-stage="${nextActiveStage}"] .btn-go-to`);
-    const addBtn = document.querySelector(`.protocol-card[data-stage="${nextActiveStage}"] .btn-add-protocol`);
+    console.log('  🔓 unblockActiveStageButtons для стадии ' + nextActiveStage);
+    
+    const card = document.querySelector(`.protocol-card[data-stage="${nextActiveStage}"]`);
+    if (!card) {
+        console.log('  ❌ Карточка не найдена для стадии ' + nextActiveStage);
+        return;
+    }
+    
+    const goToBtn = card.querySelector('.btn-protocol');
+    const addBtn = card.querySelector('.btn-add-comment');
+    
+    console.log('  🔍 goToBtn:', goToBtn ? 'найдена' : 'не найдена');
+    console.log('  🔍 addBtn:', addBtn ? 'найдена' : 'не найдена');
     
     if (goToBtn) {
         goToBtn.disabled = false;
-        goToBtn.textContent = '↗️ Перейти';
         goToBtn.classList.remove('locked');
+        const span = goToBtn.querySelector('span');
+        if (span) {
+            span.textContent = 'Перейти';
+        }
         console.log('  ✅ Кнопка "Перейти" разблокирована для стадии ' + nextActiveStage);
     }
     
