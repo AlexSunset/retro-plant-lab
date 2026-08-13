@@ -318,6 +318,10 @@ function updateStagesUI(stages, currentStage) {
     // currentStage: 1-6 (1=семя, 6=цветущее дерево)
     currentStage = currentStage || 1;
     
+    // Определяем следующую активную стадию (первая незавершённая)
+    let nextActiveStage = currentStage + 1;
+    if (nextActiveStage > 6) nextActiveStage = 6;
+    
     // Проверяем каждую стадию (2-6)
     for (let i = 2; i <= 6; i++) {
         const protocolKey = stageProtocols[i]?.key;
@@ -327,17 +331,56 @@ function updateStagesUI(stages, currentStage) {
         const card = document.querySelector(`.protocol-card[data-stage="${i}"]`);
         const statusEl = document.getElementById(`stage${i}Status`);
         
+        // Находим кнопки на карточке
+        const goToBtn = card ? card.querySelector('.btn-go-to') : null;
+        const addBtn = card ? card.querySelector('.btn-add-protocol') : null;
+        const applyBtn = card ? card.querySelector('.btn-apply') : null;
+        
         if (card) {
             card.setAttribute('data-completed', isCompleted);
             if (isCompleted) {
                 card.classList.add('completed');
+                card.classList.remove('locked');
+            } else if (i === nextActiveStage) {
+                // Эта стадия активна для выполнения
+                card.classList.remove('locked');
+                card.classList.remove('completed');
+            } else if (i > nextActiveStage) {
+                // Эта стадия заблокирована
+                card.classList.add('locked');
+                card.classList.remove('completed');
             } else {
+                // i < nextActiveStage но не завершена - не должно быть, но на всякий случай
+                card.classList.remove('locked');
                 card.classList.remove('completed');
             }
         }
         
         if (statusEl) {
             statusEl.textContent = isCompleted ? '✅ Выполнено' : '⏳ Не выполнено';
+        }
+        
+        // Блокируем/разблокируем кнопки
+        const isLocked = i > nextActiveStage;
+        const isActive = i === nextActiveStage && !isCompleted;
+        
+        if (goToBtn) {
+            goToBtn.disabled = isLocked || isCompleted;
+            if (isCompleted) {
+                goToBtn.textContent = '↗️ Открыть';
+            } else if (isLocked) {
+                goToBtn.textContent = '🔒 Заблокировано';
+            } else {
+                goToBtn.textContent = '↗️ Перейти';
+            }
+        }
+        
+        if (addBtn) {
+            addBtn.disabled = isLocked || isCompleted;
+        }
+        
+        if (applyBtn) {
+            applyBtn.disabled = isLocked || isCompleted;
         }
     }
     
@@ -517,8 +560,12 @@ window.saveProtocolComment = function() {
 };
 
 // Загрузка комментариев для протоколов
-function loadProtocolComments(stages) {
+function loadProtocolComments(stages, currentStage) {
     const protocolsRef = database.ref(`rooms/${ROOM_ID}/protocols`);
+    
+    // Определяем следующую активную стадию
+    let nextActiveStage = (currentStage || 1) + 1;
+    if (nextActiveStage > 6) nextActiveStage = 6;
     
     protocolsRef.once('value').then((snapshot) => {
         const data = snapshot.val();
@@ -542,6 +589,15 @@ function loadProtocolComments(stages) {
                 const commentsEl = document.getElementById(`stage${stageNum}Comments`);
                 const card = document.querySelector(`.protocol-card[data-stage="${stageNum}"]`);
                 const applyBtn = card ? card.querySelector('.btn-apply') : null;
+                const addBtn = card ? card.querySelector('.btn-add-protocol') : null;
+                const goToBtn = card ? card.querySelector('.btn-go-to') : null;
+                
+                // Проверяем, завершена ли эта стадия
+                const protocolKey = stageProtocols[stageNum]?.key;
+                const isCompleted = stages[protocolKey] === true;
+                
+                // Проверяем, активна ли эта стадия (следующая для выполнения)
+                const isActive = stageNum === nextActiveStage && !isCompleted;
                 
                 if (commentsEl && protocol.comments) {
                     // Сортируем комментарии по времени
@@ -558,9 +614,24 @@ function loadProtocolComments(stages) {
                         </div>
                     `).join('');
                     
-                    // Активируем кнопку "Применить протоколы", если есть комментарии
-                    if (applyBtn && sortedComments.length > 0) {
+                    // Активируем кнопку "Применить протоколы", только если:
+                    // 1. Есть комментарии
+                    // 2. Стадия активна (nextActiveStage)
+                    // 3. Стадия ещё не завершена
+                    if (applyBtn && sortedComments.length > 0 && isActive) {
                         applyBtn.disabled = false;
+                    } else if (applyBtn) {
+                        applyBtn.disabled = true;
+                    }
+                    
+                    // Кнопка "+ Добавить протокол" активна только для активной стадии
+                    if (addBtn) {
+                        addBtn.disabled = !isActive;
+                    }
+                    
+                    // Кнопка "Перейти" активна только для активной стадии
+                    if (goToBtn) {
+                        goToBtn.disabled = !isActive;
                     }
                 }
             }
@@ -574,7 +645,7 @@ function loadProtocolComments(stages) {
 const originalUpdateStagesUI = updateStagesUI;
 updateStagesUI = function(stages, currentStage) {
     originalUpdateStagesUI(stages, currentStage);
-    loadProtocolComments(stages);
+    loadProtocolComments(stages, currentStage);
 };
 
 // Экспорт функции для использования на других страницах
