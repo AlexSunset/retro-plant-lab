@@ -325,17 +325,13 @@ if (!scientistName || scientistName === 'undefined' || scientistName === 'null')
     function addComment(agreementId, text) {
         const commentId = 'comment_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
         
-        // Добавляем комментарий и отмечаем стадию 2 (Почва)
-        Promise.all([
-            db.ref(`soil/${agreementId}/comments/${commentId}`).set({
-                author: scientistName,
-                text: text,
-                timestamp: Date.now()
-            }),
-            db.ref(`rooms/retro-main/stages/stage2_soil`).set(true)
-        ]).then(() => {
+        // Добавляем только комментарий (без завершения стадии)
+        db.ref(`soil/${agreementId}/comments/${commentId}`).set({
+            author: scientistName,
+            text: text,
+            timestamp: Date.now()
+        }).then(() => {
             console.log('✅ Комментарий добавлен');
-            console.log('✅ Стадия 2 (Подготовленная почва) завершена');
             closeModal();
         }).catch((error) => {
             console.error('❌ Ошибка добавления комментария:', error);
