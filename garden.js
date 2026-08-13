@@ -378,8 +378,12 @@ function updateStagesUI(stages, currentStage) {
             addBtn.disabled = false;
         }
         
-        // Кнопка "Применить протоколы" будет разблокирована в loadProtocolComments
-        // если есть комментарии
+        // Разблокируем кнопку "Применить протоколы" для активной стадии
+        // (окончательная проверка будет в loadProtocolComments по комментариям)
+        if (isActive && applyBtn) {
+            // Пока разрешаем, но loadProtocolComments проверит наличие комментариев
+            applyBtn.disabled = false;
+        }
         
         // Для завершённой стадии разблокируем только "Перейти"
         if (isCompleted && goToBtn) {
