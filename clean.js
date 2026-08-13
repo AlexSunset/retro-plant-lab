@@ -69,18 +69,14 @@ function addDefect() {
     
     console.log('📝 Добавление дефектного генома...');
     
-    // Добавляем дефект и отмечаем стадию 4 (Очистка генома)
-    Promise.all([
-        db.ref('clean/defects').push({
-            text: text,
-            author: scientistName,
-            timestamp: Date.now(),
-            strategies: {}
-        }),
-        db.ref(`rooms/retro-main/stages/stage4_clean`).set(true)
-    ]).then(() => {
+    // Добавляем только дефект (без завершения стадии)
+    db.ref('clean/defects').push({
+        text: text,
+        author: scientistName,
+        timestamp: Date.now(),
+        strategies: {}
+    }).then(() => {
         console.log('✅ Дефектный геном добавлен');
-        console.log('✅ Стадия 4 (Очищенный геном) завершена');
         document.getElementById('defectText').value = '';
         closeModal('defectModal');
     }).catch(err => {

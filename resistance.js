@@ -57,17 +57,13 @@ function addReview() {
         return;
     }
 
-    // Добавляем отзыв и отмечаем стадию 6 (Сильный иммунитет)
-    Promise.all([
-        database.ref('resistance').push({
-            text: text,
-            author: scientistName,
-            timestamp: Date.now()
-        }),
-        database.ref(`rooms/retro-main/stages/stage6_resistance`).set(true)
-    ]).then(() => {
+    // Добавляем только отзыв (без завершения стадии)
+    database.ref('resistance').push({
+        text: text,
+        author: scientistName,
+        timestamp: Date.now()
+    }).then(() => {
         console.log('✅ Отзыв добавлен');
-        console.log('✅ Стадия 6 (Сильный иммунитет) завершена');
         reviewText.value = '';
         closeModal('reviewModal');
     }).catch(err => {

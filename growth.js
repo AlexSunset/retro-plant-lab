@@ -60,18 +60,14 @@ function addProtocol() {
         return;
     }
 
-    // Добавляем протокол и отмечаем стадию 5 (Модуляция роста)
-    Promise.all([
-        database.ref('growth').push({
-            text: text,
-            author: scientistName,
-            timestamp: Date.now(),
-            comments: {}
-        }),
-        database.ref(`rooms/retro-main/stages/stage5_growth`).set(true)
-    ]).then(() => {
+    // Добавляем только протокол (без завершения стадии)
+    database.ref('growth').push({
+        text: text,
+        author: scientistName,
+        timestamp: Date.now(),
+        comments: {}
+    }).then(() => {
         console.log('✅ Протокол добавлен');
-        console.log('✅ Стадия 5 (Модуляция роста) завершена');
         protocolText.value = '';
         closeModal('protocolModal');
     }).catch(err => {
