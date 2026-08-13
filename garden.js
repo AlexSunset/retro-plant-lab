@@ -24,7 +24,7 @@ let isConnected = false;
 let isUpdating = false;
 let scientistName = '';
 let sessionId = '';
-let savedAvatar = '👨‍🔬';
+let savedAvatar = '👨\u200d🔬';
 
 // Стадии роста растения (6 стадий)
 const plantStages = {
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // Если аватарка не сохранена, используем стандартную
-    savedAvatar = storedAvatar || '👨‍🔬';
+    savedAvatar = storedAvatar || '👨\u200d🔬';
     
     // Получаем или генерируем sessionId
     sessionId = localStorage.getItem('scientistSessionId');
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('scientistSessionId', sessionId);
     console.log('🆕 Сгенерирован sessionId:', sessionId);
     
-    console.log('👨‍🔬 Учёный:', scientistName, 'Session:', sessionId, 'Avatar:', savedAvatar);
+    console.log('👨\u200d🔬 Учёный:', scientistName, 'Session:', sessionId, 'Avatar:', savedAvatar);
     
     document.getElementById('currentUserName').textContent = scientistName;
     document.getElementById('headerUserAvatar').textContent = savedAvatar;
@@ -111,11 +111,11 @@ function connectToLab() {
             // Первая инициализация — начинаем с стадии 1 (семя)
             return roomRef.update({
                 stages: {
-                    stage1_soil: false,
-                    stage2_samples: false,
-                    stage3_clean: false,
-                    stage4_growth: false,
-                    stage5_resistance: false
+                    stage2_soil: false,
+                    stage3_samples: false,
+                    stage4_clean: false,
+                    stage5_growth: false,
+                    stage6_resistance: false
                 },
                 currentStage: 1,
                 updatedAt: firebase.database.ServerValue.TIMESTAMP
@@ -185,7 +185,7 @@ function trackScientists() {
             localStorage.setItem('scientistAvatar', savedAvatar);
             console.log('🎭 Аватарка загружена из Firebase:', savedAvatar);
         } else {
-            savedAvatar = localStorage.getItem('scientistAvatar') || '👨‍🔬';
+            savedAvatar = localStorage.getItem('scientistAvatar') || '👨\u200d🔬';
             console.log('🎭 Аватарка из localStorage:', savedAvatar);
         }
         
@@ -262,7 +262,7 @@ function trackScientists() {
                 name: data.name,
                 joinedAt: data.joinedAt,
                 lastSeen: lastSeen,
-                avatar: data.avatar || '👨‍🔬'
+                avatar: data.avatar || '👨\u200d🔬'
             });
         });
         
@@ -378,12 +378,8 @@ function updateStagesUI(stages, currentStage) {
             addBtn.disabled = false;
         }
         
-        // Разблокируем кнопку "Применить протоколы" для активной стадии
-        // (окончательная проверка будет в loadProtocolComments по комментариям)
-        if (isActive && applyBtn) {
-            // Пока разрешаем, но loadProtocolComments проверит наличие комментариев
-            applyBtn.disabled = false;
-        }
+        // Кнопку "Применить протоколы" разблокируем ТОЛЬКО в loadProtocolComments
+        // если есть комментарии И стадия активна
         
         // Для завершённой стадии разблокируем только "Перейти"
         if (isCompleted && goToBtn) {
@@ -419,7 +415,7 @@ function updateScientistsList(scientists) {
     
     grid.innerHTML = scientists.map((s) => {
         const isMe = s.id === sessionId;
-        const avatar = s.avatar || '👨‍🔬';
+        const avatar = s.avatar || '👨\u200d🔬';
         return `
             <div class="scientist-card ${isMe ? 'is-me' : ''}">
                 <div class="scientist-icon">${avatar}</div>
@@ -581,8 +577,14 @@ function loadProtocolComments(stages, currentStage) {
         // Очищаем все комментарии
         for (let i = 2; i <= 6; i++) {
             const commentsEl = document.getElementById(`stage${i}Comments`);
+            const applyBtn = document.getElementById(`applyBtn${i}`);
+            
             if (commentsEl) {
                 commentsEl.innerHTML = '';
+            }
+            // Блокируем кнопку по умолчанию
+            if (applyBtn) {
+                applyBtn.disabled = true;
             }
         }
         
@@ -595,14 +597,11 @@ function loadProtocolComments(stages, currentStage) {
             
             if (stageNum >= 2 && stageNum <= 6 && protocol) {
                 const commentsEl = document.getElementById(`stage${stageNum}Comments`);
-                const card = document.querySelector(`.protocol-card[data-stage="${stageNum}"]`);
-                const applyBtn = card ? card.querySelector('.btn-apply') : null;
-                
-                // Проверяем, завершена ли эта стадия
-                const protocolKey = stageProtocols[stageNum]?.key;
-                const isCompleted = stages[protocolKey] === true;
+                const applyBtn = document.getElementById(`applyBtn${stageNum}`);
                 
                 // Проверяем, активна ли эта стадия (следующая для выполнения)
+                const protocolKey = stageProtocols[stageNum]?.key;
+                const isCompleted = stages[protocolKey] === true;
                 const isActive = stageNum === nextActiveStage && !isCompleted;
                 
                 if (commentsEl && protocol.comments) {
@@ -626,8 +625,6 @@ function loadProtocolComments(stages, currentStage) {
                     // 3. Стадия ещё не завершена
                     if (applyBtn && sortedComments.length > 0 && isActive) {
                         applyBtn.disabled = false;
-                    } else if (applyBtn) {
-                        applyBtn.disabled = true;
                     }
                 }
             }
