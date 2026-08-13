@@ -428,21 +428,26 @@ function resetAll() {
         database.ref(`rooms/${ROOM_ID}/scientists`).remove();
         
         // Сброс комментариев протоколов
-        database.ref(`rooms/${ROOM_ID}/protocols`).remove();
-        
-        // Очищаем UI комментариев протоколов
-        for (let i = 2; i <= 6; i++) {
-            const commentsEl = document.getElementById(`stage${i}Comments`);
-            if (commentsEl) {
-                commentsEl.innerHTML = '';
-            }
-            
-            // Отключаем кнопку "Применить протоколы"
-            const applyBtn = document.getElementById(`applyBtn${i}`);
-            if (applyBtn) {
-                applyBtn.disabled = true;
-            }
-        }
+        database.ref(`rooms/${ROOM_ID}/protocols`).remove()
+            .then(() => {
+                // Очищаем UI комментариев и отключаем кнопки после удаления из Firebase
+                for (let i = 2; i <= 6; i++) {
+                    const commentsEl = document.getElementById(`stage${i}Comments`);
+                    if (commentsEl) {
+                        commentsEl.innerHTML = '';
+                    }
+                    
+                    // Отключаем кнопку "Применить протоколы"
+                    const applyBtn = document.getElementById(`applyBtn${i}`);
+                    if (applyBtn) {
+                        applyBtn.disabled = true;
+                    }
+                }
+                console.log('✅ Протоколы и кнопки сброшены');
+            })
+            .catch((error) => {
+                console.error('❌ Ошибка сброса протоколов:', error);
+            });
         
         console.log('✅ Все данные сброшены');
     }
