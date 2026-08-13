@@ -2230,6 +2230,28 @@ body {
     gap: 10px;
     width: 100%;
     margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+/* Блокировка кнопок на карточках протоколов */
+.protocol-card .btn-protocol.disabled,
+.protocol-card .btn-add-comment.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.protocol-card .btn-protocol.locked {
+    background: rgba(100, 100, 100, 0.3);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.protocol-card .btn-add-comment:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
 .stage-status {
