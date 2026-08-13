@@ -288,6 +288,11 @@ if (!scientistName || scientistName === 'undefined' || scientistName === 'null')
         const textarea = document.getElementById('commentText');
         const charCount = document.getElementById('charCount');
         
+        console.log('🔍 modal:', modal);
+        console.log('🔍 agreementInfo:', agreementInfo);
+        console.log('🔍 textarea:', textarea);
+        console.log('🔍 charCount:', charCount);
+        
         if (!modal || !agreementInfo || !textarea || !charCount) {
             console.error('❌ Элементы модального окна не найдены');
             return;
@@ -297,7 +302,12 @@ if (!scientistName || scientistName === 'undefined' || scientistName === 'null')
         textarea.value = '';
         charCount.textContent = '0';
         
+        console.log('🔓 Добавляю класс modal-active, было классов:', modal.classList.toString());
         modal.classList.add('modal-active');
+        console.log('✅ После добавления классов:', modal.classList.toString());
+        console.log('✅ modal.style.display:', modal.style.display);
+        console.log('✅ modal.offsetHeight:', modal.offsetHeight);
+        
         textarea.focus();
     }
     
