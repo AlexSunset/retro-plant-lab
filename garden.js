@@ -593,6 +593,8 @@ function loadProtocolComments(stages, nextActiveStage) {
         
         if (!data) {
             console.log('  Нет данных протоколов');
+            // Разблокируем кнопки для активной стадии даже если нет данных
+            unblockActiveStageButtons(nextActiveStage);
             return;
         }
         
@@ -635,9 +637,32 @@ function loadProtocolComments(stages, nextActiveStage) {
                 }
             }
         });
+        
+        // Разблокируем кнопки "Перейти" и "+ Добавить протокол" для активной стадии
+        unblockActiveStageButtons(nextActiveStage);
+        
     }).catch((error) => {
         console.error('❌ Ошибка загрузки комментариев:', error);
     });
+}
+
+// Разблокировка кнопок для активной стадии
+function unblockActiveStageButtons(nextActiveStage) {
+    const goToBtn = document.querySelector(`.protocol-card[data-stage="${nextActiveStage}"] .btn-go-to`);
+    const addBtn = document.querySelector(`.protocol-card[data-stage="${nextActiveStage}"] .btn-add-protocol`);
+    
+    if (goToBtn) {
+        goToBtn.disabled = false;
+        goToBtn.textContent = '↗️ Перейти';
+        goToBtn.classList.remove('locked');
+        console.log('  ✅ Кнопка "Перейти" разблокирована для стадии ' + nextActiveStage);
+    }
+    
+    if (addBtn) {
+        addBtn.disabled = false;
+        addBtn.classList.remove('locked');
+        console.log('  ✅ Кнопка "+ Добавить протокол" разблокирована для стадии ' + nextActiveStage);
+    }
 }
 
 // Экспорт функции для использования на других страницах
